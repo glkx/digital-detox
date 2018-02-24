@@ -1,4 +1,5 @@
 const ImpulseBlocker = {
+
   extStatus: 'on',
 
   /**
@@ -21,24 +22,38 @@ const ImpulseBlocker = {
    * Redirects the tab to local "You have been blocked" page.
    */
   redirect: (requestDetails) => {
-    browser.tabs.update(requestDetails.tabId, { url: '/resources/redirect.html' });
+    browser.tabs.update(requestDetails.tabId, { url: '/redirect.html?from=' + requestDetails.url });
   },
 
   /**
    * Returns the current status of the extension.
    */
   getStatus: () => ImpulseBlocker.extStatus,
+  /* getStatus: () => {
+    browser.storage.local.get('blocking').then((storage) => {
+      if (typeof storage.blocking !== 'undefined') {
+        return storage.blocking;
+      } else {
+        return 'on';
+      }
+    });
+  },*/
 
   /**
    * Sets the current status of the extension.
    * @param string status
    */
   setStatus: (status) => {
+    /*
+    browser.storage.local.set({
+      blocking: status,
+    });
+    */
     ImpulseBlocker.extStatus = status;
-    if (ImpulseBlocker.extStatus == 'on') {
-      var icon = 'icons/icon96.png';
+    if (status === 'on') {
+      var icon = 'icons/icon-96.svg';
     } else {
-      var icon = 'icons/icon96-disabled.png';
+      var icon = 'icons/icon-96-disabled.svg';
     }
     browser.browserAction.setIcon({
       path: icon

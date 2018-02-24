@@ -1,27 +1,34 @@
-const radioOff = document.querySelector('input#off');
-const radioOn = document.querySelector('input#on');
-const addButton = document.querySelector('button.button-add');
-const optionsButton = document.querySelector('img.options');
-const removeButton = document.querySelector('button.button-remove');
+const toggleButton = document.querySelector('button.toggle-button');
+const addButton = document.querySelector('button.add-button');
+const optionsButton = document.querySelector('button.prefs-button');
+const removeButton = document.querySelector('button.remove-button');
 const domainToAllow = document.querySelector('span.domainToAllow');
 const domainToBlock = document.querySelector('span.domainToBlock');
 const getBackgroundPage = browser.runtime.getBackgroundPage();
 
 function handleClick() {
-  if (this.value === 'off') {
-    getBackgroundPage.then(bg => bg.disableBlocker());
-  } else {
-    getBackgroundPage.then(bg => bg.setBlocker());
-  }
+  getBackgroundPage.then((bg) => {
+    const status = bg.getStatus();
+    if (status === 'on') {
+      getBackgroundPage.then(bg => bg.disableBlocker());
+    } else {
+      getBackgroundPage.then(bg => bg.setBlocker());
+    }
+    markExtensionStatus();
+  });
 }
 
 function markExtensionStatus() {
   getBackgroundPage.then((bg) => {
     const status = bg.getStatus();
     if (status === 'off') {
-      radioOff.checked = true;
+      toggleButton.classList.remove('on');
+      toggleButton.classList.add('off');
+      toggleButton.innerHTML = 'Continue';
     } else if (status === 'on') {
-      radioOn.checked = true;
+      toggleButton.classList.remove('off');
+      toggleButton.classList.add('on');
+      toggleButton.innerHTML = 'Pause';
     }
   });
 }
@@ -33,7 +40,7 @@ function displayCurrentDomain() {
       .then((tabs) => {
         url = new URL(tabs[0].url);
         // dont show the button if this is the page of the extension itself
-        if (url.protocol === 'moz-extension:') return false;
+        if (url.protocol === 'moz-extension:' || url.protocol === 'about:') return false;
         const urlToMatch = url.hostname.replace(/^www\./, '');
 
         domainToAllow.textContent = urlToMatch;
@@ -75,13 +82,12 @@ function removeWebsite() {
 
 function openOptions() {
   browser.tabs.create({
-    url: "/options/options.html"
+    url: "/options.html"
   });
   window.close();
 }
 
-radioOff.addEventListener('click', handleClick);
-radioOn.addEventListener('click', handleClick);
+toggleButton.addEventListener('click', handleClick);
 addButton.addEventListener('click', addWebsite);
 removeButton.addEventListener('click', removeWebsite);
 optionsButton.addEventListener('click', openOptions);

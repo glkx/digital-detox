@@ -1,0 +1,74 @@
+body {
+    min-width: 200px;
+}
+
+.container {
+    padding: 1em 1.2em;
+    position: relative;
+}
+
+.title-text {
+    margin: 0 0 1em;
+}
+
+.prefs-button {
+    cursor: pointer;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 15px;
+    background-color: transparent;
+    background-image: url( "chrome://browser/skin/settings.svg" );
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    border: 0;
+    position: absolute;
+    right: 10.5px;
+    top: 7px;
+    z-index: 100;
+    vertical-align: middle;
+    fill: rgba(12, 12, 13, 0.6);
+    -moz-context-properties: fill;
+}
+
+.options:hover {
+    background-color: #EDEDF0;
+}
+
+.toggle-button,
+.add-domain-section button {
+    cursor: pointer;
+    width: 100%;
+    margin: 0;
+}
+
+.toggle-button.off {
+    background-color: #0a84ff;
+    border-color: transparent;
+    color: #fff; 
+}
+
+.toggle-button.off:hover {
+    background-color: #0060df;
+}
+
+.toggle-button.off:active {
+    background-color: #003EAA;
+}
+
+.add-domain-section button {
+    display: none;
+    margin: 0.5em 0 0;
+    font-size: 12px;
+}
+
+.add-domain-section button.add-button {
+    background-color: #FF4136;
+}
+
+.add-domain-section button.remove-button {
+    background-color: #2ECC40;
+}
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Options Impulse Blocker</title>
+
+        <link rel="icon" type="image/svg" href="chrome://browser/skin/settings.svg" />
+        <link rel="stylesheet" type="text/css" href="chrome://global/skin/in-content/common.css" media="all" />
+        <style>
+            .main-content {
+                padding: 40px;
+                overflow: auto;
+            }
+
+            .pane-container {
+                display: block;
+                width: 664px;
+            }
+
+            .subcategory.with-icon {
+                display: flex;
+                align-items: center;
+            }
+
+            .subcategory.with-icon img {
+                margin-right: 10px;
+            }
+
+            .subcategory.with-icon .header-name {
+                font-weight: 700;
+            }
+
+            form {
+                margin: 1em 0;
+            }
+
+            button {
+                cursor: pointer;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .blocked-sites {
+                margin: 0;
+                padding: 0;
+                background-color: #fff;
+                border: 1px solid #d7d7db;
+                border-radius: 2px;
+                list-style: none;
+            }
+            
+            .blocked-sites li {
+                display: flex;
+                min-height: 30px;
+                padding: 5px 10px;
+                line-height: 18px;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .blocked-sites li:nth-child(even) {
+                background-color: #F5F5F5;
+            }
+
+            .blocked-sites button {
+                min-height: auto;
+                margin: 0;
+                margin-left: auto;
+                background-color: transparent;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div class="main-content">
+            <div class="pane-container">
+                
+                <div class="subcategory with-icon">
+                    <img src="/icons/icon-32.svg" alt="" />
+                    <h1 class="header-name">Impulse Blocker</h1>
+                </div>
+
+                <form>
+                    <label for="site">Website to block:</label>
+                    <input type="text" id="site" name="site" placeholder="domain.com" />
+                    <button type="submit" class="primary">Add</button>
+                </form>
+
+                <ul class="blocked-sites"></ul>
+
+            </div>
+        </div>
+
+        <script src="/options/options.js"></script>
+
+    </body>
+</html>
