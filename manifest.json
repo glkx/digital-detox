@@ -1,34 +1,38 @@
 {
-  "name": "Impulse Blocker",
-  "version": "0.3",
-  "manifest_version": 2,
-  "description": "Block distracting websites when you are browsing the web.",
+    "name": "Impulse Blocker",
+    "version": "0.4",
+    "manifest_version": 2,
+    "description": "Block distracting websites when you are browsing the web.",
 
-  "permissions": [
-    "<all_urls>", "webRequest", "webRequestBlocking", "storage", "tabs"
-  ],
+    "permissions": [
+        "<all_urls>", "webRequest", "webRequestBlocking", "storage", "tabs"
+    ],
 
-  "icons": {
-    "48": "icons/icon48.png",
-    "96": "icons/icon96.png"
-  },
-
-  "options_ui": {
-      "page": "options/options.html",
-      "open_in_tab": true
+    "icons": {
+        "16": "icons/icon-16.svg",
+        "32": "icons/icon-32.svg",
+        "48": "icons/icon-48.svg",
+        "64": "icons/icon-64.svg",
+        "96": "icons/icon-96.svg",
+        "128": "icons/icon-128.svg"
     },
 
-  "web_accessible_resources": [
-      "redirect.html"
-    ],
- 
-  "background": {
-    "scripts": ["background.js"]
-  },
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
 
-  "browser_action": {
-    "default_icon": "icons/icon96.png",
-    "default_title": "Impulse Blocker",
-    "default_popup": "popup/menubar.html"
-  }
+    "web_accessible_resources": [
+        "redirect.html"
+    ],
+
+    "background": {
+        "scripts": [ "background.js" ]
+    },
+
+    "browser_action": {
+        "default_icon": "icons/icon-96.svg",
+        "default_title": "Impulse Blocker",
+        "default_popup": "popup.html"
+    }
 }
