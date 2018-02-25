@@ -7,6 +7,11 @@ body {
     position: relative;
 }
 
+button {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .title-text {
     margin: 0 0 1em;
 }
