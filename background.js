@@ -3,7 +3,8 @@ const ImpulseBlocker = {
     /**
      * Global variables
      */
-    currentStatus: 'on',
+    status: 'on',
+    sites: [], // used as default for storage
 
     /**
      * Generic error logger.
@@ -18,14 +19,18 @@ const ImpulseBlocker = {
      */
     init: () => {
         const handlingSites = browser.storage.sync.get('sites').then((storage) => {
-            if (typeof storage.sites === 'undefined') {
-                return browser.storage.sync.set({
-                    'sites': [],
-                });
+            if (typeof storage.sites !== 'undefined') {
+                ImpulseBlocker.loadSites( storage );
+            } else {
+                ImpulseBlocker.prepareSites();
             }
         });
 
         handlingSites.then(ImpulseBlocker.setBlocker, ImpulseBlocker.onError);
+    },
+
+    prepareStorage: () => {
+        
     },
 
     /**
@@ -40,14 +45,14 @@ const ImpulseBlocker = {
     /**
      * Returns the current status of the extension.
      */
-    getStatus: () => ImpulseBlocker.currentStatus,
+    getStatus: () => ImpulseBlocker.status,
 
     /**
      * Sets the current status of the extension.
      * @param string status
      */
     setStatus: (status) => {
-        ImpulseBlocker.currentStatus = status;
+        ImpulseBlocker.status = status;
         if (status === 'on') {
             var icon = 'icons/icon-96.svg';
         } else {
@@ -63,19 +68,18 @@ const ImpulseBlocker = {
      * by the WebExtensions API.
      */
     setBlocker: () => {
-        browser.storage.sync.get('sites').then((storage) => {
-            const pattern = storage.sites.map(item => `*://*.${item}/*`);
+        const sites = ImpulseBlocker.getSites();
+        const pattern = sites.map(item => `*://*.${item}/*`);
 
-            browser.webRequest.onBeforeRequest.removeListener(ImpulseBlocker.redirect);
-            if (pattern.length > 0) {
-                browser.webRequest.onBeforeRequest.addListener(
-                    ImpulseBlocker.redirect, {
-                        urls: pattern,
-                        types: ['main_frame']
-                    }, ['blocking'],
-                );
-            }
-        });
+        browser.webRequest.onBeforeRequest.removeListener(ImpulseBlocker.redirect);
+        if (pattern.length > 0) {
+            browser.webRequest.onBeforeRequest.addListener(
+                ImpulseBlocker.redirect, {
+                    urls: pattern,
+                    types: ['main_frame']
+                }, ['blocking'],
+            );
+        }
 
         browser.storage.onChanged.addListener(() => {
             // if the extension off we should not be bothered by restarting with new list
@@ -96,16 +100,42 @@ const ImpulseBlocker = {
     },
 
     /**
+     * Load sites from storage
+     */
+    prepareSites: () => {
+        browser.storage.sync.set({
+            'sites': ImpulseBlocker.sites,
+        });
+    },
+
+    /**
+     * (Re)Load sites from storage
+     */
+    loadSites: (storage) => {
+        ImpulseBlocker.sites = storage.sites;
+    },
+    reloadSites: () => {
+        browser.storage.sync.get('sites').then((storage) => {
+            ImpulseBlocker.sites = storage.sites;
+        });
+    },
+
+    /**
+     * Returns the current loaded sites of the extension.
+     */
+    getSites: () => ImpulseBlocker.sites,
+
+    /**
      * Add a website to the blocked list
      * @param  {string} url Url to add to the list
      */
     addSite: (url) => {
-        browser.storage.sync.get('sites').then((storage) => {
-            storage.sites.push(url);
-            browser.storage.sync.set({
-                'sites': storage.sites,
-            });
+        const sites = ImpulseBlocker.getSites();
+        sites.push(url);
+        const handleSites = browser.storage.sync.set({
+            'sites': sites,
         });
+        handleSites.then(ImpulseBlocker.reloadSites);
     },
 
     /**
@@ -113,15 +143,15 @@ const ImpulseBlocker = {
      * @param  {string} url Url to remove to the list
      */
     removeSite: (url) => {
-        browser.storage.sync.get('sites').then((storage) => {
-            const i = storage.sites.indexOf(url);
-            if (i !== -1) {
-                storage.sites.splice(i, 1);
-            }
-            browser.storage.sync.set({
-                'sites': storage.sites,
-            });
+        const sites = ImpulseBlocker.getSites();
+        const i = sites.indexOf(url);
+        if (i !== -1) {
+            storage.sites.splice(i, 1);
+        }
+        browser.storage.sync.set({
+            'sites': sites,
         });
+        handleSites.then(ImpulseBlocker.reloadSites);
     },
 };
 
