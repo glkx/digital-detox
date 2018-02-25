@@ -1,11 +1,11 @@
-var blockedSites, form, getSites;
+var blockedSites, form, getBackgroundPage;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
 function initialize() {
     blockedSites = document.querySelector('ul.blocked-sites');
     form = document.querySelector('form');
-    getSites = browser.storage.sync.get('sites');
+    getBackgroundPage = browser.runtime.getBackgroundPage();
 
     setListeners();
 
@@ -27,8 +27,9 @@ function localizeOptions() {
 }
 
 function restoreOptions() {
-    getSites.then((storage) => {
-        storage.sites.forEach((site) => {
+    getBackgroundPage.then((bg) => {
+        const sites = bg.getSites();
+        sites.forEach((site) => {
             addToBlockedList(site);
         });
     });
@@ -75,11 +76,8 @@ function saveSite(event) {
     addToBlockedList(url.hostname);
     form.site.value = '';
 
-    getSites.then((storage) => {
-        storage.sites.push(url.hostname);
-        browser.storage.sync.set({
-            'sites': storage.sites,
-        });
+    getBackgroundPage.then((bg) => {
+        bg.addSite(url.hostname);
     });
 }
 
@@ -90,14 +88,8 @@ function deleteSite(event) {
         const toDeleteText = event.target.previousSibling.textContent;
         toDeleteParent.removeChild(toDelete);
 
-        getSites.then((storage) => {
-            const i = storage.sites.indexOf(toDeleteText);
-            if (i !== -1) {
-                storage.sites.splice(i, 1);
-            }
-            browser.storage.sync.set({
-                'sites': storage.sites,
-            });
+        getBackgroundPage.then((bg) => {
+            bg.removeSite(toDeleteText);
         });
     }
 }

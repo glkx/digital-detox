@@ -184,7 +184,15 @@ function getDomain() {
 }
 
 function getSites() {
-    return browser.storage.sync.get('sites');
+    return ImpulseBlocker.getSites();
+}
+
+function addSite(url) {
+    return ImpulseBlocker.addSite(url);
+}
+
+function removeSite(url) {
+    return ImpulseBlocker.removeSite(url);
 }
 
 function addCurrentlyActiveSite() {
@@ -194,7 +202,7 @@ function addCurrentlyActiveSite() {
     });
     return gettingActiveTab.then((tabs) => {
         const url = new URL(tabs[0].url);
-        ImpulseBlocker.addSite(url.hostname.replace(/^www\./, ''));
+        addSite(url.hostname.replace(/^www\./, ''));
     });
 }
 
@@ -205,6 +213,6 @@ function removeCurrentlyActiveSite() {
     });
     return gettingActiveTab.then((tabs) => {
         const url = new URL(tabs[0].url);
-        ImpulseBlocker.removeSite(url.hostname.replace(/^www\./, ''));
+        removeSite(url.hostname.replace(/^www\./, ''));
     });
 }

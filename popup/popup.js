@@ -26,7 +26,7 @@ function setListeners() {
 
 function localizePopup() {
     const getI18nMsg = browser.i18n.getMessage;
-    
+
     prefsButton.title = getI18nMsg('popupPrefsButtonTitle');
     toggleButton.innerTex = getI18nMsg('popupToggleButtonOn');
 
@@ -80,15 +80,14 @@ function displayCurrentDomain() {
                 domainToAllow.textContent = urlToMatch;
                 domainToBlock.textContent = urlToMatch;
 
-                bg.getSites().then((storage) => {
-                    if (storage.sites.includes(urlToMatch)) {
-                        removeButton.style.display = 'block';
-                        addButton.style.display = 'none';
-                    } else {
-                        addButton.style.display = 'block';
-                        removeButton.style.display = 'none';
-                    }
-                });
+                const sites = bg.getSites();
+                if (sites.includes(urlToMatch)) {
+                    removeButton.style.display = 'block';
+                    addButton.style.display = 'none';
+                } else {
+                    addButton.style.display = 'block';
+                    removeButton.style.display = 'none';
+                }
             });
     });
 }
