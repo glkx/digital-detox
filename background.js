@@ -82,13 +82,10 @@ const ImpulseBlocker = {
         }
 
         browser.storage.onChanged.addListener(() => {
-            const handleSites = ImpulseBlocker.loadSites();
-            handleSites.then(() => {
-                // if the extension off we should not be bothered by restarting with new list
-                if (ImpulseBlocker.getStatus() === 'on') {
-                    ImpulseBlocker.setBlocker();
-                }
-            });
+            // if the extension off we should not be bothered by restarting with new list
+            if (ImpulseBlocker.getStatus() === 'on') {
+                ImpulseBlocker.setBlocker();
+            }
         });
 
         ImpulseBlocker.setStatus('on');
