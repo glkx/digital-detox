@@ -77,8 +77,8 @@ function displayCurrentDomain() {
             if (url.protocol === 'moz-extension:' || url.protocol === 'about:') return false;
             const urlToMatch = url.hostname.replace(/^www\./, '');
 
-            domainToAllow.textContent = urlToMatch;
-            domainToBlock.textContent = urlToMatch;
+            domainToAllow.textContent = '(' + urlToMatch + ')';
+            domainToBlock.textContent = '(' + urlToMatch + ')';
 
             const sites = bg.getSites();
             if (sites.includes(urlToMatch)) {
