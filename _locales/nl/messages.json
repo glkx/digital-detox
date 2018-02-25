@@ -10,7 +10,7 @@
 	},
 
 	"popupTitle": {
-		"message": "Toon Impulse Blocker",
+		"message": "Impulse Blocker",
 		"description": "Title of the navbar popup."
 	},
 
@@ -34,12 +34,16 @@
 		"message": "Toestaan"
 	},
 
-	"redirectTitleText": {
+	"redirectTitle": {
 		"message": "Laden van de pagina is geblokkeerd"
 	},
 
 	"redirectShortDescText": {
 		"message": "Je impuls om deze website te bezoeken is succesvol geblokkeerd door Impulse Blocker."
+	},
+
+	"optionsTitle": {
+		"message": "Voorkeuren Impulse Blocker"
 	},
 
 	"optionsAddSiteLabel": {

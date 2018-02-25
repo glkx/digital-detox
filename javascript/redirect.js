@@ -11,7 +11,8 @@ function initialize() {
 
 function localizeRedirect() {
     const getI18nMsg = browser.i18n.getMessage;
-    document.getElementById('redirectTitleText').innerText = getI18nMsg('redirectTitleText');
+    document.getElementById('redirectTitle').innerText = getI18nMsg('redirectTitle');
+    document.getElementById('redirectTitleText').innerText = getI18nMsg('redirectTitle');
     document.getElementById('redirectShortDescText').innerText = getI18nMsg('redirectShortDescText');
 }
 

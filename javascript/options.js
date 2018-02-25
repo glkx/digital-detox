@@ -20,10 +20,11 @@ function setListeners() {
 
 function localizeOptions() {
     const getI18nMsg = browser.i18n.getMessage;
-    document.getElementById('header-name').innerText = getI18nMsg('extensionName');
-    document.getElementById('add-site-label').innerText = getI18nMsg('optionsAddSiteLabel');
-    document.getElementById('add-site-input').placeholder = getI18nMsg('optionsAddSiteInputPlaceholder');
-    document.getElementById('add-site-button').innerText = getI18nMsg('optionsAddSiteButton');
+    document.getElementById('optionsTitle').innerText = getI18nMsg('optionsTitle');
+    document.getElementById('optionHeaderName').innerText = getI18nMsg('extensionName');
+    document.getElementById('optionsAddSiteLabel').innerText = getI18nMsg('optionsAddSiteLabel');
+    document.getElementById('optionsAddSiteInput').placeholder = getI18nMsg('optionsAddSiteInputPlaceholder');
+    document.getElementById('optionsAddSiteButton').innerText = getI18nMsg('optionsAddSiteButton');
 }
 
 function restoreOptions() {

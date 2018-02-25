@@ -30,6 +30,7 @@ function localizePopup() {
     prefsButton.title = getI18nMsg('popupPrefsButtonTitle');
     toggleButton.innerTex = getI18nMsg('popupToggleButtonOn');
 
+    document.getElementById('popupTitle').innerText = getI18nMsg('popupTitle');
     document.getElementById('popupHeaderName').innerText = getI18nMsg('extensionName');
     document.getElementById('popupAddButtonValue').innerText = getI18nMsg('popupAddButtonValue');
     document.getElementById('popupRemoveButtonValue').innerText = getI18nMsg('popupRemoveButtonValue');

@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>Options Impulse Blocker</title>
+        <title id="optionsTitle">Options Impulse Blocker</title>
 
         <link rel="icon" type="image/svg" href="chrome://browser/skin/settings.svg" />
         <link rel="stylesheet" type="text/css" href="chrome://global/skin/in-content/common.css" media="all" />
@@ -18,13 +18,13 @@
                 
                 <div class="subcategory with-icon">
                     <img src="/icons/icon-32.svg" alt="" />
-                    <h1 id="header-name" class="header-name">Impulse Blocker</h1>
+                    <h1 id="optionHeaderName" class="header-name">Impulse Blocker</h1>
                 </div>
 
                 <form>
-                    <label id="add-site-label" for="site">Block website:</label>
-                    <input id="add-site-input" type="text" id="site" name="site" placeholder="domain.com" />
-                    <button id="add-site-button" type="submit" class="primary">Add</button>
+                    <label id="optionsAddSiteLabel" for="site">Block website:</label>
+                    <input id="optionsAddSiteInput" type="text" id="site" name="site" placeholder="domain.com" />
+                    <button id="optionsAddSiteButton" type="submit" class="primary">Add</button>
                 </form>
 
                 <ul class="blocked-sites"></ul>

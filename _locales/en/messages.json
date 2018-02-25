@@ -10,7 +10,7 @@
 	},
 
 	"popupTitle": {
-		"message": "Show Impulse Blocker",
+		"message": "Impulse Blocker",
 		"description": "Title of the navbar popup."
 	},
 
@@ -34,7 +34,7 @@
 		"message": "Allow"
 	},
 
-	"redirectTitleText": {
+	"redirectTitle": {
 		"message": "Loading of the page is blocked"
 	},
 
@@ -42,8 +42,8 @@
 		"message": "Your impulse to visit this website has been successfully blocked by Impulse Blocker."
 	},
 
-	"optionsAddSiteLabel": {
-		"message": "Block website:"
+	"optionsTitle": {
+		"message": "Options Impulse Blocker"
 	},
 
 	"optionsAddSiteInputPlaceholder": {
