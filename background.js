@@ -71,9 +71,9 @@ const ImpulseBlocker = {
     setStatus: (status) => {
         ImpulseBlocker.status = status;
         if (status === 'on') {
-            let icon = browser.extension.getURL('/icons/icon-96.svg');
+            const icon = browser.extension.getURL('/icons/icon-96.svg');
         } else {
-            let icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
+            const icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
         }
         browser.browserAction.setIcon({
             path: icon
