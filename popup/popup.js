@@ -72,16 +72,16 @@ function displayCurrentDomain() {
         let url;
         bg.getDomain()
             .then((tabs) => {
-                url = new URL(tabs[0].url);
-                // dont show the button if this is the page of the extension itself
-                if (url.protocol === 'moz-extension:' || url.protocol === 'about:') return false;
-                const urlToMatch = url.hostname.replace(/^www\./, '');
+            url = new URL(tabs[0].url);
+            // dont show the button if this is the page of the extension itself
+            if (url.protocol === 'moz-extension:' || url.protocol === 'about:') return false;
+            const urlToMatch = url.hostname.replace(/^www\./, '');
 
-                domainToAllow.textContent = urlToMatch;
-                domainToBlock.textContent = urlToMatch;
+            domainToAllow.textContent = urlToMatch;
+            domainToBlock.textContent = urlToMatch;
 
-                const sites = bg.getSites();
-                if (sites.includes(urlToMatch)) {
+            const sites = bg.getSites();
+            if (sites.includes(urlToMatch)) {
                     removeButton.style.display = 'block';
                     addButton.style.display = 'none';
                 } else {

@@ -24,7 +24,7 @@ function restoreRedirect() {
         const redirectUrl = currentUrl.searchParams.get('from');
         const matchUrl = new URL(redirectUrl);
         const matchDomain = matchUrl.hostname.replace(/^www\./, '');
-        if (redirectUrl !== 'undefined' && ( status === 'off' || ! sites.includes( matchDomain ) ) ) {
+        if (redirectUrl !== 'undefined' && (status === 'off' || !sites.includes(matchDomain))) {
             window.location.href = redirectUrl;
         }
     });
