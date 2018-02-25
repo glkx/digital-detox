@@ -4,7 +4,14 @@ const ImpulseBlocker = {
      * Global variables
      */
     status: 'on',
-    sites: [], // used as default for storage
+    sites: ['facebook.com', 'twitter.com', 'instagram.com', 'linkedin.com'], // used as default for storage
+    sitesChange: 0,
+    sitesTiming: 500,
+    sitesInterval: 0,
+    sync: [],
+    syncChange: 0,
+    syncTiming: 10000,
+    syncInterval: 0,
 
     /**
      * Generic error logger.
@@ -20,16 +27,26 @@ const ImpulseBlocker = {
     init: () => {
         const handlingSites = browser.storage.sync.get('sites').then((storage) => {
             if (typeof storage.sites !== 'undefined') {
-                ImpulseBlocker.loadSites(storage);
+                ImpulseBlocker.setSites(storage.sites);
+                ImpulseBlocker.syncSites(storage.sites);
             } else {
                 ImpulseBlocker.prepareSites();
             }
         });
 
         handlingSites.then(ImpulseBlocker.setBlocker, ImpulseBlocker.onError);
-    },
 
-    prepareStorage: () => {
+        // Listerner for sites to sync
+        let lastSync = ImpulseBlocker.syncChange;
+        ImpulseBlocker.syncInterval = setInterval(() => {
+            if (ImpulseBlocker.syncChange !== lastSync) {
+                lastSync = ImpulseBlocker.syncChange;
+                console.log('Sync!');
+                browser.storage.sync.set({
+                    'sites': ImpulseBlocker.sync
+                });
+            }
+        }, ImpulseBlocker.syncTiming);
 
     },
 
@@ -38,7 +55,7 @@ const ImpulseBlocker = {
      */
     redirect: (requestDetails) => {
         browser.tabs.update(requestDetails.tabId, {
-            url: browser.extension.getURL( '/redirect.html?from=' + requestDetails.url )
+            url: browser.extension.getURL('/redirect.html?from=' + requestDetails.url)
         });
     },
 
@@ -54,9 +71,9 @@ const ImpulseBlocker = {
     setStatus: (status) => {
         ImpulseBlocker.status = status;
         if (status === 'on') {
-            var icon = browser.extension.getURL( '/icons/icon-96.svg' );
+            let icon = browser.extension.getURL('/icons/icon-96.svg');
         } else {
-            var icon = browser.extension.getURL( '/icons/icon-96-disabled.svg' );
+            let icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
         }
         browser.browserAction.setIcon({
             path: icon
@@ -72,6 +89,8 @@ const ImpulseBlocker = {
         const pattern = sites.map(item => `*://*.${item}/*`);
 
         browser.webRequest.onBeforeRequest.removeListener(ImpulseBlocker.redirect);
+        clearInterval(ImpulseBlocker.sitesInterval);
+
         if (pattern.length > 0) {
             browser.webRequest.onBeforeRequest.addListener(
                 ImpulseBlocker.redirect, {
@@ -81,12 +100,15 @@ const ImpulseBlocker = {
             );
         }
 
-        browser.storage.onChanged.addListener(() => {
-            // if the extension off we should not be bothered by restarting with new list
-            if (ImpulseBlocker.getStatus() === 'on') {
-                ImpulseBlocker.setBlocker();
+        let lastSites = ImpulseBlocker.sitesChange;
+        ImpulseBlocker.sitesInterval = setInterval(() => {
+            if (ImpulseBlocker.sitesChange !== lastSites) {
+                lastSites = ImpulseBlocker.sitesChange;
+                if (ImpulseBlocker.getStatus() === 'on') {
+                    ImpulseBlocker.setBlocker();
+                }
             }
-        });
+        }, ImpulseBlocker.sitesTiming);
 
         ImpulseBlocker.setStatus('on');
     },
@@ -111,13 +133,20 @@ const ImpulseBlocker = {
     /**
      * (Re)Load sites from storage
      */
-    loadSites: (storage) => {
-        if (storage === 'undefined') {
-            browser.storage.sync.get('sites').then((storage) => {
-                ImpulseBlocker.sites = storage.sites;
-            });
-        } else {
-            ImpulseBlocker.sites = storage.sites;
+    syncSites: (sites) => {
+        if (sites !== 'undefined') {
+            ImpulseBlocker.sync = sites;
+            ImpulseBlocker.syncChange = Date.now();
+        }
+    },
+
+    /**
+     * Set sites from storage
+     */
+    setSites: (sites) => {
+        if (sites !== 'undefined') {
+            ImpulseBlocker.sites = sites;
+            ImpulseBlocker.sitesChange = Date.now();
         }
     },
 
@@ -133,12 +162,8 @@ const ImpulseBlocker = {
     addSite: (url) => {
         const sites = ImpulseBlocker.getSites();
         sites.push(url);
-        const handleSites = browser.storage.sync.set({
-            'sites': sites,
-        });
-        handleSites.then(ImpulseBlocker.loadSites({
-            'sites': sites,
-        }));
+        ImpulseBlocker.setSites(sites);
+        ImpulseBlocker.syncSites(sites);
     },
 
     /**
@@ -151,12 +176,8 @@ const ImpulseBlocker = {
         if (i !== -1) {
             sites.splice(i, 1);
         }
-        const handleSites = browser.storage.sync.set({
-            'sites': sites,
-        });
-        handleSites.then(ImpulseBlocker.loadSites({
-            'sites': sites,
-        }));
+        ImpulseBlocker.setSites(sites);
+        ImpulseBlocker.syncSites(sites);
     },
 };
 
