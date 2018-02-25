@@ -1,10 +1,10 @@
 body {
     min-width: 200px;
+    min-height: 60px;
 }
 
 .container {
     padding: 1em 1.2em;
-    position: relative;
 }
 
 button {
@@ -12,30 +12,8 @@ button {
     padding-right: 10px;
 }
 
-.title-text {
-    margin: 0 0 1em;
-}
-
-.prefs-button {
-    cursor: pointer;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    padding: 15px;
-    background-color: transparent;
-    background-image: url( 'chrome://browser/skin/settings.svg' );
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 16px;
-    border: 0;
-    position: absolute;
-    right: 10.5px;
-    top: 7px;
-    z-index: 100;
-    vertical-align: middle;
-    fill: rgba( 12, 12, 13, 0.6 );
-    -moz-context-properties: fill;
+.button-group {
+    display: flex;
 }
 
 .options:hover {
@@ -47,6 +25,10 @@ button {
     cursor: pointer;
     width: 100%;
     margin: 0;
+}
+
+.toggle-button {
+    flex: 1;
 }
 
 .toggle-button.off {
@@ -61,6 +43,25 @@ button {
 
 .toggle-button.off:active {
     background-color: #003EAA;
+}
+
+.prefs-button {
+    cursor: pointer;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 0 0 0.5em;
+    padding: 15px;
+    background-color: transparent;
+    background-image: url( 'chrome://browser/skin/settings.svg' );
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    border: 0;
+    z-index: 100;
+    vertical-align: middle;
+    fill: rgba( 12, 12, 13, 0.6 );
+    -moz-context-properties: fill;
 }
 
 .add-domain-section button {
