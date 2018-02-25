@@ -17,9 +17,9 @@ const ImpulseBlocker = {
      * to the blocked list the listener is refreshed.
      */
     init: () => {
-        const handlingSites = browser.storage.local.get('sites').then((storage) => {
+        const handlingSites = browser.storage.sync.get('sites').then((storage) => {
             if (typeof storage.sites === 'undefined') {
-                return browser.storage.local.set({
+                return browser.storage.sync.set({
                     'sites': [],
                 });
             }
@@ -63,7 +63,7 @@ const ImpulseBlocker = {
      * by the WebExtensions API.
      */
     setBlocker: () => {
-        browser.storage.local.get('sites').then((storage) => {
+        browser.storage.sync.get('sites').then((storage) => {
             const pattern = storage.sites.map(item => `*://*.${item}/*`);
 
             browser.webRequest.onBeforeRequest.removeListener(ImpulseBlocker.redirect);
@@ -100,9 +100,9 @@ const ImpulseBlocker = {
      * @param  {string} url Url to add to the list
      */
     addSite: (url) => {
-        browser.storage.local.get('sites').then((storage) => {
+        browser.storage.sync.get('sites').then((storage) => {
             storage.sites.push(url);
-            browser.storage.local.set({
+            browser.storage.sync.set({
                 'sites': storage.sites,
             });
         });
@@ -113,12 +113,12 @@ const ImpulseBlocker = {
      * @param  {string} url Url to remove to the list
      */
     removeSite: (url) => {
-        browser.storage.local.get('sites').then((storage) => {
+        browser.storage.sync.get('sites').then((storage) => {
             const i = storage.sites.indexOf(url);
             if (i !== -1) {
                 storage.sites.splice(i, 1);
             }
-            browser.storage.local.set({
+            browser.storage.sync.set({
                 'sites': storage.sites,
             });
         });
@@ -149,7 +149,7 @@ function getDomain() {
 }
 
 function getSites() {
-    return browser.storage.local.get('sites');
+    return browser.storage.sync.get('sites');
 }
 
 function addCurrentlyActiveSite() {

@@ -1,6 +1,6 @@
 const blockedSites = document.querySelector('ul.blocked-sites');
 const form = document.querySelector('form');
-const getSites = browser.storage.local.get('sites');
+const getSites = browser.storage.sync.get('sites');
 
 function addToBlockedList(text) {
     const button = document.createElement('button');
@@ -53,7 +53,7 @@ function saveSite(event) {
 
     getSites.then((storage) => {
         storage.sites.push(url.hostname);
-        browser.storage.local.set({
+        browser.storage.sync.set({
             'sites': storage.sites,
         });
     });
@@ -71,7 +71,7 @@ function deleteSite(event) {
             if (i !== -1) {
                 storage.sites.splice(i, 1);
             }
-            browser.storage.local.set({
+            browser.storage.sync.set({
                 'sites': storage.sites,
             });
         });
