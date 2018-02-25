@@ -5,12 +5,12 @@ const ImpulseBlocker = {
      */
     status: 'on',
     sites: [], // used as default for storage
-    sitesChange: 0,
     sitesTiming: 500,
+    sitesChange: 0,
     sitesInterval: 0,
     sync: [],
+    syncTiming: 15000,
     syncChange: 0,
-    syncTiming: 10000,
     syncInterval: 0,
 
     /**
