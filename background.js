@@ -28,7 +28,7 @@ const ImpulseBlocker = {
         const handlingSites = browser.storage.sync.get('sites').then((storage) => {
             if (typeof storage.sites !== 'undefined') {
                 ImpulseBlocker.setSites(storage.sites);
-                ImpulseBlocker.syncSites(storage.sites);
+                // ImpulseBlocker.syncSites(storage.sites);
             } else {
                 ImpulseBlocker.prepareSites();
             }
