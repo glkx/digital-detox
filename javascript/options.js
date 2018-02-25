@@ -31,6 +31,7 @@ function restoreOptions() {
     getBackgroundPage.then((bg) => {
         const sites = bg.getSites();
         sites.sort();
+        sites.reverse();
         sites.forEach((site) => {
             addToBlockedList(site);
         });
@@ -45,7 +46,7 @@ function addToBlockedList(text) {
     listItem.textContent = text;
     listItem.appendChild(button);
 
-    blockedSites.appendChild(listItem);
+    blockedSites.insertBefore(listItem, blockedSites.childNodes[0]);
 }
 
 function hasNoProtocol(url) {
