@@ -1,5 +1,7 @@
 # Impulse Blocker
-Protect yourself from impulsive surf behavoir on the web. Block websites that distract you from what you really want to do.
+Protect yourself from impulsive surf behaviour on the web. Block websites that distract you from what you really want to do. 
+
+A simple roadblock to prevent procrastination.
 
 Written using [WebExtensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) so it will be compatible with the future releases of Firefox.
 
