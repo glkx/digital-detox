@@ -38,7 +38,7 @@ const ImpulseBlocker = {
      */
     redirect: (requestDetails) => {
         browser.tabs.update(requestDetails.tabId, {
-            url: '/redirect.html?from=' + requestDetails.url
+            url: browser.extension.getURL( '/redirect.html?from=' + requestDetails.url )
         });
     },
 
@@ -54,9 +54,9 @@ const ImpulseBlocker = {
     setStatus: (status) => {
         ImpulseBlocker.status = status;
         if (status === 'on') {
-            var icon = 'icons/icon-96.svg';
+            var icon = browser.extension.getURL( '/icons/icon-96.svg' );
         } else {
-            var icon = 'icons/icon-96-disabled.svg';
+            var icon = browser.extension.getURL( '/icons/icon-96-disabled.svg' );
         }
         browser.browserAction.setIcon({
             path: icon
