@@ -29,6 +29,7 @@ function localizeOptions() {
 function restoreOptions() {
     getBackgroundPage.then((bg) => {
         const sites = bg.getSites();
+        sites.sort();
         sites.forEach((site) => {
             addToBlockedList(site);
         });
