@@ -41,7 +41,6 @@ const ImpulseBlocker = {
         ImpulseBlocker.syncInterval = setInterval(() => {
             if (ImpulseBlocker.syncChange !== lastSync) {
                 lastSync = ImpulseBlocker.syncChange;
-                console.log('Sync!');
                 browser.storage.sync.set({
                     'sites': ImpulseBlocker.sync
                 });
@@ -71,9 +70,9 @@ const ImpulseBlocker = {
     setStatus: (status) => {
         ImpulseBlocker.status = status;
         if (status === 'on') {
-            const icon = browser.extension.getURL('/icons/icon-96.svg');
+            var icon = browser.extension.getURL('/icons/icon-96.svg');
         } else {
-            const icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
+            var icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
         }
         browser.browserAction.setIcon({
             path: icon
