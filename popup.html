@@ -8,27 +8,26 @@
 
         <link rel="stylesheet" type="text/css" href="chrome://global/skin/in-content/common.css" media="all" />
         <link rel="stylesheet" type="text/css" href="/popup/popup.css" media="all" />
+        <script src="/popup/popup.js"></script>
     </head>
     <body>
 
         <div class="container">
 
             <div class="title">
-                <h5 class="title-text">Impulse Blocker</h5>
+                <h5 id="popupHeaderName" class="title-text">Impulse Blocker</h5>
             </div>
 
-            <button class="prefs-button" title="Change Impulse Blocker options"></button>
+            <button id="popupPrefsButton" class="prefs-button" title="Change Impulse Blocker options"></button>
 
-            <button class="toggle-button">Pause</button>
+            <button id="popupToggleButton" class="toggle-button">Pause</button>
 
             <div class="add-domain-section">
-                <button class="primary add-button">Block <span class="domainToAllow"></span></button>
-                <button class="primary remove-button">Allow <span class="domainToBlock"></span></button>
+                <button class="primary add-button"><span id="popupAddButtonValue">Block</span> <span class="domainToAllow"></span></button>
+                <button class="primary remove-button"><span id="popupRemoveButtonValue">Allow</span> <span class="domainToBlock"></span></button>
             </div>
             
         </div>
-
-        <script src="/popup/popup.js"></script>
 
     </body>
 </html>

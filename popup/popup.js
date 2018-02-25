@@ -1,10 +1,44 @@
-const toggleButton = document.querySelector('button.toggle-button');
-const addButton = document.querySelector('button.add-button');
-const optionsButton = document.querySelector('button.prefs-button');
-const removeButton = document.querySelector('button.remove-button');
-const domainToAllow = document.querySelector('span.domainToAllow');
-const domainToBlock = document.querySelector('span.domainToBlock');
-const getBackgroundPage = browser.runtime.getBackgroundPage();
+var toggleButton, addButton, prefsButton, removeButton, domainToAllow, domainToBlock, getBackgroundPage;
+
+document.addEventListener('DOMContentLoaded', initialize);
+
+function initialize() {
+    prefsButton = document.getElementById('popupPrefsButton');
+    toggleButton = document.getElementById('popupToggleButton');
+    addButton = document.querySelector('button.add-button');
+    removeButton = document.querySelector('button.remove-button');
+    domainToAllow = document.querySelector('span.domainToAllow');
+    domainToBlock = document.querySelector('span.domainToBlock');
+    getBackgroundPage = browser.runtime.getBackgroundPage();
+
+    setListeners();
+
+    localizePopup();
+    restorePopup();
+}
+
+function setListeners() {
+    prefsButton.addEventListener('click', openOptions);
+    toggleButton.addEventListener('click', handleClick);
+    addButton.addEventListener('click', addWebsite);
+    removeButton.addEventListener('click', removeWebsite);
+}
+
+function localizePopup() {
+    const getI18nMsg = browser.i18n.getMessage;
+    
+    prefsButton.title = getI18nMsg('popupPrefsButtonTitle');
+    toggleButton.innerTex = getI18nMsg('popupToggleButtonOn');
+
+    document.getElementById('popupHeaderName').innerText = getI18nMsg('extensionName');
+    document.getElementById('popupAddButtonValue').innerText = getI18nMsg('popupAddButtonValue');
+    document.getElementById('popupRemoveButtonValue').innerText = getI18nMsg('popupRemoveButtonValue');
+}
+
+function restorePopup() {
+    markExtensionStatus();
+    displayCurrentDomain();
+}
 
 function handleClick() {
     getBackgroundPage.then((bg) => {
@@ -24,11 +58,11 @@ function markExtensionStatus() {
         if (status === 'off') {
             toggleButton.classList.remove('on');
             toggleButton.classList.add('off');
-            toggleButton.innerHTML = 'Continue';
+            toggleButton.innerText = browser.i18n.getMessage('popupToggleButtonOff');
         } else if (status === 'on') {
             toggleButton.classList.remove('off');
             toggleButton.classList.add('on');
-            toggleButton.innerHTML = 'Pause';
+            toggleButton.innerText = browser.i18n.getMessage('popupToggleButtonOn');
         }
     });
 }
@@ -59,15 +93,10 @@ function displayCurrentDomain() {
     });
 }
 
-function refreshToolbar() {
-    markExtensionStatus();
-    displayCurrentDomain();
-}
-
 function addWebsite() {
     getBackgroundPage.then((bg) => {
         bg.addCurrentlyActiveSite().then(() => {
-            refreshToolbar();
+            restorePopup();
         });
     });
 }
@@ -75,21 +104,14 @@ function addWebsite() {
 function removeWebsite() {
     getBackgroundPage.then((bg) => {
         bg.removeCurrentlyActiveSite().then(() => {
-            refreshToolbar();
+            restorePopup();
         });
     });
 }
 
 function openOptions() {
     browser.tabs.create({
-        url: "/options.html"
+        url: browser.extension.getURL( '/options.html' )
     });
     window.close();
 }
-
-toggleButton.addEventListener('click', handleClick);
-addButton.addEventListener('click', addWebsite);
-removeButton.addEventListener('click', removeWebsite);
-optionsButton.addEventListener('click', openOptions);
-
-refreshToolbar();

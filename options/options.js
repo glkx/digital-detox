@@ -1,10 +1,42 @@
-const blockedSites = document.querySelector('ul.blocked-sites');
-const form = document.querySelector('form');
-const getSites = browser.storage.sync.get('sites');
+var blockedSites, form, getSites;
+
+document.addEventListener('DOMContentLoaded', initialize);
+
+function initialize() {
+    blockedSites = document.querySelector('ul.blocked-sites');
+    form = document.querySelector('form');
+    getSites = browser.storage.sync.get('sites');
+
+    setListeners();
+
+    localizeOptions();
+    restoreOptions();
+}
+
+function setListeners() {
+    form.addEventListener('submit', saveSite);
+    blockedSites.addEventListener('click', deleteSite);
+}
+
+function localizeOptions() {
+    const getI18nMsg = browser.i18n.getMessage;
+    document.getElementById('header-name').innerText = getI18nMsg('extensionName');
+    document.getElementById('add-site-label').innerText = getI18nMsg('optionsAddSiteLabel');
+    document.getElementById('add-site-input').placeholder = getI18nMsg('optionsAddSiteInputPlaceholder');
+    document.getElementById('add-site-button').innerText = getI18nMsg('optionsAddSiteButton');
+}
+
+function restoreOptions() {
+    getSites.then((storage) => {
+        storage.sites.forEach((site) => {
+            addToBlockedList(site);
+        });
+    });
+}
 
 function addToBlockedList(text) {
     const button = document.createElement('button');
-    button.textContent = 'Delete';
+    button.textContent = browser.i18n.getMessage('optionsDeleteSiteButton');
 
     const listItem = document.createElement('li');
     listItem.textContent = text;
@@ -35,14 +67,6 @@ function normalizeUrl(url) {
     }
 
     return new URL(urlToAdd);
-}
-
-function restoreOptions() {
-    getSites.then((storage) => {
-        storage.sites.forEach((site) => {
-            addToBlockedList(site);
-        });
-    });
 }
 
 function saveSite(event) {
@@ -77,7 +101,3 @@ function deleteSite(event) {
         });
     }
 }
-
-form.addEventListener('submit', saveSite);
-blockedSites.addEventListener('click', deleteSite);
-document.addEventListener('DOMContentLoaded', restoreOptions);

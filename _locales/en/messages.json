@@ -1,0 +1,61 @@
+{
+	"extensionName": {
+		"message": "Impulse Blocker",
+		"description": "Name of the extension."
+	},
+
+	"extensionDescription": {
+		"message": "Block distracting websites when you are browsing the web.",
+		"description": "Description of the extension."
+	},
+
+	"popupTitle": {
+		"message": "Show Impulse Blocker",
+		"description": "Title of the navbar popup."
+	},
+
+	"popupPrefsButtonTitle": {
+		"message": "Change Impulse Blocker options"
+	},
+
+	"popupToggleButtonOn": {
+		"message": "Pause"
+	},
+
+	"popupToggleButtonOff": {
+		"message": "Continue"
+	},
+
+	"popupAddButtonValue": {
+		"message": "Block"
+	},
+
+	"popupRemoveButtonValue": {
+		"message": "Allow"
+	},
+
+	"redirectTitleText": {
+		"message": "Loading of the page is blocked"
+	},
+
+	"redirectShortDescText": {
+		"message": "Your impulse to visit this website has been successfully blocked by Impulse Blocker."
+	},
+
+	"optionsAddSiteLabel": {
+		"message": "Block website:"
+	},
+
+	"optionsAddSiteInputPlaceholder": {
+		"message": "domain.com"
+	},
+
+	"optionsAddSiteButton": {
+		"message": "Add"
+	},
+
+	"optionsDeleteSiteButton": {
+		"message": "Delete"
+	}
+
+}

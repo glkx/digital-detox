@@ -1,0 +1,61 @@
+{
+	"extensionName": {
+		"message": "Impulse Blocker",
+		"description": "Name of the extension."
+	},
+
+	"extensionDescription": {
+		"message": "Blokkeer afleidende websites wanneer je op het web rond surft.",
+		"description": "Description of the extension."
+	},
+
+	"popupTitle": {
+		"message": "Toon Impulse Blocker",
+		"description": "Title of the navbar popup."
+	},
+
+	"popupPrefsButtonTitle": {
+		"message": "Verander Impulse Blocker voorkeuren"
+	},
+
+	"popupToggleButtonOn": {
+		"message": "Pauzeren"
+	},
+
+	"popupToggleButtonOff": {
+		"message": "Hervatten"
+	},
+
+	"popupAddButtonValue": {
+		"message": "Blokkeer"
+	},
+
+	"popupRemoveButtonValue": {
+		"message": "Toestaan"
+	},
+
+	"redirectTitleText": {
+		"message": "Laden van de pagina is geblokkeerd"
+	},
+
+	"redirectShortDescText": {
+		"message": "Je impuls om deze website te bezoeken is succesvol geblokkeerd door Impulse Blocker."
+	},
+
+	"optionsAddSiteLabel": {
+		"message": "Website blokkeren:"
+	},
+
+	"optionsAddSiteInputPlaceholder": {
+		"message": "domein.nl"
+	},
+
+	"optionsAddSiteButton": {
+		"message": "Toevoegen"
+	},
+
+	"optionsDeleteSiteButton": {
+		"message": "Verwijderen"
+	}
+
+}

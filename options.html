@@ -72,6 +72,7 @@
                 background-color: transparent;
             }
         </style>
+        <script src="/options/options.js"></script>
     </head>
     <body>
         
@@ -80,21 +81,19 @@
                 
                 <div class="subcategory with-icon">
                     <img src="/icons/icon-32.svg" alt="" />
-                    <h1 class="header-name">Impulse Blocker</h1>
+                    <h1 id="header-name" class="header-name">Impulse Blocker</h1>
                 </div>
 
                 <form>
-                    <label for="site">Website to block:</label>
-                    <input type="text" id="site" name="site" placeholder="domain.com" />
-                    <button type="submit" class="primary">Add</button>
+                    <label id="add-site-label" for="site">Block website:</label>
+                    <input id="add-site-input" type="text" id="site" name="site" placeholder="domain.com" />
+                    <button id="add-site-button" type="submit" class="primary">Add</button>
                 </form>
 
                 <ul class="blocked-sites"></ul>
 
             </div>
         </div>
-
-        <script src="/options/options.js"></script>
 
     </body>
 </html>

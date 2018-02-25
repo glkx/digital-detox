@@ -1,15 +1,13 @@
 {
-    "name": "Impulse Blocker",
-    "version": "0.6",
+    "name": "__MSG_extensionName__",
+    "description": "__MSG_extensionDescription__",
+    "author": "Guido Schalkx",
+    "version": "0.7.0",
     "manifest_version": 2,
-    "description": "Block distracting websites when you are browsing the web.",
-
-    "permissions": [
-        "<all_urls>", "webRequest", "webRequestBlocking", "storage", "tabs"
-    ],
 
     "icons": {
         "16": "icons/icon-16.svg",
+        "24": "icons/icon-24.svg",
         "32": "icons/icon-32.svg",
         "48": "icons/icon-48.svg",
         "64": "icons/icon-64.svg",
@@ -17,22 +15,40 @@
         "128": "icons/icon-128.svg"
     },
 
-    "options_ui": {
-        "page": "options.html",
-        "open_in_tab": true
+    "default_locale": "en",
+
+    "permissions": [
+        "<all_urls>", "webRequest", "webRequestBlocking", "storage", "tabs"
+    ],
+
+    "incognito": "spanning",
+
+    "background": {
+        "scripts": [ "background.js" ]
     },
 
     "web_accessible_resources": [
         "redirect.html"
     ],
 
-    "background": {
-        "scripts": [ "background.js" ]
+    "browser_action": {
+        "default_icon": {
+            "16": "icons/icon-16.svg",
+            "32": "icons/icon-32.svg",
+            "64": "icons/icon-64.svg"
+        },
+        "default_title": "__MSG_popupTitle__",
+        "default_popup": "popup.html"
     },
 
-    "browser_action": {
-        "default_icon": "icons/icon-96.svg",
-        "default_title": "Impulse Blocker",
-        "default_popup": "popup.html"
-    }
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
+
+	"applications": {
+		"gecko": {
+			"id": "impulseblocker@glkx.nl"
+		}
+	}
 }
