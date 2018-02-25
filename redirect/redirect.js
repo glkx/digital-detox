@@ -19,12 +19,13 @@ function restoreRedirect() {
 
     getBackgroundPage.then((bg) => {
         const status = bg.getStatus();
-        if (status === 'off') {
-            const url = new URL(window.location.href);
-            const redirect = url.searchParams.get('from');
-            if (redirect !== 'undefined') {
-                window.location.href = redirect;
-            }
+        const sites = bg.getSites();
+        const currentUrl = new URL(window.location.href);
+        const redirectUrl = currentUrl.searchParams.get('from');
+        const matchUrl = new URL(redirectUrl);
+        const matchDomain = matchUrl.hostname.replace(/^www\./, '');
+        if (redirectUrl !== 'undefined' && ( status === 'off' || ! sites.includes( matchDomain ) ) ) {
+            window.location.href = redirectUrl;
         }
     });
 
