@@ -4,13 +4,17 @@ const ImpulseBlocker = {
 	 */
 	status: 'on',
 	sites: [], // used as default for storage
-	sitesTiming: 500,
+	sitesTiming: 500, // Interval for timer
 	sitesChange: 0,
 	sitesInterval: 0,
 	sync: [],
-	syncTiming: 15000,
+	syncTiming: 15000, // Interval for timer
 	syncChange: 0,
 	syncInterval: 0,
+	disableDuration: 5400000, // 1.5 hours
+	disableTiming: 500, // Interval for timer
+	disableChange: 0,
+	disableInterval: 0,
 
 	/**
 	 * Generic error logger.
@@ -27,7 +31,7 @@ const ImpulseBlocker = {
 		const handlingSites = browser.storage.sync
 			.get('sites')
 			.then(storage => {
-				if (typeof storage.sites !== 'undefined') {
+				if (typeof storage.sites !== undefined) {
 					ImpulseBlocker.setSites(storage.sites);
 					// ImpulseBlocker.syncSites(storage.sites);
 				} else {
@@ -71,11 +75,33 @@ const ImpulseBlocker = {
 	 */
 	setStatus: status => {
 		ImpulseBlocker.status = status;
-		if (status === 'on') {
-			var icon = browser.extension.getURL('/icons/icon-96.svg');
-		} else {
-			var icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
+
+		// Reset auto disable
+		clearInterval(ImpulseBlocker.disableInterval);
+
+		// Set default icon
+		var icon = browser.extension.getURL('/icons/icon-96.svg');
+
+		// When status is off
+		if (status === 'off') {
+			icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
+
+			// Set time of disabling
+			ImpulseBlocker.disableChange = new Date().getTime();
+
+			// Listerner for auto disable
+			ImpulseBlocker.disableInterval = setInterval(() => {
+				if (
+					new Date().getTime() -
+						ImpulseBlocker.disableChange >=
+					ImpulseBlocker.disableDuration
+				) {
+					ImpulseBlocker.setStatus('on');
+				}
+			}, ImpulseBlocker.disableTiming);
 		}
+
+        // Set icon
 		browser.browserAction.setIcon({
 			path: icon
 		});
