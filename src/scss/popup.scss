@@ -29,20 +29,20 @@ button {
 
 .toggle-button {
     flex: 1;
-}
 
-.toggle-button.off {
-    background-color: #0a84ff;
-    border-color: transparent;
-    color: #fff; 
-}
+    &.off {
+        background-color: #0a84ff;
+        border-color: transparent;
+        color: #fff; 
+        
+        &:hover {
+            background-color: #0060df;
+        }
 
-.toggle-button.off:hover {
-    background-color: #0060df;
-}
-
-.toggle-button.off:active {
-    background-color: #003EAA;
+        &:active {
+            background-color: #003EAA;
+        }
+    }
 }
 
 .prefs-button {
@@ -68,13 +68,13 @@ button {
     display: none;
     margin: 0.5em 0 0;
     font-size: 12px;
-}
 
-.add-domain-section button.add-button {
-    background-color: #FF4136;
-}
+    &.add-button {
+        background-color: #FF4136;
+    }
 
-.add-domain-section button.remove-button {
-    background-color: #2ECC40;
+    &.remove-button {
+        background-color: #2ECC40;
+    }
 }
 
