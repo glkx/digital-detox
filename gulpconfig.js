@@ -20,8 +20,7 @@ module.exports = {
 		files: {
 			src: [
 				dir.src + 'manifest.json',
-				dir.src + '*.html',
-				dir.src + 'javascript/*.js'
+				dir.src + '*.html'
 			],
 			dest: dir.build
 		}
