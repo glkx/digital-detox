@@ -1,0 +1,5 @@
+/build/**
+/dist/**
+/gulpfile.js/**
+**/vendor/**
+gulpconfig.js

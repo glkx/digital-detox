@@ -46,6 +46,10 @@
 		"message": "Options Impulse Blocker"
 	},
 
+	"optionsAddSiteLabel": {
+		"message": "Block website:"
+	},
+
 	"optionsAddSiteInputPlaceholder": {
 		"message": "domain.com"
 	},

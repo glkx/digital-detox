@@ -1,9 +1,37 @@
 {
-  "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.0.1",
-    "eslint-plugin-import": "^2.6.1",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.1.0"
-  }
+	"name": "impulse-blocker",
+	"version": "0.11.0",
+	"scripts": {
+		"lint": "eslint ./src/assets/js/**/*.js",
+		"format": "eslint --fix ./src/assets/js/**/*.js",
+		"wipe": "gulp utils:wipe",
+		"build": "gulp build",
+		"dist": "gulp dist",
+		"watch": "gulp watch",
+		"start": "gulp"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"babel-core": "^6.26.0",
+		"babel-eslint": "^8.2.2",
+		"babel-preset-env": "^1.6.1",
+		"del": "^3.0.0",
+		"eslint": "^4.18.1",
+		"eslint-config-prettier": "^2.9.0",
+		"eslint-plugin-prettier": "^2.6.0",
+		"gulp": "^3.9.1",
+		"gulp-changed": "^3.2.0",
+		"gulp-cssnano": "^2.1.2",
+		"gulp-eslint": "^4.0.2",
+		"gulp-imagemin": "^4.1.0",
+		"gulp-replace": "^0.6.1",
+		"gulp-sass": "^3.1.0",
+		"gulp-sourcemaps": "^2.6.4",
+		"gulp-uglify": "^3.0.0",
+		"gulp-util": "^3.0.8",
+		"gulp-zip": "^4.1.0",
+		"prettier": "1.11.0",
+		"require-dir": "^1.0.0",
+		"vinyl-named": "^1.1.0"
+	}
 }

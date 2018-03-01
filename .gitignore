@@ -1,5 +1,17 @@
-/web-ext-artifacts
-.idea/
-npm-debug.log
-/node_modules
+## Windows
+Desktop.ini
+Thumbs.db
+
+## Mac
 .DS_Store
+
+## Development
+.sass-cache
+node_modules
+build
+dist
+*.log
+
+## Editor
+*.sublime-project
+*.sublime-workspace

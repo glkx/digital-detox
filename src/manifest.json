@@ -2,7 +2,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "author": "Guido Schalkx",
-    "version": "0.10.3",
+    "version": "<%= version =>",
     "manifest_version": 2,
 
     "icons": {
@@ -24,7 +24,7 @@
     "incognito": "spanning",
 
     "background": {
-        "scripts": [ "background.js" ]
+        "scripts": [ "javascript/background.js" ]
     },
 
     "web_accessible_resources": [
