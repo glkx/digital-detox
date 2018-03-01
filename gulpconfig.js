@@ -78,7 +78,7 @@ module.exports = {
 			dest: dir.dist
 		},
 		zip: {
-			src: dir.dist + '/*',
+			src: dir.dist + '/**/*',
 			dest: dir.dist + '../',
 			name: name + '.zip'
 		}
