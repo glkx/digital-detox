@@ -18,20 +18,14 @@ module.exports = {
 			dest: dir.build + '_locales/'
 		},
 		files: {
-			src: [
-				dir.src + 'manifest.json',
-				dir.src + '*.html'
-			],
+			src: [dir.src + 'manifest.json', dir.src + '*.html'],
 			dest: dir.build
 		}
 	},
 	images: {
 		build: {
 			// Copies images from `src` to `build`; does not optimize
-			src: [
-				dir.src + '**/*.+(png|jpg|jpeg|gif|svg)',
-				'!**/vendor/**'
-			],
+			src: [dir.src + '**/*.+(png|jpg|jpeg|gif|svg)', '!**/vendor/**'],
 			dest: dir.build
 		},
 		dist: {
@@ -72,7 +66,7 @@ module.exports = {
 	},
 	utils: {
 		clean: [dir.build + '**/.DS_Store'],
-		wipe: [dir.dist],
+		wipe: [dir.dist, dir.dist + '../*.zip'],
 		dist: {
 			src: [dir.build + '**/*', '!' + dir.build + '**/*.map'],
 			dest: dir.dist
