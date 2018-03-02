@@ -12,7 +12,7 @@ const ImpulseBlocker = {
 	syncChange: 0,
 	syncInterval: 0,
 	disableDuration: 5400000, // 1.5 hours
-	disableTiming: 500, // Interval for timer
+	disableTiming: 3000, // Interval for timer
 	disableChange: 0,
 	disableInterval: 0,
 
@@ -96,7 +96,7 @@ const ImpulseBlocker = {
 						ImpulseBlocker.disableChange >=
 					ImpulseBlocker.disableDuration
 				) {
-					ImpulseBlocker.setStatus('on');
+					ImpulseBlocker.setBlocker();
 				}
 			}, ImpulseBlocker.disableTiming);
 		}
