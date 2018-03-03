@@ -1,4 +1,6 @@
 # Impulse Blocker
+[![Maintainability](https://api.codeclimate.com/v1/badges/07ae438cfe4556950bf8/maintainability)](https://codeclimate.com/github/glkx/impulse-blocker/maintainability)
+
 Protect yourself from impulsive surf behaviour on the web. Block websites that distract you from what you really want to do. 
 
 A simple roadblock to prevent procrastination.
