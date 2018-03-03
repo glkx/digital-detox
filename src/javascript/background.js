@@ -4,17 +4,16 @@ const ImpulseBlocker = {
 	 */
 	status: 'on',
 	sites: [], // used as default for storage
-	sitesTiming: 500, // Interval for timer
-	sitesChange: 0,
-	sitesInterval: 0,
+	sitesInterval: 500, // Interval for timer
+	sitesModified: 0,
+	sitesTimer: 0,
 	sync: [],
-	syncTiming: 15000, // Interval for timer
-	syncChange: 0,
-	syncInterval: 0,
+	syncInterval: 15000, // Interval for timer
+	syncModified: 0,
 	disableDuration: 5400000, // 1.5 hours
-	disableTiming: 3000, // Interval for timer
-	disableChange: 0,
-	disableInterval: 0,
+	disableInterval: 3000, // Interval for timer
+	disableModified: 0,
+	disableTimer: 0,
 
 	/**
 	 * Generic error logger.
@@ -38,30 +37,12 @@ const ImpulseBlocker = {
 					ImpulseBlocker.prepareSites();
 				}
 			});
-
-		handlingSites.then(ImpulseBlocker.setBlocker, ImpulseBlocker.onError);
-
-		// Listerner for sites to sync
-		let lastSync = ImpulseBlocker.syncChange;
-		ImpulseBlocker.syncInterval = setInterval(() => {
-			if (ImpulseBlocker.syncChange !== lastSync) {
-				lastSync = ImpulseBlocker.syncChange;
-				browser.storage.sync.set({
-					sites: ImpulseBlocker.sync
-				});
-			}
-		}, ImpulseBlocker.syncTiming);
-	},
-
-	/**
-	 * Redirects the tab to local "You have been blocked" page.
-	 */
-	redirect: requestDetails => {
-		browser.tabs.update(requestDetails.tabId, {
-			url: browser.extension.getURL(
-				'/redirect.html?from=' + requestDetails.url
-			)
-		});
+		handlingSites.then(() => {
+			// Start blocking
+			ImpulseBlocker.setBlocker();
+			// Start listener for sites to sync
+			ImpulseBlocker.syncListener();
+		}, ImpulseBlocker.onError);
 	},
 
 	/**
@@ -76,8 +57,8 @@ const ImpulseBlocker = {
 	setStatus: status => {
 		ImpulseBlocker.status = status;
 
-		// Reset auto disable
-		clearInterval(ImpulseBlocker.disableInterval);
+		// Clear auto re-enable blocking in case timer is running
+		ImpulseBlocker.clearAutoEnableBlocker();
 
 		// Set default icon
 		var icon = browser.extension.getURL('/icons/icon-96.svg');
@@ -86,72 +67,36 @@ const ImpulseBlocker = {
 		if (status === 'off') {
 			icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
 
-			// Set time of disabling
-			ImpulseBlocker.disableChange = new Date().getTime();
-
-			// Listerner for auto disable
-			ImpulseBlocker.disableInterval = setInterval(() => {
-				if (
-					new Date().getTime() -
-						ImpulseBlocker.disableChange >=
-					ImpulseBlocker.disableDuration
-				) {
-					ImpulseBlocker.setBlocker();
-				}
-			}, ImpulseBlocker.disableTiming);
+			// Automatically re-enable blocking
+			ImpulseBlocker.autoEnableBlocker();
 		}
 
-        // Set icon
+		// Set icon
 		browser.browserAction.setIcon({
 			path: icon
 		});
 	},
 
-	/**
-	 * Fetches blocked websites lists, attaches them to the listener provided
-	 * by the WebExtensions API.
+	/*
+	 * Re-enable blocker after set time
 	 */
-	setBlocker: () => {
-		const sites = ImpulseBlocker.getSites();
-		const pattern = sites.map(item => `*://*.${item}/*`);
+	autoEnableBlocker: () => {
+		// Set time of disabling
+		ImpulseBlocker.disableModified = Date.now();
 
-		browser.webRequest.onBeforeRequest.removeListener(
-			ImpulseBlocker.redirect
-		);
-		clearInterval(ImpulseBlocker.sitesInterval);
-
-		if (pattern.length > 0) {
-			browser.webRequest.onBeforeRequest.addListener(
-				ImpulseBlocker.redirect,
-				{
-					urls: pattern,
-					types: ['main_frame']
-				},
-				['blocking']
-			);
-		}
-
-		let lastSites = ImpulseBlocker.sitesChange;
-		ImpulseBlocker.sitesInterval = setInterval(() => {
-			if (ImpulseBlocker.sitesChange !== lastSites) {
-				lastSites = ImpulseBlocker.sitesChange;
-				if (ImpulseBlocker.getStatus() === 'on') {
-					ImpulseBlocker.setBlocker();
-				}
+		// Listerner for auto disable
+		ImpulseBlocker.disableTimer = setInterval(() => {
+			if (
+				Date.now() - ImpulseBlocker.disableModified >=
+				ImpulseBlocker.disableDuration
+			) {
+				ImpulseBlocker.setBlocker();
 			}
-		}, ImpulseBlocker.sitesTiming);
-
-		ImpulseBlocker.setStatus('on');
+		}, ImpulseBlocker.disableInterval);
 	},
 
-	/**
-	 * Removes the web request listener and turns the extension off.
-	 */
-	disableBlocker: () => {
-		browser.webRequest.onBeforeRequest.removeListener(
-			ImpulseBlocker.redirect
-		);
-		ImpulseBlocker.setStatus('off');
+	clearAutoEnableBlocker: () => {
+		clearInterval(ImpulseBlocker.disableTimer);
 	},
 
 	/**
@@ -164,22 +109,35 @@ const ImpulseBlocker = {
 	},
 
 	/**
-	 * (Re)Load sites from storage
+	 * Listen for new sites array to sync to browser storage
 	 */
-	syncSites: sites => {
-		if (sites !== 'undefined') {
-			ImpulseBlocker.sync = sites;
-			ImpulseBlocker.syncChange = Date.now();
-		}
+	syncListener: () => {
+		// Get previous sync timestamp
+		let previousSync = ImpulseBlocker.syncModified;
+
+		// Start interval
+		setInterval(() => {
+			// When previous sync timestamp is updated
+			if (ImpulseBlocker.syncModified !== previousSync) {
+				// Stores sites array in browser storage
+				browser.storage.sync.set({
+					sites: ImpulseBlocker.sync
+				});
+				// Update previous sync timestamp
+				previousSync = ImpulseBlocker.syncModified;
+			}
+		}, ImpulseBlocker.syncInterval);
 	},
 
-	/**
-	 * Set sites from storage
+	/*
+	 * Set new sites array to sync
 	 */
-	setSites: sites => {
-		if (sites !== 'undefined') {
-			ImpulseBlocker.sites = sites;
-			ImpulseBlocker.sitesChange = Date.now();
+	syncSites: sites => {
+		// When sites are defined
+		if (sites !== undefined) {
+			// Set global sync array
+			ImpulseBlocker.sync = sites;
+			ImpulseBlocker.syncModified = Date.now();
 		}
 	},
 
@@ -187,6 +145,18 @@ const ImpulseBlocker = {
 	 * Returns the current loaded sites of the extension.
 	 */
 	getSites: () => ImpulseBlocker.sites,
+
+	/**
+	 * Set sites from storage
+	 */
+	setSites: sites => {
+		// When sites are defined
+		if (sites !== undefined) {
+			// Set global sites array
+			ImpulseBlocker.sites = sites;
+			ImpulseBlocker.sitesModified = Date.now();
+		}
+	},
 
 	/**
 	 * Add a website to the blocked list
@@ -211,6 +181,76 @@ const ImpulseBlocker = {
 		}
 		ImpulseBlocker.setSites(sites);
 		ImpulseBlocker.syncSites(sites);
+	},
+
+	/**
+	 * Fetches blocked websites lists, attaches them to the listener provided by the WebExtensions API
+	 */
+	setBlocker: () => {
+		const sites = ImpulseBlocker.getSites(),
+			pattern = sites.map(item => `*://*.${item}/*`);
+
+		// Clear blocker incase when blocker is already running
+		ImpulseBlocker.clearBlocker();
+
+		if (pattern.length > 0) {
+			browser.webRequest.onBeforeRequest.addListener(
+				ImpulseBlocker.redirect,
+				{
+					urls: pattern,
+					types: ['main_frame']
+				},
+				['blocking']
+			);
+		}
+
+		// Enable blocker auto update
+		ImpulseBlocker.autoUpdateBlocker();
+
+		// Change status to on
+		ImpulseBlocker.setStatus('on');
+	},
+
+	/*
+	 * Update blocker when sites array is modified
+	 */
+	autoUpdateBlocker: () => {
+		let previousSites = ImpulseBlocker.sitesModified;
+		ImpulseBlocker.sitesTimer = setInterval(() => {
+			if (ImpulseBlocker.sitesModified !== previousSites) {
+				ImpulseBlocker.setBlocker();
+				previousSites = ImpulseBlocker.sitesModified;
+			}
+		}, ImpulseBlocker.sitesInterval);
+	},
+
+	/**
+	 * Removes the web request listener and turns the extension off.
+	 */
+	disableBlocker: () => {
+		ImpulseBlocker.clearBlocker();
+		ImpulseBlocker.setStatus('off');
+	},
+
+	/*
+	 * Clear blocker listeners
+	 */
+	clearBlocker: () => {
+		browser.webRequest.onBeforeRequest.removeListener(
+			ImpulseBlocker.redirect
+		);
+		clearInterval(ImpulseBlocker.sitesTimer);
+	},
+
+	/**
+	 * Redirects the tab to local "You have been blocked" page.
+	 */
+	redirect: requestDetails => {
+		browser.tabs.update(requestDetails.tabId, {
+			url: browser.extension.getURL(
+				'/redirect.html?from=' + requestDetails.url
+			)
+		});
 	}
 };
 
@@ -250,10 +290,7 @@ function removeSite(url) {
 }
 
 function addCurrentlyActiveSite() {
-	const gettingActiveTab = browser.tabs.query({
-		active: true,
-		currentWindow: true
-	});
+	const gettingActiveTab = getDomain();
 	return gettingActiveTab.then(tabs => {
 		const url = new URL(tabs[0].url);
 		addSite(url.hostname.replace(/^www\./, ''));
@@ -261,10 +298,7 @@ function addCurrentlyActiveSite() {
 }
 
 function removeCurrentlyActiveSite() {
-	const gettingActiveTab = browser.tabs.query({
-		active: true,
-		currentWindow: true
-	});
+	const gettingActiveTab = getDomain();
 	return gettingActiveTab.then(tabs => {
 		const url = new URL(tabs[0].url);
 		removeSite(url.hostname.replace(/^www\./, ''));
