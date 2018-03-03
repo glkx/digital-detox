@@ -66,13 +66,17 @@ function markExtensionStatus() {
 	getBackgroundPage.then(bg => {
 		const status = bg.getStatus();
 		if (status === 'off') {
-			toggleButton.classList.remove('on');
+			if (toggleButton.classList.contains('on')) {
+				toggleButton.classList.remove('on');
+			}
 			toggleButton.classList.add('off');
 			toggleButton.innerText = browser.i18n.getMessage(
 				'popupToggleButtonOff'
 			);
 		} else if (status === 'on') {
-			toggleButton.classList.remove('off');
+			if (toggleButton.classList.contains('off')) {
+				toggleButton.classList.remove('off');
+			}
 			toggleButton.classList.add('on');
 			toggleButton.innerText = browser.i18n.getMessage(
 				'popupToggleButtonOn'
