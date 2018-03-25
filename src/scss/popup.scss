@@ -33,8 +33,8 @@ button {
     &.off {
         background-color: #0a84ff;
         border-color: transparent;
-        color: #fff; 
-        
+        color: #fff;
+
         &:hover {
             background-color: #0060df;
         }
@@ -49,6 +49,7 @@ button {
     cursor: pointer;
     display: inline-block;
     width: 16px;
+    max-width: auto;
     height: 16px;
     margin: 0 0 0 0.5em;
     padding: 15px;
@@ -77,4 +78,3 @@ button {
         background-color: #2ECC40;
     }
 }
-
