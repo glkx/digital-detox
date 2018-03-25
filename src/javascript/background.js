@@ -15,6 +15,8 @@ const ImpulseBlocker = {
 	disableModified: 0,
 	disableTimer: 0,
 
+	// TODO: Block and restore tabs in background
+
 	/**
 	 * Generic error logger.
 	 */
@@ -27,17 +29,8 @@ const ImpulseBlocker = {
 	 * to the blocked list the listener is refreshed.
 	 */
 	init: () => {
-		const handlingSites = browser.storage.sync
-			.get('sites')
-			.then(storage => {
-				if (typeof storage.sites !== undefined) {
-					ImpulseBlocker.setSites(storage.sites);
-					// ImpulseBlocker.syncSites(storage.sites);
-				} else {
-					ImpulseBlocker.prepareSites();
-				}
-			});
-		handlingSites.then(() => {
+		// Load sites form storage then enable blocker and sync listener
+		ImpulseBlocker.loadSites().then(() => {
 			// Start blocking
 			ImpulseBlocker.setBlocker();
 			// Start listener for sites to sync
@@ -101,6 +94,20 @@ const ImpulseBlocker = {
 
 	/**
 	 * Load sites from storage
+	 */
+	loadSites: () => {
+		return browser.storage.sync.get('sites').then(storage => {
+			if (typeof storage.sites !== undefined) {
+				ImpulseBlocker.setSites(storage.sites);
+				// ImpulseBlocker.syncSites(storage.sites);
+			} else {
+				ImpulseBlocker.prepareSites();
+			}
+		});
+	},
+
+	/**
+	 * Prepare new sites storage
 	 */
 	prepareSites: () => {
 		browser.storage.sync.set({
@@ -275,6 +282,10 @@ function getDomain() {
 		active: true,
 		currentWindow: true
 	});
+}
+
+function refreshSites() {
+	return ImpulseBlocker.loadSites();
 }
 
 function getSites() {
