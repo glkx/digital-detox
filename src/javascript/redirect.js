@@ -23,6 +23,7 @@ function localizeRedirect() {
 }
 
 function restoreRedirect() {
+	// FIXME: Endless loop of redirecting on certain pages
 	getBackgroundPage.then(bg => {
 		const status = bg.getStatus();
 		const sites = bg.getSites();
