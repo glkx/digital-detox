@@ -39,11 +39,19 @@ function localizeOptions() {
 
 function restoreOptions() {
 	getBackgroundPage.then(bg => {
-		const sites = bg.getSites();
-		sites.sort();
-		sites.reverse();
-		sites.forEach(site => {
-			addToBlockedList(site);
+		// Rehresh sites
+		bg.refreshSites().then(() => {
+			// Get sites
+			const sites = bg.getSites();
+
+			// Sort alphabetically A - Z
+			sites.sort();
+			sites.reverse();
+
+			// Add sites to options page
+			sites.forEach(site => {
+				addToBlockedList(site);
+			});
 		});
 	});
 }
