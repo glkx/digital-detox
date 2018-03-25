@@ -7,9 +7,7 @@ const ImpulseBlocker = {
 	sitesInterval: 500, // Interval for timer
 	sitesModified: 0,
 	sitesTimer: 0,
-	sync: [],
 	syncInterval: 15000, // Interval for timer
-	syncModified: 0,
 	disableDuration: 5400000, // 1.5 hours
 	disableInterval: 3000, // Interval for timer
 	disableModified: 0,
@@ -99,7 +97,6 @@ const ImpulseBlocker = {
 		return browser.storage.sync.get('sites').then(storage => {
 			if (typeof storage.sites !== undefined) {
 				ImpulseBlocker.setSites(storage.sites);
-				// ImpulseBlocker.syncSites(storage.sites);
 			} else {
 				ImpulseBlocker.prepareSites();
 			}
@@ -120,38 +117,27 @@ const ImpulseBlocker = {
 	 */
 	syncListener: () => {
 		// Get previous sync timestamp
-		let previousSync = ImpulseBlocker.syncModified;
+		let previousSync = ImpulseBlocker.sitesModified;
 
 		// Start interval
 		setInterval(() => {
 			// When previous sync timestamp is updated
-			if (ImpulseBlocker.syncModified !== previousSync) {
+			if (ImpulseBlocker.sitesModified !== previousSync) {
 				// Stores sites array in browser storage
-				browser.storage.sync.set({
-					sites: ImpulseBlocker.sync
-				});
+				ImpulseBlocker.syncSites();
+
 				// Update previous sync timestamp
-				previousSync = ImpulseBlocker.syncModified;
+				previousSync = ImpulseBlocker.sitesModified;
 			}
 		}, ImpulseBlocker.syncInterval);
 	},
 
-	/*
-	 * Set new sites array to sync
-	 */
-	syncSites: sites => {
-		// When sites are defined
-		if (sites !== undefined) {
-			// Set global sync array
-			ImpulseBlocker.sync = sites;
-			ImpulseBlocker.syncModified = Date.now();
-		}
+	syncSites: () => {
+		// Stores sites array in browser storage
+		browser.storage.sync.set({
+			sites: ImpulseBlocker.sites
+		});
 	},
-
-	/**
-	 * Returns the current loaded sites of the extension.
-	 */
-	getSites: () => ImpulseBlocker.sites,
 
 	/**
 	 * Set sites from storage
@@ -166,6 +152,11 @@ const ImpulseBlocker = {
 	},
 
 	/**
+	 * Returns the current loaded sites of the extension.
+	 */
+	getSites: () => ImpulseBlocker.sites,
+
+	/**
 	 * Add a website to the blocked list
 	 * @param  {string} url Url to add to the list
 	 */
@@ -173,7 +164,6 @@ const ImpulseBlocker = {
 		const sites = ImpulseBlocker.getSites();
 		sites.push(url);
 		ImpulseBlocker.setSites(sites);
-		ImpulseBlocker.syncSites(sites);
 	},
 
 	/**
@@ -187,7 +177,6 @@ const ImpulseBlocker = {
 			sites.splice(i, 1);
 		}
 		ImpulseBlocker.setSites(sites);
-		ImpulseBlocker.syncSites(sites);
 	},
 
 	/**
@@ -282,6 +271,10 @@ function getDomain() {
 		active: true,
 		currentWindow: true
 	});
+}
+
+function syncSites() {
+	return ImpulseBlocker.syncSites();
 }
 
 function refreshSites() {

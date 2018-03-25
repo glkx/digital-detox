@@ -1,6 +1,6 @@
 {
 	"name": "impulse-blocker",
-	"version": "0.11.4",
+	"version": "0.11.8",
 	"scripts": {
 		"lint": "eslint ./src/assets/js/**/*.js",
 		"format": "eslint --fix ./src/assets/js/**/*.js",

@@ -14,6 +14,7 @@ function initialize() {
 }
 
 function setListeners() {
+	window.addEventListener('beforeunload', closeOptions);
 	form.addEventListener('submit', saveSite);
 	blockedSites.addEventListener('click', deleteSite);
 }
@@ -38,21 +39,41 @@ function localizeOptions() {
 }
 
 function restoreOptions() {
-	getBackgroundPage.then(bg => {
-		// Rehresh sites
-		bg.refreshSites().then(() => {
-			// Get sites
-			const sites = bg.getSites();
-
-			// Sort alphabetically A - Z
-			sites.sort();
-			sites.reverse();
-
-			// Add sites to options page
-			sites.forEach(site => {
-				addToBlockedList(site);
+	browser.storage.local.get('options_setup').then(storage => {
+		if (storage.options_setup !== true) {
+			getBackgroundPage.then(bg => {
+				// Rehresh sites
+				bg.refreshSites().then(setSites);
 			});
+			browser.storage.local.set({
+				options_setup: true
+			});
+		} else {
+			setSites();
+		}
+	});
+}
+
+function setSites() {
+	getBackgroundPage.then(bg => {
+		// Get sites
+		const sites = bg.getSites();
+
+		// Sort alphabetically A - Z
+		sites.sort();
+		sites.reverse();
+
+		// Add sites to options page
+		sites.forEach(site => {
+			addToBlockedList(site);
 		});
+	});
+}
+
+function closeOptions() {
+	// Request sync sites to storage
+	getBackgroundPage.then(bg => {
+		bg.syncSites();
 	});
 }
 
