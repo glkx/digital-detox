@@ -115,12 +115,14 @@ function normalizeUrl(url) {
 function saveSite(event) {
 	event.preventDefault();
 	const url = normalizeUrl(form.site.value);
-	addToBlockedList(url.hostname);
-	form.site.value = '';
+	if (url.hostname != '.com') {
+		addToBlockedList(url.hostname);
+		form.site.value = '';
 
-	getBackgroundPage.then(bg => {
-		bg.addSite(url.hostname);
-	});
+		getBackgroundPage.then(bg => {
+			bg.addSite(url.hostname);
+		});
+	}
 }
 
 function deleteSite(event) {
