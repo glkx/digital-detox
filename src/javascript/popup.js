@@ -54,14 +54,7 @@ function handleClick() {
 	getBackgroundPage.then(bg => {
 		const status = bg.getStatus();
 		if (status === 'on') {
-			// Get confirmation to disable blocker
-			if (
-				confirm(
-					browser.i18n.getMessage('popupToggleConfirmationMessage')
-				)
-			) {
-				getBackgroundPage.then(bg => bg.disableBlocker());
-			}
+			getBackgroundPage.then(bg => bg.disableBlocker());
 		} else {
 			getBackgroundPage.then(bg => bg.setBlocker());
 		}
