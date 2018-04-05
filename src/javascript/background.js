@@ -190,6 +190,10 @@ const ImpulseBlocker = {
 		ImpulseBlocker.clearBlocker();
 
 		if (pattern.length > 0) {
+			// Block current tabs
+			ImpulseBlocker.redirectCurrent(pattern);
+
+			// Listen to new tabs
 			browser.webRequest.onBeforeRequest.addListener(
 				ImpulseBlocker.redirect,
 				{
@@ -224,6 +228,10 @@ const ImpulseBlocker = {
 	 * Removes the web request listener and turns the extension off.
 	 */
 	disableBlocker: () => {
+		// Restore blocked tabs
+		ImpulseBlocker.restoreCurrent();
+
+		// Remove listeners
 		ImpulseBlocker.clearBlocker();
 		ImpulseBlocker.setStatus('off');
 	},
@@ -239,6 +247,27 @@ const ImpulseBlocker = {
 	},
 
 	/**
+	 * Redirect current tabs
+	 */
+	redirectCurrent: urls => {
+		browser.tabs
+			.query({
+				url: urls
+			})
+			.then(tabs => {
+				// Loop matched tabs
+				for (let tab of tabs) {
+					// Block tabs
+					browser.tabs.update(tab.id, {
+						url: browser.extension.getURL(
+							'/redirect.html?from=' + tab.url
+						)
+					});
+				}
+			});
+	},
+
+	/**
 	 * Redirects the tab to local "You have been blocked" page.
 	 */
 	redirect: requestDetails => {
@@ -247,6 +276,23 @@ const ImpulseBlocker = {
 				'/redirect.html?from=' + requestDetails.url
 			)
 		});
+	},
+
+	/**
+	 * Restore current tabs
+	 */
+	restoreCurrent: () => {
+		browser.tabs
+			.query({
+				url: browser.extension.getURL('*')
+			})
+			.then(tabs => {
+				// Loop matched tabs
+				for (let tab of tabs) {
+					// Reload tabs
+					browser.tabs.reload(tab.id);
+				}
+			});
 	}
 };
 
