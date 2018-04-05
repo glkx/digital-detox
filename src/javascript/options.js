@@ -98,31 +98,23 @@ function hasNoExtension(url) {
 	return !regex.test(url);
 }
 
-function normalizeUrl(url) {
-	let urlToAdd = url.replace(/^www\./, '');
-
-	if (hasNoProtocol(urlToAdd)) {
-		urlToAdd = `http://${urlToAdd}`;
-	}
-
-	if (hasNoExtension(urlToAdd)) {
-		urlToAdd += '.com';
-	}
-
-	return new URL(urlToAdd);
-}
-
 function saveSite(event) {
 	event.preventDefault();
-	const url = normalizeUrl(form.site.value);
-	if (url.hostname != '.com') {
-		addToBlockedList(url.hostname);
-		form.site.value = '';
-
-		getBackgroundPage.then(bg => {
-			bg.addSite(url.hostname);
-		});
+	const url = form.site.value;
+	if (url.length === 0) {
+		return;
 	}
+
+	// Add url to list
+	addToBlockedList(url);
+
+	// Clear form field
+	form.site.value = '';
+
+	// Store url
+	getBackgroundPage.then(bg => {
+		bg.addSite(url);
+	});
 }
 
 function deleteSite(event) {
