@@ -26,6 +26,10 @@
 		"message": "Continue"
 	},
 
+	"popupToggleConfirmationMessage": {
+		"message": "Are your really sure?"
+	},
+
 	"popupAddButtonValue": {
 		"message": "Block"
 	},

@@ -26,6 +26,10 @@
 		"message": "Hervatten"
 	},
 
+	"popupToggleConfirmationMessage": {
+		"message": "Weet je het zeker?"
+	},
+
 	"popupAddButtonValue": {
 		"message": "Blokkeren"
 	},
