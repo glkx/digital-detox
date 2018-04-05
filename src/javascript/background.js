@@ -273,7 +273,7 @@ const ImpulseBlocker = {
 	redirect: requestDetails => {
 		browser.tabs.update(requestDetails.tabId, {
 			url: browser.extension.getURL(
-				'/redirect.html?from=' + requestDetails.url
+				'/redirect.html?from=' + encodeURIComponent(requestDetails.url)
 			)
 		});
 	},
