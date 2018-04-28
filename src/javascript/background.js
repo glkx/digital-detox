@@ -252,7 +252,9 @@ const ImpulseBlocker = {
 	redirectCurrent: urls => {
 		browser.tabs
 			.query({
-				url: urls
+				url: urls,
+				audible: false,
+				pinned: false
 			})
 			.then(tabs => {
 				// Loop matched tabs
