@@ -262,7 +262,8 @@ const ImpulseBlocker = {
 					// Block tabs
 					browser.tabs.update(tab.id, {
 						url: browser.extension.getURL(
-							'/redirect.html?from=' + tab.url
+							'/redirect.html?from=' +
+								encodeURIComponent(btoa(tab.url))
 						)
 					});
 				}
@@ -273,11 +274,19 @@ const ImpulseBlocker = {
 	 * Redirects the tab to local "You have been blocked" page.
 	 */
 	redirect: requestDetails => {
-		browser.tabs.update(requestDetails.tabId, {
-			url: browser.extension.getURL(
-				'/redirect.html?from=' + encodeURIComponent(requestDetails.url)
-			)
-		});
+		// Catch url that are false positive for example when a url has a url as component
+		const sites = ImpulseBlocker.getSites();
+		const matchUrl = new URL(requestDetails.url);
+		const matchDomain = matchUrl.hostname.replace(/^www\./, '');
+
+		if (sites.includes(matchDomain)) {
+			browser.tabs.update(requestDetails.tabId, {
+				url: browser.extension.getURL(
+					'/redirect.html?from=' +
+						encodeURIComponent(btoa(requestDetails.url))
+				)
+			});
+		}
 	},
 
 	/**

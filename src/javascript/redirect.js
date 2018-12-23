@@ -28,7 +28,9 @@ function restoreRedirect() {
 		const status = bg.getStatus();
 		const sites = bg.getSites();
 		const currentUrl = new URL(window.location.href);
-		const redirectUrl = currentUrl.searchParams.get('from');
+		const redirectUrl = atob(
+			decodeURIComponent(currentUrl.searchParams.get('from'))
+		);
 		const matchUrl = new URL(redirectUrl);
 		const matchDomain = matchUrl.hostname.replace(/^www\./, '');
 		if (
