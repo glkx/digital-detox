@@ -3,7 +3,21 @@ const ImpulseBlocker = {
 	 * Global variables
 	 */
 	status: 'on',
-	sites: [], // used as default for storage
+	sites: [
+		'facebook.com',
+		'youtube.com',
+		'tumblr.com',
+		'instagram.com',
+		'twitter.com',
+		'snapchat.com',
+		'vk.com',
+		'pinterest.com',
+		'reddit.com',
+		'linkedin.com',
+		'9gag.com',
+		'dumpert.nl',
+		'dailymotion.com'
+	], // used as default for storage
 	sitesInterval: 500, // Interval for timer
 	sitesModified: 0,
 	sitesTimer: 0,
