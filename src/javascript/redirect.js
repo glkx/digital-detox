@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', initialize);
 function initialize() {
 	getBackgroundPage = browser.runtime.getBackgroundPage();
 
-	localizeRedirect();
 	restoreRedirect();
+	localizeRedirect();
 }
 
 function localizeRedirect() {
@@ -23,21 +23,24 @@ function localizeRedirect() {
 }
 
 function restoreRedirect() {
-	// FIXME: Endless loop of redirecting on certain pages
-	getBackgroundPage.then(bg => {
-		const status = bg.getStatus();
-		const sites = bg.getSites();
-		const currentUrl = new URL(window.location.href);
-		const redirectUrl = atob(
-			decodeURIComponent(currentUrl.searchParams.get('from'))
-		);
-		const matchUrl = new URL(redirectUrl);
-		const matchDomain = matchUrl.hostname.replace(/^www\./, '');
-		if (
-			redirectUrl !== 'undefined' &&
-			(status === 'off' || !sites.includes(matchDomain))
-		) {
-			window.location.href = redirectUrl;
-		}
-	});
+	if (window.performance.navigation.type == 2) {
+		window.history.back();
+	} else {
+		getBackgroundPage.then(bg => {
+			const status = bg.getStatus();
+			const sites = bg.getSites();
+			const currentUrl = new URL(window.location.href);
+			const redirectUrl = atob(
+				decodeURIComponent(currentUrl.searchParams.get('from'))
+			);
+			const matchUrl = new URL(redirectUrl);
+			const matchDomain = matchUrl.hostname.replace(/^www\./, '');
+			if (
+				redirectUrl !== 'undefined' &&
+				(status === 'off' || !sites.includes(matchDomain))
+			) {
+				window.location.href = redirectUrl;
+			}
+		});
+	}
 }
