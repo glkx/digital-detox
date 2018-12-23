@@ -288,12 +288,21 @@ const ImpulseBlocker = {
 	 * Redirects the tab to local "You have been blocked" page.
 	 */
 	redirect: requestDetails => {
-		// Catch url that are false positive for example when a url has a url as component
-		const sites = ImpulseBlocker.getSites();
-		const matchUrl = new URL(requestDetails.url);
-		const matchDomain = matchUrl.hostname.replace(/^www\./, '');
+		let matchFound = true; // By default url is catched correctly
 
-		if (sites.includes(matchDomain)) {
+		// Test url on false positive when url components are found
+		if (requestDetails.url.match(/[?#]./)) {
+			const sites = ImpulseBlocker.getSites();
+			const matchUrl = new URL(requestDetails.url);
+			const matchDomain = matchUrl.hostname.replace(/^www\./, '');
+
+			// Catch url that are false positive for example when a url has a url as component
+			if (!sites.includes(matchDomain)) {
+				matchFound = false;
+			}
+		}
+
+		if (matchFound === true) {
 			browser.tabs.update(requestDetails.tabId, {
 				url: browser.extension.getURL(
 					'/redirect.html?from=' +
