@@ -4,8 +4,8 @@ const ImpulseBlocker = {
 	 */
 	status: 'on',
 	sites: [
+		// Social media
 		'facebook.com',
-		'youtube.com',
 		'tumblr.com',
 		'instagram.com',
 		'twitter.com',
@@ -14,14 +14,19 @@ const ImpulseBlocker = {
 		'pinterest.com',
 		'reddit.com',
 		'linkedin.com',
-		'9gag.com',
-		'dumpert.nl',
-		'dailymotion.com',
+		// Video streaming
+		'youtube.com',
 		'netflix.com',
 		'primevideo.com',
 		'hulu.com',
 		'hbonow.com',
-		'videoland.com'
+		'videoland.com',
+		'dumpert.nl',
+		'dailymotion.com',
+		'twitch.tv',
+		// Entertainment
+		'9gag.com',
+		'buzzfeed.com'
 	], // used as default for storage
 	sitesInterval: 1000, // Interval for timer
 	sitesModified: 0,
