@@ -18,7 +18,7 @@ const ImpulseBlocker = {
 		'dumpert.nl',
 		'dailymotion.com'
 	], // used as default for storage
-	sitesInterval: 500, // Interval for timer
+	sitesInterval: 1000, // Interval for timer
 	sitesModified: 0,
 	sitesTimer: 0,
 	syncInterval: 15000, // Interval for timer
