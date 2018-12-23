@@ -16,7 +16,12 @@ const ImpulseBlocker = {
 		'linkedin.com',
 		'9gag.com',
 		'dumpert.nl',
-		'dailymotion.com'
+		'dailymotion.com',
+		'netflix.com',
+		'primevideo.com',
+		'hulu.com',
+		'hbonow.com',
+		'videoland.com'
 	], // used as default for storage
 	sitesInterval: 1000, // Interval for timer
 	sitesModified: 0,
