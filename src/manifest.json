@@ -34,11 +34,19 @@
     "browser_action": {
         "default_icon": {
             "16": "icons/icon-16.svg",
-            "32": "icons/icon-32.svg",
-            "64": "icons/icon-64.svg"
+            "32": "icons/icon-32.svg"
         },
         "default_title": "__MSG_popupTitle__",
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "theme_icons": [{
+           "light": "icons/icon-16-light.svg",
+           "dark": "icons/icon-16.svg",
+           "size": 16
+       }, {
+           "light": "icons/icon-32-light.svg",
+           "dark": "icons/icon-32.svg",
+           "size": 32
+       }]
     },
 
     "options_ui": {
