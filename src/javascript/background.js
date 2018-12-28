@@ -222,7 +222,7 @@ const ImpulseBlocker = {
 				ImpulseBlocker.redirect,
 				{
 					urls: pattern,
-					types: ['main_frame', 'sub_frame']
+					types: ['main_frame']
 				},
 				['blocking']
 			);
