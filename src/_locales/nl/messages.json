@@ -1,6 +1,6 @@
 {
 	"extensionName": {
-		"message": "Impulse Blocker",
+		"message": "Digital Detox",
 		"description": "Name of the extension."
 	},
 
@@ -10,7 +10,7 @@
 	},
 
 	"popupTitle": {
-		"message": "Impulse Blocker",
+		"message": "Digital Detox",
 		"description": "Title of the navbar popup."
 	},
 

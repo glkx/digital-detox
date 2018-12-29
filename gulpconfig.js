@@ -1,5 +1,5 @@
 // Variables
-var name = 'impulse-blocker', // The directory name for your theme; change this at the very least!
+var name = 'digital-detox', // The directory name for your theme; change this at the very least!
 	dir = {
 		src: './src/', // The raw material of your theme: custom scripts, SCSS source files, PHP files, images, etc
 		build: './build/', // A temporary directory containing a development version of your theme; delete it anytime

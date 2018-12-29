@@ -1,6 +1,6 @@
 {
-	"name": "impulse-blocker",
-	"version": "0.16.0",
+	"name": "digital-detox",
+	"version": "1.0.0",
 	"scripts": {
 		"lint": "eslint ./src/assets/js/**/*.js",
 		"format": "eslint --fix ./src/assets/js/**/*.js",
