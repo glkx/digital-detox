@@ -129,7 +129,7 @@ function removeWebsite() {
 
 function openOptions() {
 	browser.tabs.create({
-		url: browser.extension.getURL('/options.html')
+		url: browser.runtime.getURL('/options.html')
 	});
 	window.close();
 }
