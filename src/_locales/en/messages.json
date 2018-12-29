@@ -64,6 +64,10 @@
 
 	"optionsDeleteSiteButton": {
 		"message": "Delete"
+	},
+
+	"optionsBlockedSitesTHeadWebsites": {
+		"message": "Blocked websites"
 	}
 
 }

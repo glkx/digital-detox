@@ -3,7 +3,9 @@ var blockedSites, form, getBackgroundPage;
 document.addEventListener('DOMContentLoaded', initialize);
 
 function initialize() {
-	blockedSites = document.querySelector('ul.blocked-sites');
+	blockedSites = document
+		.getElementById('optionsBlockedSites')
+		.getElementsByTagName('tbody')[0];
 	form = document.querySelector('form');
 	getBackgroundPage = browser.runtime.getBackgroundPage();
 
@@ -36,6 +38,9 @@ function localizeOptions() {
 	document.getElementById('optionsAddSiteButton').innerText = getI18nMsg(
 		'optionsAddSiteButton'
 	);
+	document.getElementById(
+		'optionsBlockedSitesTHeadWebsites'
+	).innerText = getI18nMsg('optionsBlockedSitesTHeadWebsites');
 }
 
 function restoreOptions() {
@@ -77,15 +82,22 @@ function closeOptions() {
 	});
 }
 
-function addToBlockedList(text) {
+function addToBlockedList(url) {
 	const button = document.createElement('button');
 	button.textContent = browser.i18n.getMessage('optionsDeleteSiteButton');
 
-	const listItem = document.createElement('li');
-	listItem.textContent = text;
-	listItem.appendChild(button);
+	// Insert new row
+	const blockedSitesRow = blockedSites.insertRow(0);
 
-	blockedSites.insertBefore(listItem, blockedSites.childNodes[0]);
+	// Insert website cell
+	const valueCell = blockedSitesRow.insertCell(0);
+
+	// Insert website cell
+	const buttonCell = blockedSitesRow.insertCell(1);
+
+	blockedSitesRow.dataset.url = url;
+	valueCell.textContent = url;
+	buttonCell.appendChild(button);
 }
 
 function hasNoProtocol(url) {
@@ -119,13 +131,12 @@ function saveSite(event) {
 
 function deleteSite(event) {
 	if (event.target.nodeName === 'BUTTON') {
-		const toDelete = event.target.parentElement;
-		const toDeleteParent = toDelete.parentElement;
-		const toDeleteText = event.target.previousSibling.textContent;
-		toDeleteParent.removeChild(toDelete);
+		const deleteRow = event.target.closest('tr');
+		const deleteWebsite = deleteRow.dataset.url;
+		deleteRow.remove();
 
 		getBackgroundPage.then(bg => {
-			bg.removeSite(toDeleteText);
+			bg.removeSite(deleteWebsite);
 		});
 	}
 }
