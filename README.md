@@ -5,3 +5,22 @@ Give yourself a digital detox and block all your impulsive surf behaviour on the
 
 ## Fork from Impulse Blocker by raicem
 You can install the original extension from the official [add-ons page](https://addons.mozilla.org/en-US/firefox/addon/impulse-blocker/). Simple usage instructions are [here](http://raicem.github.io/2017/05/17/impulse-blocker-guide/).
+
+## Export and import websites
+You can export and import website with an work around through the development console on the extention options page.
+
+Export:
+```
+getBackgroundPage.then(bg => { console.log(bg.getSites().join('; ')); });
+```
+
+Import:
+```
+const website = '';
+
+website.split('; ').forEach(function(url) {
+	getBackgroundPage.then(bg => {
+		bg.addSite(url);
+	});
+});
+```
