@@ -28,7 +28,7 @@ function restoreRedirect() {
 	} else {
 		getBackgroundPage.then(bg => {
 			const status = bg.getStatus();
-			const sites = bg.getSites();
+			const sites = bg.getAllSites();
 			const currentUrl = new URL(window.location.href);
 			const redirectUrl = atob(
 				decodeURIComponent(currentUrl.searchParams.get('from'))
@@ -37,7 +37,8 @@ function restoreRedirect() {
 			const matchDomain = matchUrl.hostname.replace(/^www\./, '');
 			if (
 				redirectUrl !== 'undefined' &&
-				(status === 'off' || !sites.includes(matchDomain))
+				(status === 'off' ||
+					sites.findIndex(v => v.url === matchDomain) === -1)
 			) {
 				window.location.href = redirectUrl;
 			}

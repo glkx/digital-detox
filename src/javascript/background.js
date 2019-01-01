@@ -3,35 +3,97 @@ const ImpulseBlocker = {
 	 * Global variables
 	 */
 	status: 'on',
-	sites: [
-		// Social media
-		'facebook.com',
-		'tumblr.com',
-		'instagram.com',
-		'twitter.com',
-		'snapchat.com',
-		'vk.com',
-		'pinterest.com',
-		'reddit.com',
-		'linkedin.com',
-		// Video streaming
-		'youtube.com',
-		'netflix.com',
-		'primevideo.com',
-		'hulu.com',
-		'hbonow.com',
-		'videoland.com',
-		'dumpert.nl',
-		'dailymotion.com',
-		'twitch.tv',
-		// Entertainment
-		'9gag.com',
-		'buzzfeed.com'
-	], // used as default for storage
+	userSettings: {
+		blockedSites: [
+			// Social media
+			{
+				url: 'facebook.com',
+				time: 0
+			},
+			{
+				url: 'tumblr.com',
+				time: 0
+			},
+			{
+				url: 'instagram.com',
+				time: 0
+			},
+			{
+				url: 'twitter.com',
+				time: 0
+			},
+			{
+				url: 'snapchat.com',
+				time: 0
+			},
+			{
+				url: 'vk.com',
+				time: 0
+			},
+			{
+				url: 'pinterest.com',
+				time: 0
+			},
+			{
+				url: 'reddit.com',
+				time: 0
+			},
+			{
+				url: 'linkedin.com',
+				time: 0
+			},
+			// Video streaming
+			{
+				url: 'youtube.com',
+				time: 0
+			},
+			{
+				url: 'netflix.com',
+				time: 0
+			},
+			{
+				url: 'primevideo.com',
+				time: 0
+			},
+			{
+				url: 'hulu.com',
+				time: 0
+			},
+			{
+				url: 'hbonow.com',
+				time: 0
+			},
+			{
+				url: 'videoland.com',
+				time: 0
+			},
+			{
+				url: 'dumpert.nl',
+				time: 0
+			},
+			{
+				url: 'dailymotion.com',
+				time: 0
+			},
+			{
+				url: 'twitch.tv',
+				time: 0
+			},
+			// Entertainment
+			{
+				url: '9gag.com',
+				time: 0
+			},
+			{
+				url: 'buzzfeed.com',
+				time: 0
+			}
+		]
+	}, // used as default for storage
+	userSettingsModified: 0,
+	userSettingsSyncInterval: 30000, // Interval for timer
 	sitesInterval: 1000, // Interval for timer
-	sitesModified: 0,
 	sitesTimer: 0,
-	syncInterval: 15000, // Interval for timer
 	disableDuration: 5400000, // 1.5 hours
 	disableInterval: 3000, // Interval for timer
 	disableModified: 0,
@@ -52,7 +114,7 @@ const ImpulseBlocker = {
 	 */
 	init: () => {
 		// Load sites form storage then enable blocker and sync listener
-		ImpulseBlocker.loadSites().then(() => {
+		ImpulseBlocker.loadUserSettings().then(() => {
 			// Start blocking
 			ImpulseBlocker.setBlocker();
 			// Start listener for sites to sync
@@ -115,79 +177,102 @@ const ImpulseBlocker = {
 	},
 
 	/**
-	 * Load sites from storage
-	 */
-	loadSites: () => {
-		return browser.storage.sync.get('sites').then(storage => {
-			if (typeof storage.sites !== undefined) {
-				ImpulseBlocker.setSites(storage.sites);
-			} else {
-				ImpulseBlocker.prepareSites();
-			}
-		});
-	},
-
-	/**
-	 * Prepare new sites storage
-	 */
-	prepareSites: () => {
-		browser.storage.sync.set({
-			sites: ImpulseBlocker.sites
-		});
-	},
-
-	/**
 	 * Listen for new sites array to sync to browser storage
 	 */
 	syncListener: () => {
 		// Get previous sync timestamp
-		let previousSync = ImpulseBlocker.sitesModified;
+		let previousSync = ImpulseBlocker.userSettingsModified;
 
 		// Start interval
 		setInterval(() => {
 			// When previous sync timestamp is updated
-			if (ImpulseBlocker.sitesModified !== previousSync) {
+			if (ImpulseBlocker.userSettingsModified !== previousSync) {
 				// Stores sites array in browser storage
-				ImpulseBlocker.syncSites();
+				ImpulseBlocker.syncUserSettings();
 
 				// Update previous sync timestamp
-				previousSync = ImpulseBlocker.sitesModified;
+				previousSync = ImpulseBlocker.userSettingsModified;
 			}
-		}, ImpulseBlocker.syncInterval);
+		}, ImpulseBlocker.userSettingsSyncInterval);
 	},
 
-	syncSites: () => {
-		// Stores sites array in browser storage
-		browser.storage.sync.set({
-			sites: ImpulseBlocker.sites
+	/**
+	 * Load user settings from storage
+	 */
+	loadUserSettings: () => {
+		return browser.storage.sync.get('userSettings').then(storage => {
+			if (typeof storage.userSettings !== undefined) {
+				ImpulseBlocker.setUserSettings(storage.userSettings);
+			} else {
+				ImpulseBlocker.prepareUserSettings();
+			}
 		});
 	},
 
 	/**
-	 * Set sites from storage
+	 * Initate first sync of user settings to storage
 	 */
-	setSites: sites => {
+	prepareUserSettings: () => {
+		ImpulseBlocker.syncUserSettings();
+	},
+
+	/**
+	 * Get user settings from storage
+	 */
+	getUserSettings: () => ImpulseBlocker.userSettings,
+
+	/**
+	 * Set user settings from storage
+	 */
+	setUserSettings: settings => {
 		// When sites are defined
-		if (sites !== undefined) {
+		if (settings !== undefined) {
 			// Set global sites array
-			ImpulseBlocker.sites = sites;
-			ImpulseBlocker.sitesModified = Date.now();
+			ImpulseBlocker.userSettings = settings;
+			ImpulseBlocker.userSettingsModified = Date.now();
 		}
+	},
+
+	/**
+	 * Sync user settings
+	 */
+	syncUserSettings: () => {
+		// Stores sites array in browser storage
+		browser.storage.sync.set({
+			userSettings: ImpulseBlocker.userSettings
+		});
 	},
 
 	/**
 	 * Returns the current loaded sites of the extension.
 	 */
-	getSites: () => ImpulseBlocker.sites,
+	getBlockedSites: () => {
+		const sites = ImpulseBlocker.userSettings.blockedSites,
+			blockedSites = [];
+
+		sites.forEach(site => {
+			blockedSites.push(site.url);
+			// IDEA: Implement time logic
+		});
+
+		return blockedSites;
+	},
 
 	/**
 	 * Add a website to the blocked list
 	 * @param  {string} url Url to add to the list
 	 */
-	addSite: url => {
-		const sites = ImpulseBlocker.getSites();
-		sites.push(url);
-		ImpulseBlocker.setSites(sites);
+	addSite: (url, time = 0) => {
+		const userSettings = ImpulseBlocker.getUserSettings();
+
+		// Add url to blocked websites
+		userSettings.blockedSites.push({
+			url: url,
+			time: time
+		});
+
+		// Update user settings
+		ImpulseBlocker.setUserSettings(userSettings);
 	},
 
 	/**
@@ -195,19 +280,21 @@ const ImpulseBlocker = {
 	 * @param  {string} url Url to remove to the list
 	 */
 	removeSite: url => {
-		const sites = ImpulseBlocker.getSites();
-		const i = sites.indexOf(url);
-		if (i !== -1) {
-			sites.splice(i, 1);
-		}
-		ImpulseBlocker.setSites(sites);
+		const userSettings = ImpulseBlocker.getUserSettings();
+
+		userSettings.blockedSites.splice(
+			userSettings.blockedSites.findIndex(v => v.url === url),
+			1
+		);
+
+		ImpulseBlocker.setUserSettings(userSettings);
 	},
 
 	/**
 	 * Fetches blocked websites lists, attaches them to the listener provided by the WebExtensions API
 	 */
 	setBlocker: () => {
-		const sites = ImpulseBlocker.getSites(),
+		const sites = ImpulseBlocker.getBlockedSites(),
 			pattern = sites.map(item => `*://*.${item}/*`);
 
 		// Clear blocker incase when blocker is already running
@@ -239,11 +326,13 @@ const ImpulseBlocker = {
 	 * Update blocker when sites array is modified
 	 */
 	autoUpdateBlocker: () => {
-		let previousSites = ImpulseBlocker.sitesModified;
+		let previousSites = JSON.stringify(ImpulseBlocker.getBlockedSites());
+
 		ImpulseBlocker.sitesTimer = setInterval(() => {
-			if (ImpulseBlocker.sitesModified !== previousSites) {
+			let currentSites = JSON.stringify(ImpulseBlocker.getBlockedSites());
+			if (currentSites !== previousSites) {
 				ImpulseBlocker.setBlocker();
-				previousSites = ImpulseBlocker.sitesModified;
+				previousSites = currentSites;
 			}
 		}, ImpulseBlocker.sitesInterval);
 	},
@@ -302,7 +391,7 @@ const ImpulseBlocker = {
 
 		// Test url on false positive when url components are found
 		if (requestDetails.url.match(/[?#]./)) {
-			const sites = ImpulseBlocker.getSites();
+			const sites = ImpulseBlocker.getBlockedSites();
 			const matchUrl = new URL(requestDetails.url);
 			const matchDomain = matchUrl.hostname.replace(/^www\./, '');
 
@@ -363,16 +452,24 @@ function getDomain() {
 	});
 }
 
-function syncSites() {
-	return ImpulseBlocker.syncSites();
+function syncUserSettings() {
+	return ImpulseBlocker.syncUserSettings();
 }
 
-function refreshSites() {
-	return ImpulseBlocker.loadSites();
+function getUserSettings() {
+	return ImpulseBlocker.getUserSettings();
 }
 
-function getSites() {
-	return ImpulseBlocker.getSites();
+function refreshUserSettings() {
+	return ImpulseBlocker.loadUserSettings();
+}
+
+function getBlockedSites() {
+	return ImpulseBlocker.getBlockedSites();
+}
+
+function getAllSites() {
+	return ImpulseBlocker.getUserSettings().blockedSites;
 }
 
 function addSite(url) {

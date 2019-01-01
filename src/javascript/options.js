@@ -48,37 +48,56 @@ function restoreOptions() {
 		if (storage.options_setup !== true) {
 			getBackgroundPage.then(bg => {
 				// Rehresh sites
-				bg.refreshSites().then(setSites);
+				bg.refreshUserSettings().then(setOptions);
 			});
 			browser.storage.local.set({
 				options_setup: true
 			});
 		} else {
-			setSites();
+			setOptions();
 		}
 	});
 }
 
-function setSites() {
+function setOptions() {
 	getBackgroundPage.then(bg => {
-		// Get sites
-		const sites = bg.getSites();
+		// Get user settings
+		const userSettings = bg.getUserSettings();
 
-		// Sort alphabetically A - Z
-		sites.sort();
-		sites.reverse();
-
-		// Add sites to options page
-		sites.forEach(site => {
-			addToBlockedList(site);
-		});
+		// Set sites
+		setSites(userSettings.blockedSites);
 	});
 }
 
 function closeOptions() {
 	// Request sync sites to storage
 	getBackgroundPage.then(bg => {
-		bg.syncSites();
+		bg.syncUserSettings();
+	});
+}
+
+function sortSites(a, b) {
+	const urlA = a.url.toLowerCase(),
+		urlB = b.url.toLowerCase();
+
+	let comparison = 0;
+
+	if (urlA > urlB) {
+		comparison = -1;
+	} else if (urlA < urlB) {
+		comparison = 1;
+	}
+
+	return comparison;
+}
+
+function setSites(sites) {
+	// Sort alphabetically on url
+	sites.sort(sortSites);
+
+	// Add sites to options page
+	sites.forEach(site => {
+		addToBlockedList(site.url);
 	});
 }
 
@@ -98,16 +117,6 @@ function addToBlockedList(url) {
 	blockedSitesRow.dataset.url = url;
 	valueCell.textContent = url;
 	buttonCell.appendChild(button);
-}
-
-function hasNoProtocol(url) {
-	const regex = /^[a-zA-Z]{3,}:\/\//;
-	return !regex.test(url);
-}
-
-function hasNoExtension(url) {
-	const regex = /(\w+\.\w+)$/;
-	return !regex.test(url);
 }
 
 function saveSite(event) {
@@ -131,12 +140,12 @@ function saveSite(event) {
 
 function deleteSite(event) {
 	if (event.target.nodeName === 'BUTTON') {
-		const deleteRow = event.target.closest('tr');
-		const deleteWebsite = deleteRow.dataset.url;
-		deleteRow.remove();
+		const row = event.target.closest('tr');
+		const url = row.dataset.url;
+		row.remove();
 
 		getBackgroundPage.then(bg => {
-			bg.removeSite(deleteWebsite);
+			bg.removeSite(url);
 		});
 	}
 }

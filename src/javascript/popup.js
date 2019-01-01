@@ -99,8 +99,9 @@ function displayCurrentDomain() {
 			domainToAllow.textContent = '(' + urlToMatch + ')';
 			domainToBlock.textContent = '(' + urlToMatch + ')';
 
-			const sites = bg.getSites();
-			if (sites.includes(urlToMatch)) {
+			const sites = bg.getAllSites();
+
+			if (sites.findIndex(v => v.url === urlToMatch) > -1) {
 				removeButton.style.display = 'block';
 				addButton.style.display = 'none';
 			} else {
