@@ -24,5 +24,3 @@ settings.blockedSites.forEach(function(site) {
 	});
 });
 ```
-
-["ziggogo.tv","yts.am","youtube.com","wptavern.com","waitbutwhy.com","vn.nl","vk.com","videoland.com","vice.com","universiteitvannederland.nl","twitter.com","twitch.tv","tweakers.net","tumblr.com","theverge.com","thenextweb.com","southpark.cc.com","snapchat.com","roomed.nl","reddit.com","rarbg.to","primevideo.com","pinterest.com","onemorething.nl","nytimes.com","nu.nl","npostart.nl","nos.nl","newyorker.com","netflix.com","medium.com","mashable.com","londonreal.tv","linkedin.com","lifehacker.com","introvertdear.com","instagram.com","inc.com","imdb.com","iculture.nl","hulu.com","hbonow.com","hardware.info","gizmodo.com","geenstijl.nl","froot.nl","frankwatching.com","fok.nl","filmtotaal.nl","facebook.com","dumpert.nl","decorrespondent.nl","dailymotion.com","culy.nl","cnn.com","buzzfeed.com","bright.nl","blendle.com","bbc.com","bbc.co.uk","awwwards.com","ad.nl","9to5mac.com","9gag.com"]
