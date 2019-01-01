@@ -38,15 +38,6 @@
         },
         "default_title": "__MSG_popupTitle__",
         "default_popup": "popup.html",
-        "theme_icons": [{
-           "light": "icons/icon-16-light.svg",
-           "dark": "icons/icon-16.svg",
-           "size": 16
-       }, {
-           "light": "icons/icon-32-light.svg",
-           "dark": "icons/icon-32.svg",
-           "size": 32
-       }]
     },
 
     "options_ui": {

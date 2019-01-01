@@ -138,11 +138,11 @@ const ImpulseBlocker = {
 		ImpulseBlocker.clearAutoEnableBlocker();
 
 		// Set default icon
-		var icon = browser.runtime.getURL('/icons/icon-96.svg');
+		var icon = browser.runtime.getURL('/icons/icon-32.svg');
 
 		// When status is off
 		if (status === 'off') {
-			icon = browser.runtime.getURL('/icons/icon-96-disabled.svg');
+			icon = browser.runtime.getURL('/icons/icon-32-disabled.svg');
 
 			// Automatically re-enable blocking
 			ImpulseBlocker.autoEnableBlocker();
