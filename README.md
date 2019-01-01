@@ -11,7 +11,7 @@ You can export and import your blocked websites with an work around through the 
 
 Export:
 ```
-getBackgroundPage.then(bg => { let settings = bg.getUserSettings(); console.log(JSON.stringify(settings)); });
+getBackgroundPage.then(bg => { const settings = bg.getUserSettings(); console.log(JSON.stringify(settings)); });
 ```
 
 Import:
