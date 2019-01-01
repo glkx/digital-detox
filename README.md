@@ -3,9 +3,6 @@
 
 Give yourself a digital detox and block all your impulsive surf behaviour on the web. This extension blocks websites that distract you from what you really want to do. A simple roadblock to prevent procrastination.
 
-## Fork from Impulse Blocker by raicem
-You can install the original extension from the official [add-ons page](https://addons.mozilla.org/en-US/firefox/addon/impulse-blocker/). Simple usage instructions are [here](http://raicem.github.io/2017/05/17/impulse-blocker-guide/).
-
 ## Export and import blocked websites
 You can export and import your blocked websites with an work around through the development console on the extention options page.
 
@@ -24,3 +21,6 @@ settings.blockedSites.forEach(function(site) {
 	});
 });
 ```
+
+## Fork from Impulse Blocker by raicem
+Digital Detox is inspired by and fork from [Impulse Blocker](https://addons.mozilla.org/en-US/firefox/addon/impulse-blocker/).
