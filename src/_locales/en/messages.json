@@ -15,7 +15,7 @@
 	},
 
 	"popupPrefsButtonTitle": {
-		"message": "Change Impulse Blocker options"
+		"message": "Change Digital Detox options"
 	},
 
 	"popupToggleButtonOn": {
@@ -27,7 +27,7 @@
 	},
 
 	"popupToggleConfirmationMessage": {
-		"message": "Are your really sure you want to disable Impulse Blocker for 1½ hours?"
+		"message": "Are your really sure you want to disable Digital Detox for 1½ hours?"
 	},
 
 	"popupAddButtonValue": {
@@ -43,11 +43,11 @@
 	},
 
 	"redirectShortDescText": {
-		"message": "Your impulse to visit this website has been successfully blocked by Impulse Blocker."
+		"message": "Your impulse to visit this website has been successfully blocked by Digital Detox."
 	},
 
 	"optionsTitle": {
-		"message": "Options Impulse Blocker"
+		"message": "Options Digital Detox"
 	},
 
 	"optionsAddSiteLabel": {
