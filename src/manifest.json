@@ -37,7 +37,7 @@
             "32": "icons/icon-32.svg"
         },
         "default_title": "__MSG_popupTitle__",
-        "default_popup": "popup.html",
+        "default_popup": "popup.html"
     },
 
     "options_ui": {
