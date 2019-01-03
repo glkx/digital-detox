@@ -31,8 +31,13 @@ function setListeners() {
 }
 
 function localizePopup() {
-	const getI18nMsg = browser.i18n.getMessage;
+	const browserLanguage = browser.i18n.getUILanguage(),
+		getI18nMsg = browser.i18n.getMessage;
 
+	// Set language
+	document.documentElement.setAttribute('lang', browserLanguage);
+
+	// Translate strings
 	prefsButton.title = getI18nMsg('popupPrefsButtonTitle');
 	toggleButton.innerTex = getI18nMsg('popupToggleButtonOn');
 
