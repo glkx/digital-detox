@@ -10,7 +10,13 @@ function initialize() {
 }
 
 function localizeRedirect() {
-	const getI18nMsg = browser.i18n.getMessage;
+	const browserLanguage = browser.i18n.getUILanguage(),
+		getI18nMsg = browser.i18n.getMessage;
+
+	// Set language
+	document.documentElement.setAttribute('lang', browserLanguage);
+
+	// Translate strings	
 	document.getElementById('redirectTitle').innerText = getI18nMsg(
 		'redirectTitle'
 	);

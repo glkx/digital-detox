@@ -20,7 +20,13 @@ function setListeners() {
 }
 
 function localizeOptions() {
-	const getI18nMsg = browser.i18n.getMessage;
+	const browserLanguage = browser.i18n.getUILanguage(),
+		getI18nMsg = browser.i18n.getMessage;
+
+	// Set language
+	document.documentElement.setAttribute('lang', browserLanguage);
+
+	// Translate strings
 	document.getElementById('optionsTitle').innerText = getI18nMsg(
 		'optionsTitle'
 	);
