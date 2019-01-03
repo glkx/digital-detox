@@ -76,11 +76,11 @@ const ImpulseBlocker = {
 		ImpulseBlocker.clearAutoEnableBlocker();
 
 		// Set default icon
-		var icon = browser.extension.getURL('/icons/icon-96.svg');
+		var icon = browser.runtime.getURL('/icons/icon-96.svg');
 
 		// When status is off
 		if (status === 'off') {
-			icon = browser.extension.getURL('/icons/icon-96-disabled.svg');
+			icon = browser.runtime.getURL('/icons/icon-96-disabled.svg');
 
 			// Automatically re-enable blocking
 			ImpulseBlocker.autoEnableBlocker();
@@ -285,7 +285,7 @@ const ImpulseBlocker = {
 				for (let tab of tabs) {
 					// Block tabs
 					browser.tabs.update(tab.id, {
-						url: browser.extension.getURL(
+						url: browser.runtime.getURL(
 							'/redirect.html?from=' +
 								encodeURIComponent(btoa(tab.url))
 						)
@@ -314,7 +314,7 @@ const ImpulseBlocker = {
 
 		if (matchFound === true) {
 			browser.tabs.update(requestDetails.tabId, {
-				url: browser.extension.getURL(
+				url: browser.runtime.getURL(
 					'/redirect.html?from=' +
 						encodeURIComponent(btoa(requestDetails.url))
 				)
@@ -328,7 +328,7 @@ const ImpulseBlocker = {
 	restoreCurrent: () => {
 		browser.tabs
 			.query({
-				url: browser.extension.getURL('*')
+				url: browser.runtime.getURL('*')
 			})
 			.then(tabs => {
 				// Loop matched tabs

@@ -31,29 +31,48 @@ button {
     padding-right: 10px;
 }
 
+.table-wrapper,
 .blocked-sites {
-    min-height: 150px;
-    margin: 0;
-    padding: 0;
-    background-color: #fff;
-    border: 1px solid #d7d7db;
-    border-radius: 2px;
-    list-style: none;
+	width: 100%;
+}
 
-    li {
-        display: flex;
-        min-height: 30px;
-        padding: 5px 10px;
-        line-height: 18px;
-        align-items: center;
-        justify-content: space-between;
-    
-        &:nth-child(even) {
-            background-color: #F5F5F5;
-        }
+.table-wrapper {
+	min-height: 150px;
+    background-color: #fff;
+	border: 1px solid #d7d7db;
+    border-radius: 2px;
+	overflow: hidden;
+}
+
+.blocked-sites {
+	border-collapse: collapse;
+
+	thead {
+		background-color: rgb(235, 235, 235);
+		border-bottom: 1px solid #d7d7db;
+	}
+
+    tr:nth-child(even) {
+        background-color: #F5F5F5;
     }
 
+	td, th {
+		height: 26.5px;
+		padding: 5px 10px;
+		line-height: 18px;
+		vertical-align: middle;
+	}
+
+	.column-website {
+		text-align: left;
+	}
+
+	.column-button {
+		text-align: right;
+	}
+
     button {
+		display: block;
         min-height: auto;
         margin: 0;
         margin-left: auto;
