@@ -46,6 +46,16 @@
 		"message": "Your impulse to visit this website has been successfully blocked by Digital Detox."
 	},
 
+	"redirectShortCustomDescText": {
+		"message": "Your impulse to visit $URL$ has been successfully blocked by Digital Detox.",
+		"placeholders": {
+			"url" : {
+				"content" : "$1",
+				"example" : "facebook.com"
+			}
+		}
+	},
+
 	"optionsTitle": {
 		"message": "Options Digital Detox"
 	},

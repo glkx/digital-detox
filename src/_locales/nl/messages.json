@@ -46,6 +46,16 @@
 		"message": "Je impuls om deze website te bezoeken is succesvol geblokkeerd door Digital Detox."
 	},
 
+	"redirectShortCustomDescText": {
+		"message": "Je impuls om $URL$ te bezoeken is succesvol geblokkeerd door Digital Detox.",
+		"placeholders": {
+			"url" : {
+				"content" : "$1",
+				"example" : "facebook.com"
+			}
+		}
+	},
+
 	"optionsTitle": {
 		"message": "Voorkeuren Digital Detox"
 	},

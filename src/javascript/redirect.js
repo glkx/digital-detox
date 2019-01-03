@@ -1,9 +1,16 @@
-var getBackgroundPage;
+var getBackgroundPage, currentUrl, redirectUrl, redirectDomain;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
 function initialize() {
 	getBackgroundPage = browser.runtime.getBackgroundPage();
+
+	// Get domain
+	currentUrl = new URL(window.location.href);
+	redirectUrl = atob(
+		decodeURIComponent(currentUrl.searchParams.get('from'))
+	);
+	redirectDomain = new URL(redirectUrl).hostname.replace(/^www\./, '');
 
 	restoreRedirect();
 	localizeRedirect();
@@ -16,16 +23,23 @@ function localizeRedirect() {
 	// Set language
 	document.documentElement.setAttribute('lang', browserLanguage);
 
-	// Translate strings	
+	// Translate strings
 	document.getElementById('redirectTitle').innerText = getI18nMsg(
 		'redirectTitle'
 	);
 	document.getElementById('redirectTitleText').innerText = getI18nMsg(
 		'redirectTitle'
 	);
-	document.getElementById('redirectShortDescText').innerText = getI18nMsg(
-		'redirectShortDescText'
-	);
+
+	if (redirectDomain !== 'undefined') {
+		document.getElementById('redirectShortDescText').innerText = getI18nMsg(
+			'redirectShortCustomDescText', redirectDomain
+		);
+	} else {
+		document.getElementById('redirectShortDescText').innerText = getI18nMsg(
+			'redirectShortDescText'
+		);
+	}
 }
 
 function restoreRedirect() {
@@ -33,18 +47,13 @@ function restoreRedirect() {
 		window.history.back();
 	} else {
 		getBackgroundPage.then(bg => {
-			const status = bg.getStatus();
-			const sites = bg.getAllSites();
-			const currentUrl = new URL(window.location.href);
-			const redirectUrl = atob(
-				decodeURIComponent(currentUrl.searchParams.get('from'))
-			);
-			const matchUrl = new URL(redirectUrl);
-			const matchDomain = matchUrl.hostname.replace(/^www\./, '');
+			const status = bg.getStatus(),
+				sites = bg.getAllSites();
+
 			if (
 				redirectUrl !== 'undefined' &&
 				(status === 'off' ||
-					sites.findIndex(v => v.url === matchDomain) === -1)
+					sites.findIndex(v => v.url === redirectDomain) === -1)
 			) {
 				window.location.href = redirectUrl;
 			}
