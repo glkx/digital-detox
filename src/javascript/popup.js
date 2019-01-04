@@ -61,7 +61,7 @@ function handleClick() {
 		if (status === 'on') {
 			getBackgroundPage.then(bg => bg.disableBlocker());
 		} else {
-			getBackgroundPage.then(bg => bg.setBlocker());
+			getBackgroundPage.then(bg => bg.enableBlocker());
 		}
 		markExtensionStatus();
 	});

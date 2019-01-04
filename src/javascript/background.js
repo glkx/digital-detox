@@ -3,6 +3,7 @@ const DigitalDetox = {
 	 * Global variables
 	 */
 	status: 'on',
+	localSetting: [],
 	userSettings: {
 		blockedSites: [
 			// Social media
@@ -116,7 +117,7 @@ const DigitalDetox = {
 		// Load sites form storage then enable blocker and sync listener
 		DigitalDetox.loadUserSettings().then(() => {
 			// Start blocking
-			DigitalDetox.setBlocker();
+			DigitalDetox.enableBlocker();
 			// Start listener for sites to sync
 			DigitalDetox.syncListener();
 		}, DigitalDetox.onError);
@@ -167,7 +168,7 @@ const DigitalDetox = {
 				Date.now() - DigitalDetox.disableModified >=
 				DigitalDetox.disableDuration
 			) {
-				DigitalDetox.setBlocker();
+				DigitalDetox.enableBlocker();
 			}
 		}, DigitalDetox.disableInterval);
 	},
@@ -293,7 +294,7 @@ const DigitalDetox = {
 	/**
 	 * Fetches blocked websites lists, attaches them to the listener provided by the WebExtensions API
 	 */
-	setBlocker: () => {
+	enableBlocker: () => {
 		const sites = DigitalDetox.getBlockedSites(),
 			pattern = sites.map(item => `*://*.${item}/*`);
 
@@ -331,7 +332,7 @@ const DigitalDetox = {
 		DigitalDetox.sitesTimer = setInterval(() => {
 			let currentSites = JSON.stringify(DigitalDetox.getBlockedSites());
 			if (currentSites !== previousSites) {
-				DigitalDetox.setBlocker();
+				DigitalDetox.enableBlocker();
 				previousSites = currentSites;
 			}
 		}, DigitalDetox.sitesInterval);
@@ -441,8 +442,8 @@ function disableBlocker() {
 	DigitalDetox.disableBlocker();
 }
 
-function setBlocker() {
-	DigitalDetox.setBlocker();
+function enableBlocker() {
+	DigitalDetox.enableBlocker();
 }
 
 function getDomain() {
