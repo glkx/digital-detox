@@ -3,7 +3,9 @@ const DigitalDetox = {
 	 * Global variables
 	 */
 	status: 'on',
-	localSetting: [],
+	localSettings: {
+
+	},
 	userSettings: {
 		blockedSites: [
 			// Social media
@@ -117,9 +119,9 @@ const DigitalDetox = {
 		// Load sites form storage then enable blocker and sync listener
 		DigitalDetox.initUserSettings().then(() => {
 			// Start blocking
-			DigitalDetox.enableBlocker();
+			DigitalDetox.initBlocker();
 			// Start listener for sites to sync
-			DigitalDetox.syncListener();
+			DigitalDetox.setListeners();
 		}, DigitalDetox.onError);
 	},
 
@@ -180,7 +182,7 @@ const DigitalDetox = {
 	/**
 	 * Listen for new sites array to sync to browser storage
 	 */
-	syncListener: () => {
+	setListeners: () => {
 		// Get previous sync timestamp
 		let previousSync = DigitalDetox.userSettingsModified;
 
@@ -289,6 +291,12 @@ const DigitalDetox = {
 		);
 
 		DigitalDetox.updateUserSettings(userSettings);
+	},
+
+	initBlocker: () => {
+		// IDEA: Based on settings enable or disable blocker by default
+		// Enable blocker
+		DigitalDetox.enableBlocker();
 	},
 
 	/**
