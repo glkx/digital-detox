@@ -1,4 +1,4 @@
-const ImpulseBlocker = {
+const DigitalDetox = {
 	/**
 	 * Global variables
 	 */
@@ -114,28 +114,28 @@ const ImpulseBlocker = {
 	 */
 	init: () => {
 		// Load sites form storage then enable blocker and sync listener
-		ImpulseBlocker.loadUserSettings().then(() => {
+		DigitalDetox.loadUserSettings().then(() => {
 			// Start blocking
-			ImpulseBlocker.setBlocker();
+			DigitalDetox.setBlocker();
 			// Start listener for sites to sync
-			ImpulseBlocker.syncListener();
-		}, ImpulseBlocker.onError);
+			DigitalDetox.syncListener();
+		}, DigitalDetox.onError);
 	},
 
 	/**
 	 * Returns the current status of the extension.
 	 */
-	getStatus: () => ImpulseBlocker.status,
+	getStatus: () => DigitalDetox.status,
 
 	/**
 	 * Sets the current status of the extension.
 	 * @param string status
 	 */
 	setStatus: status => {
-		ImpulseBlocker.status = status;
+		DigitalDetox.status = status;
 
 		// Clear auto re-enable blocking in case timer is running
-		ImpulseBlocker.clearAutoEnableBlocker();
+		DigitalDetox.clearAutoEnableBlocker();
 
 		// Set default icon
 		var icon = browser.runtime.getURL('/icons/icon-32.svg');
@@ -145,7 +145,7 @@ const ImpulseBlocker = {
 			icon = browser.runtime.getURL('/icons/icon-32-disabled.svg');
 
 			// Automatically re-enable blocking
-			ImpulseBlocker.autoEnableBlocker();
+			DigitalDetox.autoEnableBlocker();
 		}
 
 		// Set icon
@@ -159,21 +159,21 @@ const ImpulseBlocker = {
 	 */
 	autoEnableBlocker: () => {
 		// Set time of disabling
-		ImpulseBlocker.disableModified = Date.now();
+		DigitalDetox.disableModified = Date.now();
 
 		// Listerner for auto disable
-		ImpulseBlocker.disableTimer = setInterval(() => {
+		DigitalDetox.disableTimer = setInterval(() => {
 			if (
-				Date.now() - ImpulseBlocker.disableModified >=
-				ImpulseBlocker.disableDuration
+				Date.now() - DigitalDetox.disableModified >=
+				DigitalDetox.disableDuration
 			) {
-				ImpulseBlocker.setBlocker();
+				DigitalDetox.setBlocker();
 			}
-		}, ImpulseBlocker.disableInterval);
+		}, DigitalDetox.disableInterval);
 	},
 
 	clearAutoEnableBlocker: () => {
-		clearInterval(ImpulseBlocker.disableTimer);
+		clearInterval(DigitalDetox.disableTimer);
 	},
 
 	/**
@@ -181,19 +181,19 @@ const ImpulseBlocker = {
 	 */
 	syncListener: () => {
 		// Get previous sync timestamp
-		let previousSync = ImpulseBlocker.userSettingsModified;
+		let previousSync = DigitalDetox.userSettingsModified;
 
 		// Start interval
 		setInterval(() => {
 			// When previous sync timestamp is updated
-			if (ImpulseBlocker.userSettingsModified !== previousSync) {
+			if (DigitalDetox.userSettingsModified !== previousSync) {
 				// Stores sites array in browser storage
-				ImpulseBlocker.syncUserSettings();
+				DigitalDetox.syncUserSettings();
 
 				// Update previous sync timestamp
-				previousSync = ImpulseBlocker.userSettingsModified;
+				previousSync = DigitalDetox.userSettingsModified;
 			}
-		}, ImpulseBlocker.userSettingsSyncInterval);
+		}, DigitalDetox.userSettingsSyncInterval);
 	},
 
 	/**
@@ -202,9 +202,9 @@ const ImpulseBlocker = {
 	loadUserSettings: () => {
 		return browser.storage.sync.get('userSettings').then(storage => {
 			if (typeof storage.userSettings !== undefined) {
-				ImpulseBlocker.setUserSettings(storage.userSettings);
+				DigitalDetox.setUserSettings(storage.userSettings);
 			} else {
-				ImpulseBlocker.prepareUserSettings();
+				DigitalDetox.prepareUserSettings();
 			}
 		});
 	},
@@ -213,13 +213,13 @@ const ImpulseBlocker = {
 	 * Initate first sync of user settings to storage
 	 */
 	prepareUserSettings: () => {
-		ImpulseBlocker.syncUserSettings();
+		DigitalDetox.syncUserSettings();
 	},
 
 	/**
 	 * Get user settings from storage
 	 */
-	getUserSettings: () => ImpulseBlocker.userSettings,
+	getUserSettings: () => DigitalDetox.userSettings,
 
 	/**
 	 * Set user settings from storage
@@ -228,8 +228,8 @@ const ImpulseBlocker = {
 		// When sites are defined
 		if (settings !== undefined) {
 			// Set global sites array
-			ImpulseBlocker.userSettings = settings;
-			ImpulseBlocker.userSettingsModified = Date.now();
+			DigitalDetox.userSettings = settings;
+			DigitalDetox.userSettingsModified = Date.now();
 		}
 	},
 
@@ -239,7 +239,7 @@ const ImpulseBlocker = {
 	syncUserSettings: () => {
 		// Stores sites array in browser storage
 		browser.storage.sync.set({
-			userSettings: ImpulseBlocker.userSettings
+			userSettings: DigitalDetox.userSettings
 		});
 	},
 
@@ -247,7 +247,7 @@ const ImpulseBlocker = {
 	 * Returns the current loaded sites of the extension.
 	 */
 	getBlockedSites: () => {
-		const sites = ImpulseBlocker.userSettings.blockedSites,
+		const sites = DigitalDetox.userSettings.blockedSites,
 			blockedSites = [];
 
 		sites.forEach(site => {
@@ -263,7 +263,7 @@ const ImpulseBlocker = {
 	 * @param  {string} url Url to add to the list
 	 */
 	addSite: (url, time = 0) => {
-		const userSettings = ImpulseBlocker.getUserSettings();
+		const userSettings = DigitalDetox.getUserSettings();
 
 		// Add url to blocked websites
 		userSettings.blockedSites.push({
@@ -272,7 +272,7 @@ const ImpulseBlocker = {
 		});
 
 		// Update user settings
-		ImpulseBlocker.setUserSettings(userSettings);
+		DigitalDetox.setUserSettings(userSettings);
 	},
 
 	/**
@@ -280,33 +280,33 @@ const ImpulseBlocker = {
 	 * @param  {string} url Url to remove to the list
 	 */
 	removeSite: url => {
-		const userSettings = ImpulseBlocker.getUserSettings();
+		const userSettings = DigitalDetox.getUserSettings();
 
 		userSettings.blockedSites.splice(
 			userSettings.blockedSites.findIndex(v => v.url === url),
 			1
 		);
 
-		ImpulseBlocker.setUserSettings(userSettings);
+		DigitalDetox.setUserSettings(userSettings);
 	},
 
 	/**
 	 * Fetches blocked websites lists, attaches them to the listener provided by the WebExtensions API
 	 */
 	setBlocker: () => {
-		const sites = ImpulseBlocker.getBlockedSites(),
+		const sites = DigitalDetox.getBlockedSites(),
 			pattern = sites.map(item => `*://*.${item}/*`);
 
 		// Clear blocker incase when blocker is already running
-		ImpulseBlocker.clearBlocker();
+		DigitalDetox.clearBlocker();
 
 		if (pattern.length > 0) {
 			// Block current tabs
-			ImpulseBlocker.redirectCurrent(pattern);
+			DigitalDetox.redirectCurrent(pattern);
 
 			// Listen to new tabs
 			browser.webRequest.onBeforeRequest.addListener(
-				ImpulseBlocker.redirect,
+				DigitalDetox.redirect,
 				{
 					urls: pattern,
 					types: ['main_frame']
@@ -316,25 +316,25 @@ const ImpulseBlocker = {
 		}
 
 		// Enable blocker auto update
-		ImpulseBlocker.autoUpdateBlocker();
+		DigitalDetox.autoUpdateBlocker();
 
 		// Change status to on
-		ImpulseBlocker.setStatus('on');
+		DigitalDetox.setStatus('on');
 	},
 
 	/*
 	 * Update blocker when sites array is modified
 	 */
 	autoUpdateBlocker: () => {
-		let previousSites = JSON.stringify(ImpulseBlocker.getBlockedSites());
+		let previousSites = JSON.stringify(DigitalDetox.getBlockedSites());
 
-		ImpulseBlocker.sitesTimer = setInterval(() => {
-			let currentSites = JSON.stringify(ImpulseBlocker.getBlockedSites());
+		DigitalDetox.sitesTimer = setInterval(() => {
+			let currentSites = JSON.stringify(DigitalDetox.getBlockedSites());
 			if (currentSites !== previousSites) {
-				ImpulseBlocker.setBlocker();
+				DigitalDetox.setBlocker();
 				previousSites = currentSites;
 			}
-		}, ImpulseBlocker.sitesInterval);
+		}, DigitalDetox.sitesInterval);
 	},
 
 	/**
@@ -342,11 +342,11 @@ const ImpulseBlocker = {
 	 */
 	disableBlocker: () => {
 		// Restore blocked tabs
-		ImpulseBlocker.restoreCurrent();
+		DigitalDetox.restoreCurrent();
 
 		// Remove listeners
-		ImpulseBlocker.clearBlocker();
-		ImpulseBlocker.setStatus('off');
+		DigitalDetox.clearBlocker();
+		DigitalDetox.setStatus('off');
 	},
 
 	/*
@@ -354,9 +354,9 @@ const ImpulseBlocker = {
 	 */
 	clearBlocker: () => {
 		browser.webRequest.onBeforeRequest.removeListener(
-			ImpulseBlocker.redirect
+			DigitalDetox.redirect
 		);
-		clearInterval(ImpulseBlocker.sitesTimer);
+		clearInterval(DigitalDetox.sitesTimer);
 	},
 
 	/**
@@ -391,7 +391,7 @@ const ImpulseBlocker = {
 
 		// Test url on false positive when url components are found
 		if (requestDetails.url.match(/[?#]./)) {
-			const sites = ImpulseBlocker.getBlockedSites();
+			const sites = DigitalDetox.getBlockedSites();
 			const matchUrl = new URL(requestDetails.url);
 			const matchDomain = matchUrl.hostname.replace(/^www\./, '');
 
@@ -429,20 +429,20 @@ const ImpulseBlocker = {
 	}
 };
 
-ImpulseBlocker.init();
+DigitalDetox.init();
 
 // Helper functions to access object literal from popup.js file. These funcitons are
 // easily accessible from the getBackgroundPage instance.
 function getStatus() {
-	return ImpulseBlocker.getStatus();
+	return DigitalDetox.getStatus();
 }
 
 function disableBlocker() {
-	ImpulseBlocker.disableBlocker();
+	DigitalDetox.disableBlocker();
 }
 
 function setBlocker() {
-	ImpulseBlocker.setBlocker();
+	DigitalDetox.setBlocker();
 }
 
 function getDomain() {
@@ -453,31 +453,31 @@ function getDomain() {
 }
 
 function syncUserSettings() {
-	return ImpulseBlocker.syncUserSettings();
+	return DigitalDetox.syncUserSettings();
 }
 
 function getUserSettings() {
-	return ImpulseBlocker.getUserSettings();
+	return DigitalDetox.getUserSettings();
 }
 
 function refreshUserSettings() {
-	return ImpulseBlocker.loadUserSettings();
+	return DigitalDetox.loadUserSettings();
 }
 
 function getBlockedSites() {
-	return ImpulseBlocker.getBlockedSites();
+	return DigitalDetox.getBlockedSites();
 }
 
 function getAllSites() {
-	return ImpulseBlocker.getUserSettings().blockedSites;
+	return DigitalDetox.getUserSettings().blockedSites;
 }
 
 function addSite(url) {
-	return ImpulseBlocker.addSite(url);
+	return DigitalDetox.addSite(url);
 }
 
 function removeSite(url) {
-	return ImpulseBlocker.removeSite(url);
+	return DigitalDetox.removeSite(url);
 }
 
 function addCurrentlyActiveSite() {
