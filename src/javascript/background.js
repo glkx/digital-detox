@@ -203,7 +203,7 @@ const DigitalDetox = {
 	loadUserSettings: () => {
 		return browser.storage.sync.get('userSettings').then(storage => {
 			if (typeof storage.userSettings !== undefined) {
-				DigitalDetox.setUserSettings(storage.userSettings);
+				DigitalDetox.updateUserSettings(storage.userSettings);
 			} else {
 				DigitalDetox.prepareUserSettings();
 			}
@@ -225,7 +225,7 @@ const DigitalDetox = {
 	/**
 	 * Set user settings from storage
 	 */
-	setUserSettings: settings => {
+	updateUserSettings: settings => {
 		// When sites are defined
 		if (settings !== undefined) {
 			// Set global sites array
@@ -273,7 +273,7 @@ const DigitalDetox = {
 		});
 
 		// Update user settings
-		DigitalDetox.setUserSettings(userSettings);
+		DigitalDetox.updateUserSettings(userSettings);
 	},
 
 	/**
@@ -288,7 +288,7 @@ const DigitalDetox = {
 			1
 		);
 
-		DigitalDetox.setUserSettings(userSettings);
+		DigitalDetox.updateUserSettings(userSettings);
 	},
 
 	/**
