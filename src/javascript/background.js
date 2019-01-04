@@ -115,7 +115,7 @@ const DigitalDetox = {
 	 */
 	init: () => {
 		// Load sites form storage then enable blocker and sync listener
-		DigitalDetox.loadUserSettings().then(() => {
+		DigitalDetox.initUserSettings().then(() => {
 			// Start blocking
 			DigitalDetox.enableBlocker();
 			// Start listener for sites to sync
@@ -200,7 +200,7 @@ const DigitalDetox = {
 	/**
 	 * Load user settings from storage
 	 */
-	loadUserSettings: () => {
+	initUserSettings: () => {
 		return browser.storage.sync.get('userSettings').then(storage => {
 			if (typeof storage.userSettings !== undefined) {
 				DigitalDetox.updateUserSettings(storage.userSettings);
@@ -462,7 +462,7 @@ function getUserSettings() {
 }
 
 function refreshUserSettings() {
-	return DigitalDetox.loadUserSettings();
+	return DigitalDetox.initUserSettings();
 }
 
 function getBlockedSites() {
