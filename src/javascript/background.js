@@ -568,7 +568,7 @@ function getDomain() {
 }
 
 function refreshOptions() {
-	return DigitalDetox.initOptions();
+	return DigitalDetox.loadOptions();
 }
 
 function getUserOptions() {
