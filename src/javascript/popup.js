@@ -1,3 +1,5 @@
+'use strict';
+
 var toggleButton,
 	addButton,
 	prefsButton,

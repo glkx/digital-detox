@@ -1,3 +1,5 @@
+'use strict';
+
 var blockedSites, form, getBackgroundPage;
 
 document.addEventListener('DOMContentLoaded', initialize);

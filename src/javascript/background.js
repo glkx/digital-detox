@@ -1,11 +1,11 @@
+'use strict';
+
 const DigitalDetox = {
 	/**
 	 * Global variables
 	 */
 	status: 'on',
-	localSettings: {
-
-	},
+	localSettings: {},
 	userSettings: {
 		blockedSites: [
 			// Social media

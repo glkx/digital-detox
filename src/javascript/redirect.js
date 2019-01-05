@@ -1,3 +1,5 @@
+'use strict';
+
 var getBackgroundPage, currentUrl, redirectUrl, redirectDomain;
 
 document.addEventListener('DOMContentLoaded', initialize);
