@@ -56,7 +56,7 @@ function restoreOptions() {
 		if (storage.options_setup !== true) {
 			getBackgroundPage.then(bg => {
 				// Rehresh sites
-				bg.refreshUserSettings().then(setOptions);
+				bg.refreshOptions().then(setOptions);
 			});
 			browser.storage.local.set({
 				options_setup: true
@@ -70,17 +70,17 @@ function restoreOptions() {
 function setOptions() {
 	getBackgroundPage.then(bg => {
 		// Get user settings
-		const userSettings = bg.getUserSettings();
+		const userOptions = bg.getUserOptions();
 
 		// Set sites
-		setSites(userSettings.blockedSites);
+		setSites(userOptions.blockedSites);
 	});
 }
 
 function closeOptions() {
 	// Request sync sites to storage
 	getBackgroundPage.then(bg => {
-		bg.syncUserSettings();
+		bg.syncUserOptions();
 	});
 }
 

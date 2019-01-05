@@ -1,147 +1,192 @@
 'use strict';
 
 const DigitalDetox = {
-	/**
-	 * Global variables
-	 */
-	status: 'on',
-	localSettings: {},
-	userSettings: {
-		blockedSites: [
-			// Social media
-			{
-				url: 'facebook.com',
-				time: 0
-			},
-			{
-				url: 'tumblr.com',
-				time: 0
-			},
-			{
-				url: 'instagram.com',
-				time: 0
-			},
-			{
-				url: 'twitter.com',
-				time: 0
-			},
-			{
-				url: 'snapchat.com',
-				time: 0
-			},
-			{
-				url: 'vk.com',
-				time: 0
-			},
-			{
-				url: 'pinterest.com',
-				time: 0
-			},
-			{
-				url: 'reddit.com',
-				time: 0
-			},
-			{
-				url: 'linkedin.com',
-				time: 0
-			},
-			// Video streaming
-			{
-				url: 'youtube.com',
-				time: 0
-			},
-			{
-				url: 'netflix.com',
-				time: 0
-			},
-			{
-				url: 'primevideo.com',
-				time: 0
-			},
-			{
-				url: 'hulu.com',
-				time: 0
-			},
-			{
-				url: 'hbonow.com',
-				time: 0
-			},
-			{
-				url: 'videoland.com',
-				time: 0
-			},
-			{
-				url: 'dumpert.nl',
-				time: 0
-			},
-			{
-				url: 'dailymotion.com',
-				time: 0
-			},
-			{
-				url: 'twitch.tv',
-				time: 0
-			},
-			// Entertainment
-			{
-				url: '9gag.com',
-				time: 0
-			},
-			{
-				url: 'buzzfeed.com',
-				time: 0
-			}
-		]
-	}, // used as default for storage
-	userSettingsModified: 0,
-	userSettingsSyncInterval: 30000, // Interval for timer
-	sitesInterval: 1000, // Interval for timer
-	sitesTimer: 0,
-	disableDuration: 5400000, // 1.5 hours
-	disableInterval: 3000, // Interval for timer
-	disableModified: 0,
-	disableTimer: 0,
-
-	// TODO: Block and restore tabs in background
-
-	/**
-	 * Generic error logger.
-	 */
-	onError: event => {
-		console.error(event);
+	init: () => {
+		// Load sites form storage then enable blocker and sync listener
+		DigitalDetox.loadOptions().then(() => {
+			// Initiate blocker
+			DigitalDetox.initBlocker();
+			// Process handling like sync
+			DigitalDetox.startProcesses();
+		}, DigitalDetox.onError);
 	},
 
 	/**
-	 * Starts the blocker. Adds a listener so that if new websites is added
-	 * to the blocked list the listener is refreshed.
+	 * Initiate options
 	 */
-	init: () => {
-		// Load sites form storage then enable blocker and sync listener
-		DigitalDetox.initUserSettings().then(() => {
-			// Start blocking
-			DigitalDetox.initBlocker();
-			// Start listener for sites to sync
-			DigitalDetox.setListeners();
-		}, DigitalDetox.onError);
+	loadOptions: () => {
+		// Wait for local and user options are loaded
+		return new Promise((resolve, reject) => {
+			Promise.all([
+				DigitalDetox.loadLocalOptions(),
+				DigitalDetox.loadUserOptions()
+			]).then(() => {
+				return resolve();
+			});
+		});
+	},
+
+	// Load local options from local storage
+	loadLocalOptions: () => {
+		return new Promise((resolve, reject) => {
+			browser.storage.local.get('localOptions').then(storage => {
+				if (
+					typeof storage.localOptions != undefined &&
+					storage.localOptions != undefined
+				) {
+					DigitalDetox.localOptions = storage.localOptions;
+				}
+				return resolve();
+			});
+		});
+	},
+
+	// Load user options from sync storage
+	loadUserOptions: () => {
+		return new Promise((resolve, reject) => {
+			// NOTE: userSettings was old variable for userOptions
+			browser.storage.sync.get('userSettings').then(storage => {
+				if (
+					typeof storage.userSettings != undefined &&
+					storage.userSettings != undefined
+				) {
+					DigitalDetox.userOptions = storage.userSettings;
+				}
+				return resolve();
+			});
+		});
+	},
+
+	/**
+	 * Get local options
+	 */
+	getLocalOptions: () => DigitalDetox.localOptions,
+
+	/**
+	 * Set user settings from storage
+	 */
+	updateLocalOptions: (options, value = null) => {
+		// When sites are defined
+		if (options != undefined) {
+			if (value != undefined) {
+				DigitalDetox.localOptions[options] = value;
+			} else {
+				DigitalDetox.localOptions = options;
+			}
+			DigitalDetox.localOptionsModified = Date.now();
+		}
+	},
+
+	/**
+	 * Sync user settings
+	 */
+	syncLocalOptions: () => {
+		// Stores sites array in browser storage
+		browser.storage.local.set({
+			localOptions: DigitalDetox.localOptions
+		});
+	},
+
+	/**
+	 * Get user options
+	 */
+	getUserOptions: () => DigitalDetox.userOptions,
+
+	/**
+	 * Update user options
+	 */
+	updateUserOptions: (options, value = null) => {
+		// When sites are defined
+		if (options != undefined) {
+			// Set global sites array
+			if (value != undefined) {
+				DigitalDetox.userOptions[options] = value;
+			} else {
+				DigitalDetox.userOptions = options;
+			}
+			DigitalDetox.userOptionsModified = Date.now();
+		}
+	},
+
+	/**
+	 * Sync user settings
+	 */
+	syncUserOptions: () => {
+		// Stores sites array in browser storage
+		browser.storage.sync.set({
+			userSettings: DigitalDetox.userOptions
+		});
+	},
+
+	/**
+	 * Process runner
+	 */
+	startProcesses: () => {
+		// Process times
+		let processLastRuntime = {
+			syncLocalOptions: 0,
+			syncUserOptions: 0
+		};
+
+		// Sync local options
+		setInterval(() => {
+			// When previous sync timestamp is updated
+			if (
+				DigitalDetox.localOptionsModified != undefined &&
+				DigitalDetox.localOptionsModified !=
+					processLastRuntime.syncLocalOptions
+			) {
+				// Stores sites array in browser storage
+				DigitalDetox.syncLocalOptions();
+
+				// Update previous sync timestamp
+				processLastRuntime.syncLocalOptions =
+					DigitalDetox.localOptionsModified;
+			}
+		}, DigitalDetox.options.processInterval.syncLocalOptions);
+
+		// Sync user options
+		setInterval(() => {
+			// When previous sync timestamp is updated
+			if (
+				DigitalDetox.userOptionsModified != undefined &&
+				DigitalDetox.userOptionsModified !=
+					processLastRuntime.syncUserOptions
+			) {
+				// Stores sites array in browser storage
+				DigitalDetox.syncUserOptions();
+
+				// Update previous sync timestamp
+				processLastRuntime.syncUserOptions =
+					DigitalDetox.userOptionsModified;
+			}
+		}, DigitalDetox.options.processInterval.syncUserOptions);
 	},
 
 	/**
 	 * Returns the current status of the extension.
 	 */
-	getStatus: () => DigitalDetox.status,
+	getStatus: () => {
+		return DigitalDetox.getLocalOptions().status != undefined
+			? DigitalDetox.getLocalOptions().status
+			: DigitalDetox.options.status;
+	},
 
 	/**
 	 * Sets the current status of the extension.
 	 * @param string status
 	 */
 	setStatus: status => {
-		DigitalDetox.status = status;
+		// Change local status
+		DigitalDetox.updateLocalOptions('status', status);
+		// Change status moditication time
+		DigitalDetox.updateLocalOptions('statusModified', Date.now());
 
 		// Clear auto re-enable blocking in case timer is running
 		DigitalDetox.clearAutoEnableBlocker();
 
 		// Set default icon
-		var icon = browser.runtime.getURL('/icons/icon-32.svg');
+		let icon = browser.runtime.getURL('/icons/icon-32.svg');
 
 		// When status is off
 		if (status === 'off') {
@@ -162,95 +207,28 @@ const DigitalDetox = {
 	 */
 	autoEnableBlocker: () => {
 		// Set time of disabling
-		DigitalDetox.disableModified = Date.now();
+		DigitalDetox.options.disableModified = Date.now();
 
 		// Listerner for auto disable
-		DigitalDetox.disableTimer = setInterval(() => {
+		DigitalDetox.options.disableTimer = setInterval(() => {
 			if (
-				Date.now() - DigitalDetox.disableModified >=
-				DigitalDetox.disableDuration
+				Date.now() - DigitalDetox.options.disableModified >=
+				DigitalDetox.options.disableDuration
 			) {
 				DigitalDetox.enableBlocker();
 			}
-		}, DigitalDetox.disableInterval);
+		}, DigitalDetox.options.disableInterval);
 	},
 
 	clearAutoEnableBlocker: () => {
-		clearInterval(DigitalDetox.disableTimer);
-	},
-
-	/**
-	 * Listen for new sites array to sync to browser storage
-	 */
-	setListeners: () => {
-		// Get previous sync timestamp
-		let previousSync = DigitalDetox.userSettingsModified;
-
-		// Start interval
-		setInterval(() => {
-			// When previous sync timestamp is updated
-			if (DigitalDetox.userSettingsModified !== previousSync) {
-				// Stores sites array in browser storage
-				DigitalDetox.syncUserSettings();
-
-				// Update previous sync timestamp
-				previousSync = DigitalDetox.userSettingsModified;
-			}
-		}, DigitalDetox.userSettingsSyncInterval);
-	},
-
-	/**
-	 * Load user settings from storage
-	 */
-	initUserSettings: () => {
-		return browser.storage.sync.get('userSettings').then(storage => {
-			if (typeof storage.userSettings !== undefined) {
-				DigitalDetox.updateUserSettings(storage.userSettings);
-			} else {
-				DigitalDetox.prepareUserSettings();
-			}
-		});
-	},
-
-	/**
-	 * Initate first sync of user settings to storage
-	 */
-	prepareUserSettings: () => {
-		DigitalDetox.syncUserSettings();
-	},
-
-	/**
-	 * Get user settings from storage
-	 */
-	getUserSettings: () => DigitalDetox.userSettings,
-
-	/**
-	 * Set user settings from storage
-	 */
-	updateUserSettings: settings => {
-		// When sites are defined
-		if (settings !== undefined) {
-			// Set global sites array
-			DigitalDetox.userSettings = settings;
-			DigitalDetox.userSettingsModified = Date.now();
-		}
-	},
-
-	/**
-	 * Sync user settings
-	 */
-	syncUserSettings: () => {
-		// Stores sites array in browser storage
-		browser.storage.sync.set({
-			userSettings: DigitalDetox.userSettings
-		});
+		clearInterval(DigitalDetox.options.disableTimer);
 	},
 
 	/**
 	 * Returns the current loaded sites of the extension.
 	 */
 	getBlockedSites: () => {
-		const sites = DigitalDetox.userSettings.blockedSites,
+		const sites = DigitalDetox.getUserOptions().blockedSites,
 			blockedSites = [];
 
 		sites.forEach(site => {
@@ -266,16 +244,16 @@ const DigitalDetox = {
 	 * @param  {string} url Url to add to the list
 	 */
 	addSite: (url, time = 0) => {
-		const userSettings = DigitalDetox.getUserSettings();
+		const userOptions = DigitalDetox.getUserOptions();
 
 		// Add url to blocked websites
-		userSettings.blockedSites.push({
+		userOptions.blockedSites.push({
 			url: url,
 			time: time
 		});
 
 		// Update user settings
-		DigitalDetox.updateUserSettings(userSettings);
+		DigitalDetox.updateUserOptions(userOptions);
 	},
 
 	/**
@@ -283,14 +261,14 @@ const DigitalDetox = {
 	 * @param  {string} url Url to remove to the list
 	 */
 	removeSite: url => {
-		const userSettings = DigitalDetox.getUserSettings();
+		const userOptions = DigitalDetox.getUserOptions();
 
-		userSettings.blockedSites.splice(
-			userSettings.blockedSites.findIndex(v => v.url === url),
+		userOptions.blockedSites.splice(
+			userOptions.blockedSites.findIndex(v => v.url === url),
 			1
 		);
 
-		DigitalDetox.updateUserSettings(userSettings);
+		DigitalDetox.updateUserOptions(userOptions);
 	},
 
 	initBlocker: () => {
@@ -306,16 +284,18 @@ const DigitalDetox = {
 		const sites = DigitalDetox.getBlockedSites(),
 			pattern = sites.map(item => `*://*.${item}/*`);
 
+		// console.log(pattern);
+
 		// Clear blocker incase when blocker is already running
 		DigitalDetox.clearBlocker();
 
 		if (pattern.length > 0) {
 			// Block current tabs
-			DigitalDetox.redirectCurrent(pattern);
+			DigitalDetox.redirectCurrentTab(pattern);
 
 			// Listen to new tabs
 			browser.webRequest.onBeforeRequest.addListener(
-				DigitalDetox.redirect,
+				DigitalDetox.redirectTab,
 				{
 					urls: pattern,
 					types: ['main_frame']
@@ -337,13 +317,13 @@ const DigitalDetox = {
 	autoUpdateBlocker: () => {
 		let previousSites = JSON.stringify(DigitalDetox.getBlockedSites());
 
-		DigitalDetox.sitesTimer = setInterval(() => {
+		DigitalDetox.options.sitesTimer = setInterval(() => {
 			let currentSites = JSON.stringify(DigitalDetox.getBlockedSites());
 			if (currentSites !== previousSites) {
 				DigitalDetox.enableBlocker();
 				previousSites = currentSites;
 			}
-		}, DigitalDetox.sitesInterval);
+		}, DigitalDetox.options.sitesInterval);
 	},
 
 	/**
@@ -351,7 +331,7 @@ const DigitalDetox = {
 	 */
 	disableBlocker: () => {
 		// Restore blocked tabs
-		DigitalDetox.restoreCurrent();
+		DigitalDetox.restoreTabs();
 
 		// Remove listeners
 		DigitalDetox.clearBlocker();
@@ -363,15 +343,15 @@ const DigitalDetox = {
 	 */
 	clearBlocker: () => {
 		browser.webRequest.onBeforeRequest.removeListener(
-			DigitalDetox.redirect
+			DigitalDetox.redirectTab
 		);
-		clearInterval(DigitalDetox.sitesTimer);
+		clearInterval(DigitalDetox.options.sitesTimer);
 	},
 
 	/**
 	 * Redirect current tabs
 	 */
-	redirectCurrent: urls => {
+	redirectCurrentTab: urls => {
 		browser.tabs
 			.query({
 				url: urls,
@@ -395,7 +375,7 @@ const DigitalDetox = {
 	/**
 	 * Redirects the tab to local "You have been blocked" page.
 	 */
-	redirect: requestDetails => {
+	redirectTab: requestDetails => {
 		let matchFound = true; // By default url is catched correctly
 
 		// Test url on false positive when url components are found
@@ -421,9 +401,9 @@ const DigitalDetox = {
 	},
 
 	/**
-	 * Restore current tabs
+	 * Restore tabs
 	 */
-	restoreCurrent: () => {
+	restoreTabs: () => {
 		browser.tabs
 			.query({
 				url: browser.runtime.getURL('*')
@@ -435,13 +415,139 @@ const DigitalDetox = {
 					browser.tabs.reload(tab.id);
 				}
 			});
+	},
+
+	/**
+	 * Generic error logger.
+	 */
+	onError: event => {
+		console.error(event);
 	}
+};
+
+// Default options
+DigitalDetox.options = {
+	status: 'on',
+	processInterval: {
+		syncLocalOptions: 500,
+		syncUserOptions: 30000,
+		autoEnableInterval: 5000
+	},
+	updateBlockerInterval: 1000,
+	disableDuration: 5400000,
+
+	// Legacy
+	userSettingsModified: 0,
+	userSettingsSyncInterval: 30000, // Interval for timer
+	sitesInterval: 1000, // Interval for timer
+	sitesTimer: 0,
+	disableInterval: 3000, // Interval for timer
+	disableModified: 0,
+	disableTimer: 0
+};
+
+// Default local options
+DigitalDetox.localOptions = {
+	status: null,
+	statusModified: 0,
+	disableDuration: null
+};
+
+// Default user options meant to be synct
+DigitalDetox.userOptions = {
+	blockedSites: [
+		// Social media
+		{
+			url: 'facebook.com',
+			time: 0
+		},
+		{
+			url: 'tumblr.com',
+			time: 0
+		},
+		{
+			url: 'instagram.com',
+			time: 0
+		},
+		{
+			url: 'twitter.com',
+			time: 0
+		},
+		{
+			url: 'snapchat.com',
+			time: 0
+		},
+		{
+			url: 'vk.com',
+			time: 0
+		},
+		{
+			url: 'pinterest.com',
+			time: 0
+		},
+		{
+			url: 'reddit.com',
+			time: 0
+		},
+		{
+			url: 'linkedin.com',
+			time: 0
+		},
+		// Video streaming
+		{
+			url: 'youtube.com',
+			time: 0
+		},
+		{
+			url: 'netflix.com',
+			time: 0
+		},
+		{
+			url: 'primevideo.com',
+			time: 0
+		},
+		{
+			url: 'hulu.com',
+			time: 0
+		},
+		{
+			url: 'hbonow.com',
+			time: 0
+		},
+		{
+			url: 'videoland.com',
+			time: 0
+		},
+		{
+			url: 'dumpert.nl',
+			time: 0
+		},
+		{
+			url: 'dailymotion.com',
+			time: 0
+		},
+		{
+			url: 'twitch.tv',
+			time: 0
+		},
+		// Entertainment
+		{
+			url: '9gag.com',
+			time: 0
+		},
+		{
+			url: 'buzzfeed.com',
+			time: 0
+		}
+	]
 };
 
 DigitalDetox.init();
 
-// Helper functions to access object literal from popup.js file. These funcitons are
-// easily accessible from the getBackgroundPage instance.
+/**
+ * Helper functions
+ */
+
 function getStatus() {
 	return DigitalDetox.getStatus();
 }
@@ -461,16 +567,16 @@ function getDomain() {
 	});
 }
 
-function syncUserSettings() {
-	return DigitalDetox.syncUserSettings();
+function refreshOptions() {
+	return DigitalDetox.initOptions();
 }
 
-function getUserSettings() {
-	return DigitalDetox.getUserSettings();
+function getUserOptions() {
+	return DigitalDetox.getUserOptions();
 }
 
-function refreshUserSettings() {
-	return DigitalDetox.initUserSettings();
+function syncUserOptions() {
+	return DigitalDetox.syncUserOptions();
 }
 
 function getBlockedSites() {
@@ -478,7 +584,7 @@ function getBlockedSites() {
 }
 
 function getAllSites() {
-	return DigitalDetox.getUserSettings().blockedSites;
+	return DigitalDetox.getUserOptions().blockedSites;
 }
 
 function addSite(url) {

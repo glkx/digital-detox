@@ -9,9 +9,7 @@ function initialize() {
 
 	// Get domain
 	currentUrl = new URL(window.location.href);
-	redirectUrl = atob(
-		decodeURIComponent(currentUrl.searchParams.get('from'))
-	);
+	redirectUrl = atob(decodeURIComponent(currentUrl.searchParams.get('from')));
 	redirectDomain = new URL(redirectUrl).hostname.replace(/^www\./, '');
 
 	restoreRedirect();
@@ -35,7 +33,8 @@ function localizeRedirect() {
 
 	if (redirectDomain !== 'undefined') {
 		document.getElementById('redirectShortDescText').innerText = getI18nMsg(
-			'redirectShortCustomDescText', redirectDomain
+			'redirectShortCustomDescText',
+			redirectDomain
 		);
 	} else {
 		document.getElementById('redirectShortDescText').innerText = getI18nMsg(

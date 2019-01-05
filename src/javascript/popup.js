@@ -53,8 +53,8 @@ function localizePopup() {
 }
 
 function restorePopup() {
-	markExtensionStatus();
-	displayCurrentDomain();
+	setStatus();
+	setCurrentDomain();
 }
 
 function handleClick() {
@@ -65,11 +65,11 @@ function handleClick() {
 		} else {
 			getBackgroundPage.then(bg => bg.enableBlocker());
 		}
-		markExtensionStatus();
+		setStatus();
 	});
 }
 
-function markExtensionStatus() {
+function setStatus() {
 	getBackgroundPage.then(bg => {
 		const status = bg.getStatus();
 		if (status === 'off') {
@@ -92,11 +92,10 @@ function markExtensionStatus() {
 	});
 }
 
-function displayCurrentDomain() {
+function setCurrentDomain() {
 	getBackgroundPage.then(bg => {
-		let url;
 		bg.getDomain().then(tabs => {
-			url = new URL(tabs[0].url);
+			let url = new URL(tabs[0].url);
 			// dont show the button for non-http pages
 			if (['http:', 'https:'].indexOf(url.protocol) == -1) {
 				return false;
