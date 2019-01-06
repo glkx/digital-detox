@@ -251,6 +251,9 @@ const DigitalDetox = {
 	addSite: (url, time = 0) => {
 		const userOptions = DigitalDetox.getUserOptions();
 
+		// Parse time
+		time = parseInt(time, 0);
+
 		// Add url to blocked websites
 		userOptions.blockedSites.push({
 			url: url,
