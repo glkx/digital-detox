@@ -161,6 +161,28 @@ const DigitalDetox = {
 					DigitalDetox.userOptionsModified;
 			}
 		}, DigitalDetox.options.processInterval.syncUserOptions);
+
+		// Auto change status blocker
+		setInterval(() => {
+			let blockerStatus = DigitalDetox.getStatus(),
+				disableDuration =
+					DigitalDetox.getLocalOptions().disableDuration != undefined
+						? DigitalDetox.getLocalOptions().disableDuration
+						: DigitalDetox.options.disableDuration;
+
+			if (blockerStatus == 'off') {
+				// When maximum time is exceded
+				if (
+					Date.now() -
+						DigitalDetox.getLocalOptions().statusModified >=
+					disableDuration
+				) {
+					DigitalDetox.enableBlocker();
+				}
+			} else if (blockerStatus == 'on') {
+				// IDEA: Auto disable blocker between time range
+			}
+		}, DigitalDetox.options.processInterval.statusInterval);
 	},
 
 	/**
@@ -182,46 +204,18 @@ const DigitalDetox = {
 		// Change status moditication time
 		DigitalDetox.updateLocalOptions('statusModified', Date.now());
 
-		// Clear auto re-enable blocking in case timer is running
-		DigitalDetox.clearAutoEnableBlocker();
-
 		// Set default icon
 		let icon = browser.runtime.getURL('/icons/icon-32.svg');
 
 		// When status is off
 		if (status === 'off') {
 			icon = browser.runtime.getURL('/icons/icon-32-disabled.svg');
-
-			// Automatically re-enable blocking
-			DigitalDetox.autoEnableBlocker();
 		}
 
 		// Set icon
 		browser.browserAction.setIcon({
 			path: icon
 		});
-	},
-
-	/*
-	 * Re-enable blocker after set time
-	 */
-	autoEnableBlocker: () => {
-		// Set time of disabling
-		DigitalDetox.options.disableModified = Date.now();
-
-		// Listerner for auto disable
-		DigitalDetox.options.disableTimer = setInterval(() => {
-			if (
-				Date.now() - DigitalDetox.options.disableModified >=
-				DigitalDetox.options.disableDuration
-			) {
-				DigitalDetox.enableBlocker();
-			}
-		}, DigitalDetox.options.disableInterval);
-	},
-
-	clearAutoEnableBlocker: () => {
-		clearInterval(DigitalDetox.options.disableTimer);
 	},
 
 	/**
@@ -317,13 +311,13 @@ const DigitalDetox = {
 	autoUpdateBlocker: () => {
 		let previousSites = JSON.stringify(DigitalDetox.getBlockedSites());
 
-		DigitalDetox.options.sitesTimer = setInterval(() => {
+		DigitalDetox.updateBlockerTimer = setInterval(() => {
 			let currentSites = JSON.stringify(DigitalDetox.getBlockedSites());
 			if (currentSites !== previousSites) {
 				DigitalDetox.enableBlocker();
 				previousSites = currentSites;
 			}
-		}, DigitalDetox.options.sitesInterval);
+		}, DigitalDetox.options.updateBlockerInterval);
 	},
 
 	/**
@@ -345,7 +339,7 @@ const DigitalDetox = {
 		browser.webRequest.onBeforeRequest.removeListener(
 			DigitalDetox.redirectTab
 		);
-		clearInterval(DigitalDetox.options.sitesTimer);
+		clearInterval(DigitalDetox.updateBlockerTimer);
 	},
 
 	/**
@@ -431,19 +425,10 @@ DigitalDetox.options = {
 	processInterval: {
 		syncLocalOptions: 500,
 		syncUserOptions: 30000,
-		autoEnableInterval: 5000
+		statusInterval: 6000
 	},
 	updateBlockerInterval: 1000,
-	disableDuration: 5400000,
-
-	// Legacy
-	userSettingsModified: 0,
-	userSettingsSyncInterval: 30000, // Interval for timer
-	sitesInterval: 1000, // Interval for timer
-	sitesTimer: 0,
-	disableInterval: 3000, // Interval for timer
-	disableModified: 0,
-	disableTimer: 0
+	disableDuration: 5400000
 };
 
 // Default local options
