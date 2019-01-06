@@ -486,7 +486,7 @@ DigitalDetox.options = {
 DigitalDetox.localOptions = {
 	status: null,
 	statusModified: 0,
-	history: []
+	history: null
 };
 
 // Default user options meant to be synct
