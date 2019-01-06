@@ -638,8 +638,8 @@ function resetHistory() {
 	DigitalDetox.updateLocalOptions('historyModified', Date.now());
 }
 
-function addSite(url) {
-	return DigitalDetox.addSite(url);
+function addSite(url, time) {
+	return DigitalDetox.addSite(url, time);
 }
 
 function removeSite(url) {
