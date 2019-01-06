@@ -388,9 +388,9 @@ const DigitalDetox = {
 
 		// Test url on false positive when url components are found
 		if (requestDetails.url.match(/[?#]./)) {
-			const sites = DigitalDetox.getBlockedSites();
-			const matchUrl = new URL(requestDetails.url);
-			const matchDomain = matchUrl.hostname.replace(/^www\./, '');
+			const sites = DigitalDetox.getBlockedSites(),
+				matchUrl = new URL(requestDetails.url),
+				matchDomain = matchUrl.hostname.replace(/^www\./, '');
 
 			// Catch url that are false positive for example when a url has a url as component
 			if (!sites.includes(matchDomain)) {

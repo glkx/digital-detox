@@ -52,12 +52,24 @@ function restoreRedirect() {
 				sites = bg.getAllSites();
 
 			if (
-				redirectUrl !== 'undefined' &&
-				(status === 'off' ||
-					sites.findIndex(v => v.url === redirectDomain) === -1)
+				redirectUrl != undefined &&
+				(status == 'off' || matchUrl(redirectDomain, sites) === false)
 			) {
 				window.location.href = redirectUrl;
 			}
 		});
 	}
+}
+
+function matchUrl(url, list) {
+	if (list.findIndex(v => v.url === url) > -1) {
+		return true;
+	} else {
+		for (let i = 0; i < list.length; i++) {
+			if (url.match(list[i])) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
