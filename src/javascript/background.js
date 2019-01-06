@@ -164,13 +164,15 @@ const DigitalDetox = {
 
 		// Auto change status blocker
 		setInterval(() => {
-			let blockerStatus = DigitalDetox.getStatus(),
-				disableDuration =
-					DigitalDetox.getLocalOptions().disableDuration != undefined
-						? DigitalDetox.getLocalOptions().disableDuration
-						: DigitalDetox.options.disableDuration;
+			let blockerStatus = DigitalDetox.getStatus();
 
 			if (blockerStatus == 'off') {
+				let userOptions = DigitalDetox.getUserOptions(),
+					disableDuration =
+						userOptions.disableDuration != undefined
+							? userOptions.disableDuration
+							: DigitalDetox.options.disableDuration;
+
 				// When maximum time is exceded
 				if (
 					Date.now() -
@@ -423,7 +425,7 @@ const DigitalDetox = {
 DigitalDetox.options = {
 	status: 'on',
 	processInterval: {
-		syncLocalOptions: 500,
+		syncLocalOptions: 1000,
 		syncUserOptions: 30000,
 		statusInterval: 6000
 	},
@@ -434,8 +436,7 @@ DigitalDetox.options = {
 // Default local options
 DigitalDetox.localOptions = {
 	status: null,
-	statusModified: 0,
-	disableDuration: null
+	statusModified: 0
 };
 
 // Default user options meant to be synct
@@ -524,7 +525,8 @@ DigitalDetox.userOptions = {
 			url: 'buzzfeed.com',
 			time: 0
 		}
-	]
+	],
+	disableDuration: null // TODO: Add disable duration to options page
 };
 
 DigitalDetox.init();
