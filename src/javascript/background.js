@@ -185,6 +185,15 @@ const DigitalDetox = {
 				// IDEA: Auto disable blocker between time range
 			}
 		}, DigitalDetox.options.processInterval.statusInterval);
+
+		// Counting visits
+		browser.webRequest.onBeforeRequest.addListener(
+			DigitalDetox.handleVisit,
+			{
+				urls: ['<all_urls>'],
+				types: ['main_frame']
+			}
+		);
 	},
 
 	/**
@@ -413,6 +422,45 @@ const DigitalDetox = {
 			});
 	},
 
+	// Listen to new tabs
+	handleVisit: requestDetails => {
+		const url = new URL(requestDetails.url),
+			domain = url.hostname.replace(/^www\./, ''),
+			localOptions = DigitalDetox.getLocalOptions();
+
+		let history =
+			localOptions.history != undefined
+				? localOptions.history
+				: DigitalDetox.options.history;
+
+		if (
+			localOptions.historyModified != undefined &&
+			new Date(localOptions.historyModified).getDate() !=
+				new Date().getDate()
+		) {
+			history = DigitalDetox.options.history;
+		}
+
+		const domainIndex = history.findIndex(v => v.url === domain);
+
+		if (domainIndex > -1) {
+			history[domainIndex].visits = history[domainIndex].visits + 1;
+			history[domainIndex].date = Date.now();
+		} else {
+			// Add url to blocked websites
+			history.push({
+				url: domain,
+				visits: 1,
+				date: Date.now()
+			});
+		}
+
+		// Update history
+		DigitalDetox.updateLocalOptions('history', history);
+		// Change history moditication time
+		DigitalDetox.updateLocalOptions('historyModified', Date.now());
+	},
+
 	/**
 	 * Generic error logger.
 	 */
@@ -430,13 +478,15 @@ DigitalDetox.options = {
 		statusInterval: 6000
 	},
 	updateBlockerInterval: 1000,
-	disableDuration: 5400000
+	disableDuration: 5400000,
+	history: []
 };
 
 // Default local options
 DigitalDetox.localOptions = {
 	status: null,
-	statusModified: 0
+	statusModified: 0,
+	history: []
 };
 
 // Default user options meant to be synct
@@ -572,6 +622,17 @@ function getBlockedSites() {
 
 function getAllSites() {
 	return DigitalDetox.getUserOptions().blockedSites;
+}
+
+function getHistory() {
+	return DigitalDetox.getLocalOptions().history;
+}
+
+function resetHistory() {
+	// Empty history
+	DigitalDetox.updateLocalOptions('history', DigitalDetox.options.history);
+	// Update history modification date
+	DigitalDetox.updateLocalOptions('historyModified', Date.now());
 }
 
 function addSite(url) {

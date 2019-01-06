@@ -78,6 +78,10 @@
 
 	"optionsBlockedSitesTHeadWebsites": {
 		"message": "Blocked websites"
+	},
+
+	"optionsBlockedSitesTHeadVisits": {
+		"message": "Visits (today)"
 	}
 
 }

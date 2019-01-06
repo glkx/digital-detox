@@ -78,6 +78,10 @@
 
 	"optionsBlockedSitesTHeadWebsites": {
 		"message": "Geblokkeerde websites"
+	},
+
+	"optionsBlockedSitesTHeadVisits": {
+		"message": "Aantal bezoeken (vandaag)"
 	}
 
 }

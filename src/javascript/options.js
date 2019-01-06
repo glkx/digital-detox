@@ -49,6 +49,9 @@ function localizeOptions() {
 	document.getElementById(
 		'optionsBlockedSitesTHeadWebsites'
 	).innerText = getI18nMsg('optionsBlockedSitesTHeadWebsites');
+	document.getElementById(
+		'optionsBlockedSitesTHeadVisits'
+	).innerText = getI18nMsg('optionsBlockedSitesTHeadVisits');
 }
 
 function restoreOptions() {
@@ -103,13 +106,24 @@ function setSites(sites) {
 	// Sort alphabetically on url
 	sites.sort(sortSites);
 
-	// Add sites to options page
-	sites.forEach(site => {
-		addToBlockedList(site.url);
+	getBackgroundPage.then(bg => {
+		const history = bg.getHistory();
+
+		// Add sites to options page
+		sites.forEach(site => {
+			const domainIndex = history.findIndex(v => v.url === site.url);
+			let visits = 0;
+
+			if (domainIndex > -1) {
+				visits = history[domainIndex].visits;
+			}
+
+			addToBlockedList(site.url, visits);
+		});
 	});
 }
 
-function addToBlockedList(url) {
+function addToBlockedList(url, visits = 0) {
 	const button = document.createElement('button');
 	button.textContent = browser.i18n.getMessage('optionsDeleteSiteButton');
 
@@ -119,11 +133,17 @@ function addToBlockedList(url) {
 	// Insert website cell
 	const valueCell = blockedSitesRow.insertCell(0);
 
+	// Insert visits cell
+	const visitsCell = blockedSitesRow.insertCell(1);
+
 	// Insert website cell
-	const buttonCell = blockedSitesRow.insertCell(1);
+	const buttonCell = blockedSitesRow.insertCell(2);
 
 	blockedSitesRow.dataset.url = url;
 	valueCell.textContent = url;
+	if (visits > 0) {
+		visitsCell.textContent = visits;
+	}
 	buttonCell.appendChild(button);
 }
 
