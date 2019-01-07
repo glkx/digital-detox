@@ -95,8 +95,6 @@ function setSites(sites) {
 	getBackgroundPage.then(bg => {
 		const history = bg.getHistory();
 
-		console.log(sites, history);
-
 		// Add sites to options page
 		sites.forEach(site => {
 			let visits = 0;
