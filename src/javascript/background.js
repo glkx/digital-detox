@@ -251,17 +251,24 @@ const DigitalDetox = {
 	addSite: (url, time = 0) => {
 		const userOptions = DigitalDetox.getUserOptions();
 
-		// Parse time
-		time = parseInt(time, 0);
+		// Check if url already exists
+		if (userOptions.blockedSites.findIndex(v => v.url === url) === -1) {
+			// Parse time
+			time = parseInt(time, 0);
 
-		// Add url to blocked websites
-		userOptions.blockedSites.push({
-			url: url,
-			time: time
-		});
+			// Add url to blocked websites
+			userOptions.blockedSites.push({
+				url: url,
+				time: time
+			});
 
-		// Update user settings
-		DigitalDetox.updateUserOptions(userOptions);
+			// Update user settings
+			DigitalDetox.updateUserOptions(userOptions);
+
+			return true;
+		}
+
+		return new Error('Url already exists.');
 	},
 
 	/**
