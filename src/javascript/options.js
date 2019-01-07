@@ -55,22 +55,6 @@ function localizeOptions() {
 }
 
 function restoreOptions() {
-	browser.storage.local.get('options_setup').then(storage => {
-		if (storage.options_setup !== true) {
-			getBackgroundPage.then(bg => {
-				// Rehresh sites
-				bg.refreshOptions().then(setOptions);
-			});
-			browser.storage.local.set({
-				options_setup: true
-			});
-		} else {
-			setOptions();
-		}
-	});
-}
-
-function setOptions() {
 	getBackgroundPage.then(bg => {
 		// Get user settings
 		const userOptions = bg.getUserOptions();
@@ -106,16 +90,23 @@ function setSites(sites) {
 	// Sort alphabetically on url
 	sites.sort(sortSites);
 
+
+
 	getBackgroundPage.then(bg => {
 		const history = bg.getHistory();
 
+		console.log(sites, history);
+
 		// Add sites to options page
 		sites.forEach(site => {
-			const domainIndex = history.findIndex(v => v.url === site.url);
-			let visits = 0;
+			let visits = '-';
 
-			if (domainIndex > -1) {
-				visits = history[domainIndex].visits;
+			if (history != undefined) {
+				const domainIndex = history.findIndex(v => v.url === site.url);
+
+				if (domainIndex > -1) {
+					visits = history[domainIndex].visits;
+				}
 			}
 
 			addToBlockedList(site.url, visits);
