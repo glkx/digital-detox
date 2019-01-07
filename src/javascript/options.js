@@ -99,7 +99,7 @@ function setSites(sites) {
 
 		// Add sites to options page
 		sites.forEach(site => {
-			let visits = '-';
+			let visits = 0;
 
 			if (history != undefined) {
 				const domainIndex = history.findIndex(v => v.url === site.url);
@@ -132,9 +132,7 @@ function addToBlockedList(url, visits = 0) {
 
 	blockedSitesRow.dataset.url = url;
 	valueCell.textContent = url;
-	if (visits > 0) {
-		visitsCell.textContent = visits;
-	}
+	visitsCell.textContent = visits > 0 ? visits : '-';
 	buttonCell.appendChild(button);
 }
 
