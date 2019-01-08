@@ -50,6 +50,10 @@ button {
 	thead {
 		background-color: rgb(235, 235, 235);
 		border-bottom: 1px solid #d7d7db;
+
+        .icon {
+            margin-left: -3px;
+        }
 	}
 
     tr:nth-child(even) {
