@@ -30,17 +30,21 @@
                 <div class="table-wrapper">
 					<table id="optionsBlockedSites" class="blocked-sites">
 						<colgroup>
-							<col width="45%" />
-							<col width="35%" />
+							<col width="50%" />
+							<col width="10%" />
+                            <col width="20%" />
 							<col width="20%" />
 						</colgroup>
 						<thead>
 							<tr>
 								<th class="column-website">
-									<span id="optionsBlockedSitesTHeadWebsites">Blocked websites</span>
+                                    <span id="optionsBlockedSitesTHeadWebsites">Blocked websites</span>
 								</th>
 								<th class="column-visits">
-									<span id="optionsBlockedSitesTHeadVisits">Visits (today)</span>
+                                    <img id="optionsBlockedSitesTHeadVisits" src="/icons/eye.svg" class="icon" title="Number of times visited today" />
+								</th>
+                                <th class="column-visits">
+									<img id="optionsBlockedSitesTHeadBlocks" src="/icons/ban.svg" class="icon" title="Number of times blocked today" />
 								</th>
 								<th class="column-button"></th>
 							</tr>

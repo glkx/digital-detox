@@ -81,7 +81,11 @@
 	},
 
 	"optionsBlockedSitesTHeadVisits": {
-		"message": "Visits (today)"
+		"message": "Number of times visited today"
+	},
+
+	"optionsBlockedSitesTHeadBlocks": {
+		"message": "Number of times blocked today"
 	}
 
 }

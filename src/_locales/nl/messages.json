@@ -81,7 +81,11 @@
 	},
 
 	"optionsBlockedSitesTHeadVisits": {
-		"message": "Aantal bezoeken (vandaag)"
+		"message": "Aantal keer bezocht vandaag"
+	},
+
+	"optionsBlockedSitesTHeadBlocks": {
+		"message": "Aantal keer geblokkeerd vandaag"
 	}
 
 }

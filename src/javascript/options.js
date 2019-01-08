@@ -51,7 +51,10 @@ function localizeOptions() {
 	).innerText = getI18nMsg('optionsBlockedSitesTHeadWebsites');
 	document.getElementById(
 		'optionsBlockedSitesTHeadVisits'
-	).innerText = getI18nMsg('optionsBlockedSitesTHeadVisits');
+	).title = getI18nMsg('optionsBlockedSitesTHeadVisits');
+	document.getElementById(
+		'optionsBlockedSitesTHeadBlocks'
+	).title = getI18nMsg('optionsBlockedSitesTHeadBlocks');
 }
 
 function restoreOptions() {
@@ -97,22 +100,24 @@ function setSites(sites) {
 
 		// Add sites to options page
 		sites.forEach(site => {
-			let visits = 0;
+			let visits = 0,
+				blocks = 0;
 
 			if (history != undefined) {
 				const domainIndex = history.findIndex(v => v.url === site.url);
 
 				if (domainIndex > -1) {
 					visits = history[domainIndex].visits;
+					blocks = history[domainIndex].blocks;
 				}
 			}
 
-			addToBlockedList(site.url, visits);
+			addToBlockedList(site.url, visits, blocks);
 		});
 	});
 }
 
-function addToBlockedList(url, visits = 0) {
+function addToBlockedList(url, visits = 0, blocks = 0) {
 	const button = document.createElement('button');
 	button.textContent = browser.i18n.getMessage('optionsDeleteSiteButton');
 
@@ -125,12 +130,16 @@ function addToBlockedList(url, visits = 0) {
 	// Insert visits cell
 	const visitsCell = blockedSitesRow.insertCell(1);
 
+	// Insert blocked visits cell
+	const blocksCell = blockedSitesRow.insertCell(2);
+
 	// Insert website cell
-	const buttonCell = blockedSitesRow.insertCell(2);
+	const buttonCell = blockedSitesRow.insertCell(3);
 
 	blockedSitesRow.dataset.url = url;
 	valueCell.textContent = url;
 	visitsCell.textContent = visits > 0 ? visits : '-';
+	blocksCell.textContent = blocks > 0 ? blocks : '-';
 	buttonCell.appendChild(button);
 }
 

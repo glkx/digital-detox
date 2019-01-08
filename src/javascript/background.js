@@ -229,6 +229,35 @@ const DigitalDetox = {
 		});
 	},
 
+	getHistory: () => {
+		const localOptions = DigitalDetox.getLocalOptions();
+
+		let history =
+			localOptions.history != undefined
+				? localOptions.history
+				: DigitalDetox.options.history;
+
+		// Reset history when new day
+		if (
+			localOptions.historyModified != undefined &&
+			new Date(localOptions.historyModified).getDate() !=
+				new Date().getDate()
+		) {
+			history = DigitalDetox.options.history;
+		}
+
+		return history;
+	},
+
+	updateHistory: history => {
+		if (history != undefined) {
+			// Update history
+			DigitalDetox.updateLocalOptions('history', history);
+			// Change history moditication time
+			DigitalDetox.updateLocalOptions('historyModified', Date.now());
+		}
+	},
+
 	/**
 	 * Returns the current loaded sites of the extension.
 	 */
@@ -391,21 +420,21 @@ const DigitalDetox = {
 	 * Redirects the tab to local "You have been blocked" page.
 	 */
 	redirectTab: requestDetails => {
-		let matchFound = true; // By default url is catched correctly
+		let match = true; // By default url is catched correctly
 
 		// Test url on false positive when url components are found
 		if (requestDetails.url.match(/[?#]./)) {
 			const sites = DigitalDetox.getBlockedSites(),
-				matchUrl = new URL(requestDetails.url),
-				matchDomain = matchUrl.hostname.replace(/^www\./, '');
+				url = new URL(requestDetails.url),
+				domain = url.hostname.replace(/^www\./, '');
 
 			// Catch url that are false positive for example when a url has a url as component
-			if (!sites.includes(matchDomain)) {
-				matchFound = false;
+			if (!sites.includes(domain)) {
+				match = false;
 			}
 		}
 
-		if (matchFound === true) {
+		if (match === true) {
 			browser.tabs.update(requestDetails.tabId, {
 				url: browser.runtime.getURL(
 					'/redirect.html?from=' +
@@ -436,39 +465,40 @@ const DigitalDetox = {
 	handleVisit: requestDetails => {
 		const url = new URL(requestDetails.url),
 			domain = url.hostname.replace(/^www\./, ''),
-			localOptions = DigitalDetox.getLocalOptions();
+			history = DigitalDetox.getHistory();
 
-		let history =
-			localOptions.history != undefined
-				? localOptions.history
-				: DigitalDetox.options.history;
+		if (history != undefined) {
+			const status = DigitalDetox.getStatus(),
+				domainIndex = history.findIndex(v => v.url === domain);
 
-		if (
-			localOptions.historyModified != undefined &&
-			new Date(localOptions.historyModified).getDate() !=
-				new Date().getDate()
-		) {
-			history = DigitalDetox.options.history;
+			if (domainIndex > -1) {
+				if (status == 'off') {
+					if (history[domainIndex].visits != undefined) {
+						history[domainIndex].visits = history[domainIndex].visits + 1;
+					} else {
+						history[domainIndex].visits = 1;
+					}
+				} else if (status == 'on') {
+					if (history[domainIndex].blocks != undefined) {
+						history[domainIndex].blocks = history[domainIndex].blocks + 1;
+					} else {
+						history[domainIndex].blocks = 1;
+					}
+				}
+				history[domainIndex].date = Date.now();
+			} else {
+				// Add url to blocked websites
+				history.push({
+					url: domain,
+					visits: status == 'off' ? 1 : 0,
+					blocks: status == 'on' ? 1 : 0,
+					date: Date.now()
+				});
+			}
+
+			// Update history
+			DigitalDetox.updateHistory(history);
 		}
-
-		const domainIndex = history.findIndex(v => v.url === domain);
-
-		if (domainIndex > -1) {
-			history[domainIndex].visits = history[domainIndex].visits + 1;
-			history[domainIndex].date = Date.now();
-		} else {
-			// Add url to blocked websites
-			history.push({
-				url: domain,
-				visits: 1,
-				date: Date.now()
-			});
-		}
-
-		// Update history
-		DigitalDetox.updateLocalOptions('history', history);
-		// Change history moditication time
-		DigitalDetox.updateLocalOptions('historyModified', Date.now());
 	},
 
 	/**
