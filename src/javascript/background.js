@@ -150,8 +150,6 @@ const DigitalDetox = {
 			}
 		}, DigitalDetox.options.processInterval.syncLocalOptions);
 
-		DigitalDetox.process.syncLocalOptions.start();
-
 		// Sync user options
 		DigitalDetox.process.syncUserOptions = new Interval(() => {
 			// When previous sync timestamp is updated
@@ -168,8 +166,6 @@ const DigitalDetox = {
 					DigitalDetox.userOptionsModified;
 			}
 		}, DigitalDetox.options.processInterval.syncUserOptions);
-
-		DigitalDetox.process.syncUserOptions.start();
 
 		// Auto change status blocker
 		DigitalDetox.process.statusInterval = new Interval(() => {
@@ -194,8 +190,6 @@ const DigitalDetox = {
 				// IDEA: Auto disable blocker between time range
 			}
 		}, DigitalDetox.options.processInterval.statusInterval);
-
-		DigitalDetox.process.statusInterval.start();
 
 		// Pause background processes when user is inactive
 		browser.idle.onStateChanged.addListener(state => {
@@ -392,8 +386,6 @@ const DigitalDetox = {
 				previousSites = currentSites;
 			}
 		}, DigitalDetox.options.updateBlockerInterval);
-
-		DigitalDetox.updateBlockerTimer.start();
 
 		// Pause background processes when user is inactive
 		// NOTE: Currently updating blocker in background is not needed in future it can be the case
@@ -668,6 +660,9 @@ class Interval {
 		this.callback = callback;
 		this.interval = interval;
 		this.timerId;
+
+		// Start interval on construct
+		this.start();
 	}
 
 	pause() {
