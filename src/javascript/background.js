@@ -377,11 +377,11 @@ const DigitalDetox = {
 	 * Update blocker when sites array is modified
 	 */
 	autoUpdateBlocker: () => {
-		let previousSites = JSON.stringify(DigitalDetox.getBlockedSites());
+		let previousSites = DigitalDetox.getBlockedSites();
 
-		DigitalDetox.updateBlockerTimer = new Interval(() => {
-			let currentSites = JSON.stringify(DigitalDetox.getBlockedSites());
-			if (currentSites !== previousSites) {
+		DigitalDetox.process.updateBlockerTimer = new Interval(() => {
+			let currentSites = DigitalDetox.getBlockedSites();
+			if (equalArrays(previousSites, currentSites) === false) {
 				DigitalDetox.enableBlocker();
 				previousSites = currentSites;
 			}
@@ -391,9 +391,9 @@ const DigitalDetox = {
 		// NOTE: Currently updating blocker in background is not needed in future it can be the case
 		browser.idle.onStateChanged.addListener(state => {
 		  	if (state === 'idle' || state === 'locked') {
-				DigitalDetox.updateBlockerTimer.pause();
+				DigitalDetox.process.updateBlockerTimer.pause();
 			} else if (state === 'active') {
-				DigitalDetox.updateBlockerTimer.start();
+				DigitalDetox.process.updateBlockerTimer.start();
 			}
 		});
 	},
@@ -419,7 +419,10 @@ const DigitalDetox = {
 		);
 
 		// Delete interval
-		delete DigitalDetox.updateBlockerTimer;
+		if (DigitalDetox.process.updateBlockerTimer != undefined) {
+			DigitalDetox.process.updateBlockerTimer.delete();
+			DigitalDetox.process.updateBlockerTimer = null;
+		}
 	},
 
 	/**
@@ -666,17 +669,39 @@ class Interval {
 	}
 
 	pause() {
-		clearTimeout(this.timerId);
+		clearInterval(this.timerId);
 	}
 
 	start() {
 		this.timerId = setInterval(this.callback, this.interval);
+	}
+
+	delete() {
+		clearInterval(this.timerId);
+		this.callback = null;
+		this.interval = null;
 	}
 }
 
 /**
  * Helper functions
  */
+
+function equalArrays(a, b) {
+ 	let i = a.length;
+
+ 	if (i !== b.length) {
+		return false;
+	}
+
+ 	while (i--) {
+ 		if (a[i] !== b[i]) {
+			return false;
+		}
+ 	}
+
+ 	return true;
+}
 
 function getStatus() {
 	return DigitalDetox.getStatus();
