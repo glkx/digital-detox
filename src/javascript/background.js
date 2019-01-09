@@ -119,6 +119,11 @@ const DigitalDetox = {
 	},
 
 	/**
+	 * Processes
+	 */
+	process: {},
+
+	/**
 	 * Process runner
 	 */
 	startProcesses: () => {
@@ -129,7 +134,7 @@ const DigitalDetox = {
 		};
 
 		// Sync local options
-		setInterval(() => {
+		DigitalDetox.process.syncLocalOptions = new Interval(() => {
 			// When previous sync timestamp is updated
 			if (
 				DigitalDetox.localOptionsModified != undefined &&
@@ -145,8 +150,10 @@ const DigitalDetox = {
 			}
 		}, DigitalDetox.options.processInterval.syncLocalOptions);
 
+		DigitalDetox.process.syncLocalOptions.start();
+
 		// Sync user options
-		setInterval(() => {
+		DigitalDetox.process.syncUserOptions = new Interval(() => {
 			// When previous sync timestamp is updated
 			if (
 				DigitalDetox.userOptionsModified != undefined &&
@@ -162,8 +169,10 @@ const DigitalDetox = {
 			}
 		}, DigitalDetox.options.processInterval.syncUserOptions);
 
+		DigitalDetox.process.syncUserOptions.start();
+
 		// Auto change status blocker
-		setInterval(() => {
+		DigitalDetox.process.statusInterval = new Interval(() => {
 			let blockerStatus = DigitalDetox.getStatus();
 
 			if (blockerStatus == 'off') {
@@ -185,6 +194,21 @@ const DigitalDetox = {
 				// IDEA: Auto disable blocker between time range
 			}
 		}, DigitalDetox.options.processInterval.statusInterval);
+
+		DigitalDetox.process.statusInterval.start();
+
+		// Pause background processes when user is inactive
+		browser.idle.onStateChanged.addListener(state => {
+		  	if (state === 'idle' || state === 'locked') {
+				DigitalDetox.process.syncLocalOptions.pause();
+				DigitalDetox.process.syncUserOptions.pause();
+				DigitalDetox.process.statusInterval.pause();
+			} else if (state === 'active') {
+				DigitalDetox.process.syncLocalOptions.start();
+				DigitalDetox.process.syncUserOptions.start();
+				DigitalDetox.process.statusInterval.start();
+			}
+		});
 
 		// Counting visits
 		browser.webRequest.onBeforeRequest.addListener(
@@ -361,13 +385,25 @@ const DigitalDetox = {
 	autoUpdateBlocker: () => {
 		let previousSites = JSON.stringify(DigitalDetox.getBlockedSites());
 
-		DigitalDetox.updateBlockerTimer = setInterval(() => {
+		DigitalDetox.updateBlockerTimer = new Interval(() => {
 			let currentSites = JSON.stringify(DigitalDetox.getBlockedSites());
 			if (currentSites !== previousSites) {
 				DigitalDetox.enableBlocker();
 				previousSites = currentSites;
 			}
 		}, DigitalDetox.options.updateBlockerInterval);
+
+		DigitalDetox.updateBlockerTimer.start();
+
+		// Pause background processes when user is inactive
+		// NOTE: Currently updating blocker in background is not needed in future it can be the case
+		browser.idle.onStateChanged.addListener(state => {
+		  	if (state === 'idle' || state === 'locked') {
+				DigitalDetox.updateBlockerTimer.pause();
+			} else if (state === 'active') {
+				DigitalDetox.updateBlockerTimer.start();
+			}
+		});
 	},
 
 	/**
@@ -389,7 +425,9 @@ const DigitalDetox = {
 		browser.webRequest.onBeforeRequest.removeListener(
 			DigitalDetox.redirectTab
 		);
-		clearInterval(DigitalDetox.updateBlockerTimer);
+
+		// Delete interval
+		delete DigitalDetox.updateBlockerTimer;
 	},
 
 	/**
@@ -620,6 +658,26 @@ DigitalDetox.userOptions = {
 };
 
 DigitalDetox.init();
+
+/**
+ * Helper classes
+ */
+
+class Interval {
+	constructor(callback, interval) {
+		this.callback = callback;
+		this.interval = interval;
+		this.timerId;
+	}
+
+	pause() {
+		clearTimeout(this.timerId);
+	}
+
+	start() {
+		this.timerId = setInterval(this.callback, this.interval);
+	}
+}
 
 /**
  * Helper functions
