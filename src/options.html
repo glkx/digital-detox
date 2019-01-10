@@ -8,18 +8,45 @@
 
         <link id="favicon" rel="icon" href="chrome://browser/skin/settings.svg" type="image/svg" />
         <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" type="text/css" media="all" />
-        <link rel="stylesheet" href="/css/options.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="/css/options.css" type="text/css" media="all" />
         <script src="/javascript/options.js"></script>
     </head>
     <body>
 
+		<div class="navigation">
+			<ul>
+				<li>
+					<a href="#general" class="button">
+						<img class="icon" />
+						<label class="name">General</label>
+					</a>
+				</li>
+				<li>
+					<a href="#block-list" class="button">
+						<img class="icon" />
+						<label class="name">Block list</label>
+					</a>
+				</li>
+			</ul>
+		</div>
+
         <div class="main-content">
             <div class="pane-container">
+
+				<a name="general"></a>
 
                 <div class="subcategory with-icon">
                     <img src="/icons/icon-32.svg" alt="" />
                     <h1 id="optionHeaderName" class="header-name">Digital Detox</h1>
                 </div>
+
+				<div class="groupbox-title">
+					<h2>General</h2>
+				</div>
+
+				<div id="block-list" class="groupbox-title">
+					<h2>Block list</h2>
+				</div>
 
                 <form>
                     <label id="optionsAddSiteLabel" for="site">Block website:</label>

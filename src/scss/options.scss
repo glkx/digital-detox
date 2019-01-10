@@ -1,5 +1,62 @@
+.navigation {
+	box-sizing: border-box;
+	width: 240px;
+	height: 100vh;
+	padding-top: 70px;
+	float: left;
+	position: sticky;
+	top: 0;
+
+	ul {
+		margin: 0;
+		padding-left: 0;
+		list-style: none;
+	}
+
+	.button {
+		cursor: default;
+		display: flex;
+  		align-items: center;
+		min-height: 48px;
+		color: var(--in-content-category-text);
+		margin-inline-start: 34px;
+		padding-inline-end: 10px;
+		padding-inline-start: 10px;
+		transition: background-color 150ms;
+
+		&:hover, &:active, &:focus {
+			text-decoration: none;
+		}
+
+		&:hover {
+			background-color: var(--in-content-category-background-hover);
+			border-radius: 2px;
+		}
+
+		&:active {
+			color: var(--in-content-category-text-selected);
+			background: none;
+		}
+
+		.icon {
+			width: 24px;
+			height: 24px;
+			fill: currentColor;
+		}
+
+		.name {
+			font-size: 1.07em;
+			line-height: 1.4em;
+			padding-bottom: 2px;
+			padding-inline-start: 9px;
+			margin: 0;
+			-moz-user-select: none;
+		}
+	}
+}
+
 .main-content {
-    padding: 40px;
+    padding: 82px 40px 40px;
     overflow: auto;
 }
 
@@ -16,9 +73,16 @@
         margin-right: 10px;
     }
 
-    .header-name {
+    /* .header-name {
         font-weight: 700;
-    }
+    } */
+}
+
+.groupbox-title h2 {
+	padding: 4px 0;
+	font-size: 1.14em;
+	font-weight: 600;
+	line-height: 1.4em;
 }
 
 form {
