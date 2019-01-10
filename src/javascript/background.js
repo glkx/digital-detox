@@ -190,28 +190,31 @@ const DigitalDetox = {
 
 		// Auto change status blocker
 		DigitalDetox.process.statusIntervalFast = new Interval(DigitalDetox.handleStatus, DigitalDetox.options.processInterval.statusInterval);
-		// When system is idle slow status blocker handler is started with interval 10 times longer
-		DigitalDetox.process.statusIntervalSlow = new Interval(DigitalDetox.handleStatus, DigitalDetox.options.processInterval.statusInterval * 10, false);
 
-		if (debug) {
-			console.warn('Idle detection interval set to 15 seconds which can impact performance. Disable debug to return to default interval.');
-			browser.idle.setDetectionInterval(15);
-		}
+		if (DigitalDetox.options.idleManagement === true) {
+			// When system is idle slow status blocker handler is started with interval 10 times longer
+			DigitalDetox.process.statusIntervalSlow = new Interval(DigitalDetox.handleStatus, DigitalDetox.options.processInterval.statusInterval * 10, false);
 
-		// Pause background processes when user is inactive
-		browser.idle.onStateChanged.addListener(state => {
-			if (state === 'idle' || state === 'locked') {
-				DigitalDetox.process.syncLocalOptions.pause();
-				DigitalDetox.process.syncUserOptions.pause();
-				DigitalDetox.process.statusIntervalFast.pause();
-				DigitalDetox.process.statusIntervalSlow.start();
-			} else if (state === 'active') {
-				DigitalDetox.process.syncLocalOptions.start();
-				DigitalDetox.process.syncUserOptions.start();
-				DigitalDetox.process.statusIntervalFast.start();
-				DigitalDetox.process.statusIntervalSlow.pause();
+			if (debug) {
+				console.warn('Idle detection interval set to 15 seconds which can impact performance. Disable debug to return to default interval.');
+				browser.idle.setDetectionInterval(15);
 			}
-		});
+
+			// Pause background processes when user is inactive
+			browser.idle.onStateChanged.addListener(state => {
+				if (state === 'idle' || state === 'locked') {
+					DigitalDetox.process.syncLocalOptions.pause();
+					DigitalDetox.process.syncUserOptions.pause();
+					DigitalDetox.process.statusIntervalFast.pause();
+					DigitalDetox.process.statusIntervalSlow.start();
+				} else if (state === 'active') {
+					DigitalDetox.process.syncLocalOptions.start();
+					DigitalDetox.process.syncUserOptions.start();
+					DigitalDetox.process.statusIntervalFast.start();
+					DigitalDetox.process.statusIntervalSlow.pause();
+				}
+			});
+		}
 
 		// Counting visits
 		browser.webRequest.onBeforeRequest.addListener(
@@ -439,15 +442,17 @@ const DigitalDetox = {
 
 		// Pause background processes when user is inactive
 		// NOTE: Currently updating blocker in background is not needed in future it can be the case
-		/* browser.idle.onStateChanged.addListener(state => {
-			if (DigitalDetox.process.updateBlockerTimer != undefined) {
-				if (state === 'idle' || state === 'locked') {
-					DigitalDetox.process.updateBlockerTimer.pause();
-				} else if (state === 'active') {
-					DigitalDetox.process.updateBlockerTimer.start();
+		/* if (DigitalDetox.options.idleManagement === true) {
+			browser.idle.onStateChanged.addListener(state => {
+				if (DigitalDetox.process.updateBlockerTimer != undefined) {
+					if (state === 'idle' || state === 'locked') {
+						DigitalDetox.process.updateBlockerTimer.pause();
+					} else if (state === 'active') {
+						DigitalDetox.process.updateBlockerTimer.start();
+					}
 				}
-			}
-		}); */
+			});
+		} */
 	},
 
 	/**
@@ -605,6 +610,7 @@ const DigitalDetox = {
 // Default options
 DigitalDetox.options = {
 	status: 'on',
+	idleManagement: true,
 	processInterval: {
 		syncLocalOptions: 1000,
 		syncUserOptions: 30000,
