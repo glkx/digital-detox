@@ -8,7 +8,9 @@ const debug = false;
  */
 const DigitalDetox = {
 	init: () => {
-		if (debug) { console.log('Initiate Digital Detox'); }
+		if (debug) {
+			console.log('Initiate Digital Detox');
+		}
 
 		// Load sites form storage then enable blocker and sync listener
 		DigitalDetox.loadOptions().then(() => {
@@ -23,7 +25,9 @@ const DigitalDetox = {
 	 * Initiate options
 	 */
 	loadOptions: () => {
-		if (debug) { console.log('Load options started'); }
+		if (debug) {
+			console.log('Load options started');
+		}
 
 		// Wait for local and user options are loaded
 		return new Promise((resolve, reject) => {
@@ -31,7 +35,9 @@ const DigitalDetox = {
 				DigitalDetox.loadLocalOptions(),
 				DigitalDetox.loadUserOptions()
 			]).then(() => {
-				if (debug) { console.log('Load options finished'); }
+				if (debug) {
+					console.log('Load options finished');
+				}
 				return resolve();
 			});
 		});
@@ -87,7 +93,9 @@ const DigitalDetox = {
 
 			DigitalDetox.localOptionsModified = Date.now();
 
-			if (debug) { console.log('Update local options'); }
+			if (debug) {
+				console.log('Update local options');
+			}
 		}
 	},
 
@@ -100,7 +108,9 @@ const DigitalDetox = {
 			localOptions: DigitalDetox.localOptions
 		});
 
-		if (debug) { console.log('Sync local options'); }
+		if (debug) {
+			console.log('Sync local options');
+		}
 	},
 
 	/**
@@ -123,7 +133,9 @@ const DigitalDetox = {
 
 			DigitalDetox.userOptionsModified = Date.now();
 
-			if (debug) { console.log('Update user options'); }
+			if (debug) {
+				console.log('Update user options');
+			}
 		}
 	},
 
@@ -136,7 +148,9 @@ const DigitalDetox = {
 			userSettings: DigitalDetox.userOptions
 		});
 
-		if (debug) { console.log('Sync user options'); }
+		if (debug) {
+			console.log('Sync user options');
+		}
 	},
 
 	/**
@@ -189,14 +203,23 @@ const DigitalDetox = {
 		}, DigitalDetox.options.processInterval.syncUserOptions);
 
 		// Auto change status blocker
-		DigitalDetox.process.statusIntervalFast = new Interval(DigitalDetox.handleStatus, DigitalDetox.options.processInterval.statusInterval);
+		DigitalDetox.process.statusIntervalFast = new Interval(
+			DigitalDetox.handleStatus,
+			DigitalDetox.options.processInterval.statusInterval
+		);
 
 		if (DigitalDetox.options.idleManagement === true) {
 			// When system is idle slow status blocker handler is started with interval 10 times longer
-			DigitalDetox.process.statusIntervalSlow = new Interval(DigitalDetox.handleStatus, DigitalDetox.options.processInterval.statusInterval * 10, false);
+			DigitalDetox.process.statusIntervalSlow = new Interval(
+				DigitalDetox.handleStatus,
+				DigitalDetox.options.processInterval.statusInterval * 10,
+				false
+			);
 
 			if (debug) {
-				console.warn('Idle detection interval set to 15 seconds which can impact performance. Disable debug to return to default interval.');
+				console.warn(
+					'Idle detection interval set to 15 seconds which can impact performance. Disable debug to return to default interval.'
+				);
 				browser.idle.setDetectionInterval(15);
 			}
 
@@ -238,8 +261,7 @@ const DigitalDetox = {
 
 			// When maximum time is exceded
 			if (
-				Date.now() -
-					DigitalDetox.getLocalOptions().statusModified >=
+				Date.now() - DigitalDetox.getLocalOptions().statusModified >=
 				disableDuration
 			) {
 				DigitalDetox.enableBlocker();
@@ -248,7 +270,9 @@ const DigitalDetox = {
 			// IDEA: Auto disable blocker between time range
 		}
 
-		if (debug) { console.log('Status handled'); }
+		if (debug) {
+			console.log('Status handled');
+		}
 	},
 
 	/**
@@ -283,7 +307,9 @@ const DigitalDetox = {
 			path: icon
 		});
 
-		if (debug) { console.log('Set status', status); }
+		if (debug) {
+			console.log('Set status', status);
+		}
 
 		return true;
 	},
@@ -305,7 +331,9 @@ const DigitalDetox = {
 			history = DigitalDetox.options.history;
 		}
 
-		if (debug) { console.log('Get history', history); }
+		if (debug) {
+			console.log('Get history', history);
+		}
 
 		return history;
 	},
@@ -331,7 +359,9 @@ const DigitalDetox = {
 			// IDEA: Implement time logic
 		});
 
-		if (debug) { console.log('Get blocked sites', blockedSites); }
+		if (debug) {
+			console.log('Get blocked sites', blockedSites);
+		}
 
 		return blockedSites;
 	},
@@ -357,7 +387,9 @@ const DigitalDetox = {
 			// Update user settings
 			DigitalDetox.updateUserOptions(userOptions);
 
-			if (debug) { console.log('Site added'); }
+			if (debug) {
+				console.log('Site added');
+			}
 
 			return true;
 		}
@@ -419,7 +451,9 @@ const DigitalDetox = {
 		// Change status to on
 		DigitalDetox.setStatus('on');
 
-		if (debug) { console.log('Blocker enabled'); }
+		if (debug) {
+			console.log('Blocker enabled');
+		}
 	},
 
 	/*
@@ -429,14 +463,18 @@ const DigitalDetox = {
 		let previousSites = DigitalDetox.getBlockedSites();
 
 		DigitalDetox.process.updateBlockerTimer = new Interval(() => {
-			if (debug) { console.log('Check for blocker updates'); }
+			if (debug) {
+				console.log('Check for blocker updates');
+			}
 
 			let currentSites = DigitalDetox.getBlockedSites();
 			if (equalArrays(previousSites, currentSites) === false) {
 				DigitalDetox.enableBlocker();
 				previousSites = currentSites;
 
-				if (debug) { console.log('Blocker updated'); }
+				if (debug) {
+					console.log('Blocker updated');
+				}
 			}
 		}, DigitalDetox.options.updateBlockerInterval);
 
@@ -459,7 +497,9 @@ const DigitalDetox = {
 	 * Removes the web request listener and turns the extension off.
 	 */
 	disableBlocker: () => {
-		if (debug) { console.log('Disable blocker'); }
+		if (debug) {
+			console.log('Disable blocker');
+		}
 
 		// Restore blocked tabs
 		DigitalDetox.restoreTabs();
@@ -483,7 +523,9 @@ const DigitalDetox = {
 			DigitalDetox.process.updateBlockerTimer = null;
 		}
 
-		if (debug) { console.log('Blocker cleared'); }
+		if (debug) {
+			console.log('Blocker cleared');
+		}
 	},
 
 	/**
@@ -554,7 +596,9 @@ const DigitalDetox = {
 				}
 			});
 
-		if (debug) { console.log('Tabs restored'); }
+		if (debug) {
+			console.log('Tabs restored');
+		}
 	},
 
 	// Listen to new tabs
@@ -570,13 +614,15 @@ const DigitalDetox = {
 			if (domainIndex > -1) {
 				if (status == 'off') {
 					if (history[domainIndex].visits != undefined) {
-						history[domainIndex].visits = history[domainIndex].visits + 1;
+						history[domainIndex].visits =
+							history[domainIndex].visits + 1;
 					} else {
 						history[domainIndex].visits = 1;
 					}
 				} else if (status == 'on') {
 					if (history[domainIndex].blocks != undefined) {
-						history[domainIndex].blocks = history[domainIndex].blocks + 1;
+						history[domainIndex].blocks =
+							history[domainIndex].blocks + 1;
 					} else {
 						history[domainIndex].blocks = 1;
 					}
@@ -596,7 +642,9 @@ const DigitalDetox = {
 			DigitalDetox.updateHistory(history);
 		}
 
-		if (debug) { console.log('Visit handled'); }
+		if (debug) {
+			console.log('Visit handled');
+		}
 	},
 
 	/**
@@ -756,19 +804,19 @@ class Interval {
  */
 
 function equalArrays(a, b) {
- 	let i = a.length;
+	let i = a.length;
 
- 	if (i !== b.length) {
+	if (i !== b.length) {
 		return false;
 	}
 
- 	while (i--) {
- 		if (a[i] !== b[i]) {
+	while (i--) {
+		if (a[i] !== b[i]) {
 			return false;
 		}
- 	}
+	}
 
- 	return true;
+	return true;
 }
 
 function getStatus() {
