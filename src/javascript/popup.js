@@ -1,6 +1,6 @@
 'use strict';
 
-var toggleButton,
+let toggleButton,
 	addButton,
 	prefsButton,
 	removeButton,
@@ -40,16 +40,16 @@ function localizePopup() {
 	document.documentElement.setAttribute('lang', browserLanguage);
 
 	// Translate strings
-	prefsButton.title = getI18nMsg('popupPrefsButtonTitle');
-	toggleButton.innerTex = getI18nMsg('popupToggleButtonOn');
+	document.querySelectorAll('[i18n]').forEach(element => {
+		const translation = getI18nMsg(element.getAttribute('i18n'));
 
-	document.getElementById('popupTitle').innerText = getI18nMsg('popupTitle');
-	document.getElementById('popupAddButtonValue').innerText = getI18nMsg(
-		'popupAddButtonValue'
-	);
-	document.getElementById('popupRemoveButtonValue').innerText = getI18nMsg(
-		'popupRemoveButtonValue'
-	);
+		if (translation != undefined) {
+			element.innerText = translation;
+		}
+	});
+
+	// Translate attributes
+	prefsButton.title = getI18nMsg('popupPrefsButtonTitle');
 }
 
 function restorePopup() {

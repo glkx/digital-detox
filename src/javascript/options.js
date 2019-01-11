@@ -1,6 +1,6 @@
 'use strict';
 
-var blockedSites, form, getBackgroundPage;
+let blockedSites, formBlockSite, getBackgroundPage;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
@@ -8,7 +8,7 @@ function initialize() {
 	blockedSites = document
 		.getElementById('optionsBlockedSites')
 		.getElementsByTagName('tbody')[0];
-	form = document.querySelector('form');
+	formBlockSite = document.getElementById('formBlockSite');
 	getBackgroundPage = browser.runtime.getBackgroundPage();
 
 	setListeners();
@@ -19,7 +19,7 @@ function initialize() {
 
 function setListeners() {
 	window.addEventListener('beforeunload', closeOptions);
-	form.addEventListener('submit', saveSite);
+	formBlockSite.addEventListener('submit', saveSite);
 	blockedSites.addEventListener('click', deleteSite);
 }
 
@@ -31,24 +31,18 @@ function localizeOptions() {
 	document.documentElement.setAttribute('lang', browserLanguage);
 
 	// Translate strings
-	document.getElementById('optionsTitle').innerText = getI18nMsg(
-		'optionsTitle'
-	);
-	document.getElementById('optionHeaderName').innerText = getI18nMsg(
-		'extensionName'
-	);
-	document.getElementById('optionsAddSiteLabel').innerText = getI18nMsg(
-		'optionsAddSiteLabel'
-	);
+	document.querySelectorAll('[i18n]').forEach(element => {
+		const translation = getI18nMsg(element.getAttribute('i18n'));
+
+		if (translation != undefined) {
+			element.innerText = translation;
+		}
+	});
+
+	// Translate attributes
 	document.getElementById('optionsAddSiteInput').placeholder = getI18nMsg(
 		'optionsAddSiteInputPlaceholder'
 	);
-	document.getElementById('optionsAddSiteButton').innerText = getI18nMsg(
-		'optionsAddSiteButton'
-	);
-	document.getElementById(
-		'optionsBlockedSitesTHeadWebsites'
-	).innerText = getI18nMsg('optionsBlockedSitesTHeadWebsites');
 	document.getElementById(
 		'optionsBlockedSitesTHeadVisits'
 	).title = getI18nMsg('optionsBlockedSitesTHeadVisits');
@@ -60,7 +54,8 @@ function localizeOptions() {
 function restoreOptions() {
 	getBackgroundPage.then(bg => {
 		// Get user settings
-		const userOptions = bg.getUserOptions();
+		const localOptions = bg.getLocalOptions(),
+			userOptions = bg.getUserOptions();
 
 		// Set sites
 		setSites(userOptions.blockedSites);
@@ -92,8 +87,6 @@ function sortSites(a, b) {
 function setSites(sites) {
 	// Sort alphabetically on url
 	sites.sort(sortSites);
-
-
 
 	getBackgroundPage.then(bg => {
 		const history = bg.getHistory();

@@ -1,4 +1,4 @@
-.navigation {
+/* .navigation {
 	box-sizing: border-box;
 	width: 240px;
 	height: 100vh;
@@ -53,7 +53,7 @@
 			-moz-user-select: none;
 		}
 	}
-}
+} */
 
 .main-content {
     padding: 82px 40px 40px;
@@ -81,8 +81,6 @@
 .groupbox-title h2 {
 	padding: 4px 0;
 	font-size: 1.14em;
-	font-weight: 600;
-	line-height: 1.4em;
 }
 
 form {
@@ -94,12 +92,31 @@ button {
     padding-right: 10px;
 }
 
+.radio-group {
+    margin: 1px 0px 1px 0px;
+}
+
+#formBlockSite .field-group {
+	display: flex;
+
+	input {
+		flex: 1;
+	}
+
+	button {
+		margin-top: 0;
+		margin-right: 0;
+		margin-bottom: 0;
+	}
+}
+
 .table-wrapper,
 .blocked-sites {
 	width: 100%;
 }
 
 .table-wrapper {
+	box-sizing: border-box;
 	min-height: 150px;
     background-color: #fff;
 	border: 1px solid #d7d7db;
@@ -156,4 +173,8 @@ button {
     height: 1em;
     vertical-align: -0.125em;
 	overflow: visible;
+}
+
+.d-block {
+	display: block;
 }

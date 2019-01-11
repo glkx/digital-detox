@@ -60,8 +60,20 @@
 		"message": "Voorkeuren Digital Detox"
 	},
 
+	"optionGroupNameGeneral": {
+		"message": "Algemeen"
+	},
+
+	"optionGroupNameStartup": {
+		"message": "Opstarten"
+	},
+
+	"optionGroupNameBlocklist": {
+		"message": "Blokkeerlijst"
+	},
+
 	"optionsAddSiteLabel": {
-		"message": "Blokkeer website:"
+		"message": "Adres van website"
 	},
 
 	"optionsAddSiteInputPlaceholder": {
@@ -69,7 +81,7 @@
 	},
 
 	"optionsAddSiteButton": {
-		"message": "Toevoegen"
+		"message": "Blokkeren"
 	},
 
 	"optionsDeleteSiteButton": {

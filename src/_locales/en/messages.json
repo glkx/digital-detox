@@ -60,8 +60,20 @@
 		"message": "Options Digital Detox"
 	},
 
+	"optionGroupNameGeneral": {
+		"message": "General"
+	},
+
+	"optionGroupNameStartup": {
+		"message": "Startup"
+	},
+
+	"optionGroupNameBlocklist": {
+		"message": "Block list"
+	},
+
 	"optionsAddSiteLabel": {
-		"message": "Block website:"
+		"message": "Website address"
 	},
 
 	"optionsAddSiteInputPlaceholder": {
@@ -69,7 +81,7 @@
 	},
 
 	"optionsAddSiteButton": {
-		"message": "Add"
+		"message": "Block"
 	},
 
 	"optionsDeleteSiteButton": {

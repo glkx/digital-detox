@@ -1,6 +1,6 @@
 'use strict';
 
-var getBackgroundPage, currentUrl, redirectUrl, redirectDomain;
+let getBackgroundPage, currentUrl, redirectUrl, redirectDomain;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
@@ -24,13 +24,15 @@ function localizeRedirect() {
 	document.documentElement.setAttribute('lang', browserLanguage);
 
 	// Translate strings
-	document.getElementById('redirectTitle').innerText = getI18nMsg(
-		'redirectTitle'
-	);
-	document.getElementById('redirectTitleText').innerText = getI18nMsg(
-		'redirectTitle'
-	);
+	document.querySelectorAll('[i18n]').forEach(element => {
+		const translation = getI18nMsg(element.getAttribute('i18n'));
 
+		if (translation != undefined) {
+			element.innerText = translation;
+		}
+	});
+
+	// Translate attributes
 	if (redirectDomain !== 'undefined') {
 		document.getElementById('redirectShortDescText').innerText = getI18nMsg(
 			'redirectShortCustomDescText',
