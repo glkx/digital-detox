@@ -96,6 +96,54 @@ button {
     margin: 1px 0px 1px 0px;
 }
 
+.radio {
+    margin-bottom: 10px;
+
+    &:hover label::before {
+        border-color: var(--in-content-border-focus);
+    }
+
+    input {
+        display: none;
+
+        &:checked + label::after {
+            background-color: #2292d0;
+        }
+    }
+
+    label {
+        display: block;
+		margin-left: 28px;
+        line-height: 20px;
+		position: relative;
+
+		&::before,
+		&::after {
+			content: '';
+			display: block;
+            border-radius: 100%;
+			position: absolute;
+            top: 0;
+			left: -30px;
+		}
+
+		&::before {
+            width: 18px;
+            height: 18px;
+            background-color: var(--in-content-box-background);
+            border: 1px solid var(--in-content-box-border-color);
+		}
+
+        &::after {
+            width: 10px;
+			height: 10px;
+			background-color: transparent;
+			left: -25px;
+			top: 5px;
+        }
+	}
+}
+
 #formBlockSite .field-group {
 	display: flex;
 
