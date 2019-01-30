@@ -128,8 +128,13 @@ button {
 	border-collapse: collapse;
 
 	thead {
-		background-color: rgb(235, 235, 235);
-		border-bottom: 1px solid #d7d7db;
+		border-bottom: 1px solid var(--in-content-border-color);
+
+        th {
+            background-color: var(--in-content-box-background-hover);
+            color: #808080;
+            font-weight: normal;
+        }
 
         .icon {
             margin-left: -3px;
@@ -141,9 +146,9 @@ button {
     }
 
 	td, th {
-		height: 26.5px;
+        height: 20px;
 		padding: 5px 10px;
-		line-height: 18px;
+		line-height: 20px;
 		vertical-align: middle;
 	}
 
