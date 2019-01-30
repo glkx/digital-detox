@@ -54,8 +54,7 @@ function localizeOptions() {
 function restoreOptions() {
 	getBackgroundPage.then(bg => {
 		// Get user settings
-		const localOptions = bg.getLocalOptions(),
-			userOptions = bg.getUserOptions();
+		const userOptions = bg.getUserOptions();
 
 		// Set sites
 		setSites(userOptions.blockedSites);
@@ -138,7 +137,7 @@ function addToBlockedList(url, visits = 0, blocks = 0) {
 
 function saveSite(event) {
 	event.preventDefault();
-	const url = form.site.value;
+	const url = formBlockSite.site.value;
 	if (url.length === 0) {
 		return;
 	}
@@ -147,7 +146,7 @@ function saveSite(event) {
 	addToBlockedList(url);
 
 	// Clear form field
-	form.site.value = '';
+	formBlockSite.site.value = '';
 
 	// Store url
 	getBackgroundPage.then(bg => {
