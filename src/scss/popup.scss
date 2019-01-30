@@ -26,21 +26,17 @@ button {
     margin: 0;
 }
 
-.toggle-button {
-    flex: 1;
+.toggle-button.off {
+    background-color: #0a84ff;
+    border-color: transparent;
+    color: #fff !important;
 
-    &.off {
-        background-color: #0a84ff;
-        border-color: transparent;
-        color: #fff;
+    &:hover {
+        background-color: #0060df;
+    }
 
-        &:hover {
-            background-color: #0060df;
-        }
-
-        &:active {
-            background-color: #003EAA;
-        }
+    &:active {
+        background-color: #003EAA;
     }
 }
 
