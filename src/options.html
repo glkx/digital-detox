@@ -14,6 +14,24 @@
     </head>
     <body>
 
+		<!-- <div class="navigation">
+			<ul>
+				<li>
+					<a href="#general" class="button">
+						<img class="icon" />
+						<label class="name">General</label>
+					</a>
+				</li>
+				<li>
+					<a href="#block-list" class="button">
+						<img class="icon" />
+						<label class="name">Block list</label>
+					</a>
+				</li>
+			</ul>
+		</div>
+        -->
+
         <div class="main-content">
             <div class="pane-container">
 
@@ -21,6 +39,27 @@
                     <img src="/icons/icon-32.svg" alt="" />
                     <h1 i18n="extensionName" class="header-name">Digital Detox</h1>
                 </div>
+
+                <div class="groupbox-title">
+					<h2 i18n="optionGroupNameStartup">Startup</h2>
+				</div>
+
+				<form class="groupbox-body">
+					<div class="radio-group">
+						<div class="radio">
+                            <input id="option-startup-on" type="radio" name="option-startup" value="auto" class="radio-check" />
+                            <label for="option-startup-on" class="radio-label-box">On</label>
+						</div>
+						<div class="radio">
+                            <input id="option-startup-off" type="radio" name="option-startup" value="auto" class="radio-check" />
+                            <label for="option-startup-off" class="radio-label-box">Off</label>
+						</div>
+						<div class="radio">
+                            <input id="option-startup-auto" type="radio" name="option-startup" value="auto" class="radio-check" />
+                            <label for="option-startup-auto" class="radio-label-box">Restore previous session</label>
+						</div>
+					</div>
+				</form>
 
 				<div class="groupbox-title">
 					<h2 i18n="optionGroupNameBlocklist">Block list</h2>
