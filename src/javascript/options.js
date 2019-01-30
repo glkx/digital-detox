@@ -111,7 +111,7 @@ function setSites(sites) {
 
 function addToBlockedList(url, visits = 0, blocks = 0) {
 	const button = document.createElement('button');
-	button.textContent = browser.i18n.getMessage('optionsDeleteSiteButton');
+	button.title = browser.i18n.getMessage('optionsDeleteSiteButton');
 
 	// Insert new row
 	const blockedSitesRow = blockedSites.insertRow(0);
