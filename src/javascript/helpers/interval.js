@@ -1,6 +1,6 @@
 'use strict';
 
-class Interval {
+export default class Interval {
 	constructor(callback, interval, autostart = true) {
 		this.callback = callback;
 		this.interval = interval;
@@ -26,5 +26,3 @@ class Interval {
 		this.interval = null;
 	}
 }
-
-export { Interval };
