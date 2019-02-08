@@ -3,10 +3,12 @@
 	"extends": ["eslint:recommended", "prettier"],
 	"plugins": ["prettier"],
 	"rules": {
-		"prettier/prettier": ["error"]
+		"prettier/prettier": ["error"],
+        "no-console": "off"
 	},
 	"env": {
 		"browser": true,
-		"webextensions": true
+		"webextensions": true,
+        "es6": true
 	}
 }

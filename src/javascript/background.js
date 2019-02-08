@@ -33,7 +33,7 @@ const DigitalDetox = {
 		console.log('Load options started');
 
 		// Wait for local and user options are loaded
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			Promise.all([
 				DigitalDetox.loadLocalOptions(),
 				DigitalDetox.loadUserOptions()
@@ -46,7 +46,7 @@ const DigitalDetox = {
 
 	// Load local options from local storage
 	loadLocalOptions: () => {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			browser.storage.local.get('localOptions').then(storage => {
 				if (
 					typeof storage.localOptions != undefined &&
@@ -61,7 +61,7 @@ const DigitalDetox = {
 
 	// Load user options from sync storage
 	loadUserOptions: () => {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			// NOTE: userSettings was old variable for userOptions
 			browser.storage.sync.get('userSettings').then(storage => {
 				if (
@@ -306,7 +306,7 @@ const DigitalDetox = {
 		// Reset history when new day
 		if (
 			localOptions.historyModified != undefined &&
-			dayjs(localOptions.historyModified).isBefore(dayjs(), "day")
+			dayjs(localOptions.historyModified).isBefore(dayjs(), 'day')
 		) {
 			history = DigitalDetox.options.history;
 			console.log('Reset history');
@@ -731,13 +731,13 @@ DigitalDetox.init();
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.type == 'getStatus') {
-    	sendResponse(DigitalDetox.getStatus());
-	    return;
+		sendResponse(DigitalDetox.getStatus());
+		return;
 	}
 
 	if (request.type == 'disableBlocker') {
-    	sendResponse(DigitalDetox.disableBlocker());
-	    return;
+		sendResponse(DigitalDetox.disableBlocker());
+		return;
 	}
 
 	if (request.type == 'enableBlocker') {
@@ -751,53 +751,56 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	}
 
 	if (request.type == 'getLocalOptions') {
-    	sendResponse(DigitalDetox.getLocalOptions());
-	    return;
+		sendResponse(DigitalDetox.getLocalOptions());
+		return;
 	}
 
 	if (request.type == 'getUserOptions') {
-    	sendResponse(DigitalDetox.getUserOptions());
-	    return;
+		sendResponse(DigitalDetox.getUserOptions());
+		return;
 	}
 
 	if (request.type == 'syncUserOptions') {
-    	sendResponse(DigitalDetox.syncUserOptions());
-	    return;
+		sendResponse(DigitalDetox.syncUserOptions());
+		return;
 	}
 
 	if (request.type == 'getBlockedSites') {
-    	sendResponse(DigitalDetox.getBlockedSites());
-	    return;
+		sendResponse(DigitalDetox.getBlockedSites());
+		return;
 	}
 
 	if (request.type == 'getAllSites') {
-    	sendResponse(DigitalDetox.getUserOptions().blockedSites);
-	    return;
+		sendResponse(DigitalDetox.getUserOptions().blockedSites);
+		return;
 	}
 
 	if (request.type === 'getHistory') {
-    	sendResponse(DigitalDetox.getLocalOptions().history);
-	    return;
+		sendResponse(DigitalDetox.getLocalOptions().history);
+		return;
 	}
 
 	if (request.type === 'resetHistory') {
 		// Empty history
-		DigitalDetox.updateLocalOptions('history', DigitalDetox.options.history);
+		DigitalDetox.updateLocalOptions(
+			'history',
+			DigitalDetox.options.history
+		);
 		// Update history modification date
 		DigitalDetox.updateLocalOptions('historyModified', Date.now());
 
 		sendResponse(true);
-	    return;
+		return;
 	}
 
 	if (request.type === 'addSite') {
-    	sendResponse(DigitalDetox.addSite(request.url, request.time));
-	    return;
+		sendResponse(DigitalDetox.addSite(request.url, request.time));
+		return;
 	}
 
 	if (request.type === 'removeSite') {
-    	sendResponse(DigitalDetox.removeSite(request.url));
-	    return;
+		sendResponse(DigitalDetox.removeSite(request.url));
+		return;
 	}
 
 	throw new Error('Message request type does not exist');

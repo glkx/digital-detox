@@ -91,9 +91,7 @@ async function setStatus() {
 			toggleButton.classList.remove('off');
 		}
 		toggleButton.classList.add('on');
-		toggleButton.innerText = browser.i18n.getMessage(
-			'popupToggleButtonOn'
-		);
+		toggleButton.innerText = browser.i18n.getMessage('popupToggleButtonOn');
 	}
 }
 
@@ -102,7 +100,7 @@ async function setCurrentDomain() {
 		type: 'getCurrentDomain'
 	});
 
-	if (domain !==  false) {
+	if (domain !== false) {
 		const sites = await browser.runtime.sendMessage({
 			type: 'getAllSites'
 		});
