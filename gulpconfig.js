@@ -40,6 +40,18 @@ module.exports = {
 		build: {
 			src: dir.src + 'javascript/*.js',
 			dest: dir.build + 'javascript/'
+		},
+		webpack: {
+			output: {
+				filename: '[name].js'
+			},
+			externals: {
+				// Exclude from import in JavaScript
+			},
+			optimization: {
+				// minimize: false,
+				runtimeChunk: false
+			}
 		}
 	},
 	styles: {
