@@ -5,8 +5,7 @@ let toggleButton,
 	prefsButton,
 	removeButton,
 	domainToAllow,
-	domainToBlock,
-	getBackgroundPage;
+	domainToBlock;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
@@ -17,7 +16,6 @@ function initialize() {
 	removeButton = document.querySelector('button.remove-button');
 	domainToAllow = document.querySelector('span.domainToAllow');
 	domainToBlock = document.querySelector('span.domainToBlock');
-	getBackgroundPage = browser.runtime.getBackgroundPage();
 
 	setListeners();
 
@@ -57,81 +55,95 @@ function restorePopup() {
 	setCurrentDomain();
 }
 
-function handleClick() {
-	getBackgroundPage.then(bg => {
-		const status = bg.getStatus();
-		if (status === 'on') {
-			getBackgroundPage.then(bg => bg.disableBlocker());
+async function handleClick() {
+	const status = await browser.runtime.sendMessage({
+		type: 'getStatus'
+	});
+
+	if (status === 'on') {
+		browser.runtime.sendMessage({
+			type: 'disableBlocker'
+		});
+	} else {
+		browser.runtime.sendMessage({
+			type: 'enableBlocker'
+		});
+	}
+
+	setStatus();
+}
+
+async function setStatus() {
+	const status = await browser.runtime.sendMessage({
+		type: 'getStatus'
+	});
+
+	if (status === 'off') {
+		if (toggleButton.classList.contains('on')) {
+			toggleButton.classList.remove('on');
+		}
+		toggleButton.classList.add('off');
+		toggleButton.innerText = browser.i18n.getMessage(
+			'popupToggleButtonOff'
+		);
+	} else if (status === 'on') {
+		if (toggleButton.classList.contains('off')) {
+			toggleButton.classList.remove('off');
+		}
+		toggleButton.classList.add('on');
+		toggleButton.innerText = browser.i18n.getMessage(
+			'popupToggleButtonOn'
+		);
+	}
+}
+
+async function setCurrentDomain() {
+	const domain = await browser.runtime.sendMessage({
+		type: 'getCurrentDomain'
+	});
+
+	if (domain !==  false) {
+		const sites = await browser.runtime.sendMessage({
+			type: 'getAllSites'
+		});
+
+		domainToAllow.textContent = '(' + domain + ')';
+		domainToBlock.textContent = '(' + domain + ')';
+
+		if (sites.findIndex(v => v.url === domain) > -1) {
+			removeButton.style.display = 'block';
+			addButton.style.display = 'none';
 		} else {
-			getBackgroundPage.then(bg => bg.enableBlocker());
+			addButton.style.display = 'block';
+			removeButton.style.display = 'none';
 		}
-		setStatus();
-	});
+	}
 }
 
-function setStatus() {
-	getBackgroundPage.then(bg => {
-		const status = bg.getStatus();
-		if (status === 'off') {
-			if (toggleButton.classList.contains('on')) {
-				toggleButton.classList.remove('on');
-			}
-			toggleButton.classList.add('off');
-			toggleButton.innerText = browser.i18n.getMessage(
-				'popupToggleButtonOff'
-			);
-		} else if (status === 'on') {
-			if (toggleButton.classList.contains('off')) {
-				toggleButton.classList.remove('off');
-			}
-			toggleButton.classList.add('on');
-			toggleButton.innerText = browser.i18n.getMessage(
-				'popupToggleButtonOn'
-			);
-		}
+async function addWebsite() {
+	const domain = await browser.runtime.sendMessage({
+		type: 'getCurrentDomain'
 	});
+
+	await browser.runtime.sendMessage({
+		type: 'addSite',
+		url: domain
+	});
+
+	restorePopup();
 }
 
-function setCurrentDomain() {
-	getBackgroundPage.then(bg => {
-		bg.getDomain().then(tabs => {
-			let url = new URL(tabs[0].url);
-			// dont show the button for non-http pages
-			if (['http:', 'https:'].indexOf(url.protocol) == -1) {
-				return false;
-			}
-			const urlToMatch = url.hostname.replace(/^www\./, '');
-
-			domainToAllow.textContent = '(' + urlToMatch + ')';
-			domainToBlock.textContent = '(' + urlToMatch + ')';
-
-			const sites = bg.getAllSites();
-
-			if (sites.findIndex(v => v.url === urlToMatch) > -1) {
-				removeButton.style.display = 'block';
-				addButton.style.display = 'none';
-			} else {
-				addButton.style.display = 'block';
-				removeButton.style.display = 'none';
-			}
-		});
+async function removeWebsite() {
+	const domain = await browser.runtime.sendMessage({
+		type: 'getCurrentDomain'
 	});
-}
 
-function addWebsite() {
-	getBackgroundPage.then(bg => {
-		bg.addCurrentlyActiveSite().then(() => {
-			restorePopup();
-		});
+	await browser.runtime.sendMessage({
+		type: 'removeSite',
+		url: domain
 	});
-}
 
-function removeWebsite() {
-	getBackgroundPage.then(bg => {
-		bg.removeCurrentlyActiveSite().then(() => {
-			restorePopup();
-		});
-	});
+	restorePopup();
 }
 
 function openOptions() {

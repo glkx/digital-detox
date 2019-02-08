@@ -1,6 +1,6 @@
 'use strict';
 
-let blockedSites, formBlockSite, getBackgroundPage;
+let blockedSites, formBlockSite;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
@@ -9,7 +9,6 @@ function initialize() {
 		.getElementById('optionsBlockedSites')
 		.getElementsByTagName('tbody')[0];
 	formBlockSite = document.getElementById('formBlockSite');
-	getBackgroundPage = browser.runtime.getBackgroundPage();
 
 	setListeners();
 
@@ -51,20 +50,19 @@ function localizeOptions() {
 	).title = getI18nMsg('optionsBlockedSitesTHeadBlocks');
 }
 
-function restoreOptions() {
-	getBackgroundPage.then(bg => {
-		// Get user settings
-		const userOptions = bg.getUserOptions();
-
-		// Set sites
-		setSites(userOptions.blockedSites);
+async function restoreOptions() {
+	const userOptions = await browser.runtime.sendMessage({
+		type: 'getUserOptions'
 	});
+
+	// Set sites
+	setSites(userOptions.blockedSites);
 }
 
 function closeOptions() {
 	// Request sync sites to storage
-	getBackgroundPage.then(bg => {
-		bg.syncUserOptions();
+	browser.runtime.sendMessage({
+		type: 'syncUserOptions'
 	});
 }
 
@@ -83,29 +81,29 @@ function sortSites(a, b) {
 	return comparison;
 }
 
-function setSites(sites) {
+async function setSites(sites) {
 	// Sort alphabetically on url
 	sites.sort(sortSites);
 
-	getBackgroundPage.then(bg => {
-		const history = bg.getHistory();
+	const history = await browser.runtime.sendMessage({
+		type: 'getHistory'
+	});
 
-		// Add sites to options page
-		sites.forEach(site => {
-			let visits = 0,
-				blocks = 0;
+	// Add sites to options page
+	sites.forEach(site => {
+		let visits = 0,
+			blocks = 0;
 
-			if (history != undefined) {
-				const domainIndex = history.findIndex(v => v.url === site.url);
+		if (history != undefined) {
+			const domainIndex = history.findIndex(v => v.url === site.url);
 
-				if (domainIndex > -1) {
-					visits = history[domainIndex].visits;
-					blocks = history[domainIndex].blocks;
-				}
+			if (domainIndex > -1) {
+				visits = history[domainIndex].visits;
+				blocks = history[domainIndex].blocks;
 			}
+		}
 
-			addToBlockedList(site.url, visits, blocks);
-		});
+		addToBlockedList(site.url, visits, blocks);
 	});
 }
 
@@ -149,8 +147,10 @@ function saveSite(event) {
 	formBlockSite.site.value = '';
 
 	// Store url
-	getBackgroundPage.then(bg => {
-		bg.addSite(url);
+	browser.runtime.sendMessage({
+		type: 'addSite',
+		url: url,
+		time: 0
 	});
 }
 
@@ -160,8 +160,9 @@ function deleteSite(event) {
 		const url = row.dataset.url;
 		row.remove();
 
-		getBackgroundPage.then(bg => {
-			bg.removeSite(url);
+		browser.runtime.sendMessage({
+			type: 'removeSite',
+			url: url
 		});
 	}
 }

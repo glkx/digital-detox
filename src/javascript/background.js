@@ -1,5 +1,12 @@
 'use strict';
 
+// Helper classes
+import { Interval } from './helpers/interval';
+import { Tabs } from './helpers/tabs';
+
+// Helper functions
+import equalArrays from './helpers/equal-arrays';
+
 // Global variables
 const debug = false;
 
@@ -769,130 +776,79 @@ DigitalDetox.userOptions = {
 DigitalDetox.init();
 
 /**
- * Helper classes
+ * Messages
  */
 
-class Interval {
-	constructor(callback, interval, autostart = true) {
-		this.callback = callback;
-		this.interval = interval;
-		this.timerId;
-
-		// Auto start interval on construct
-		if (autostart === true) {
-			this.start();
-		}
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	if (request.type == 'getStatus') {
+    	sendResponse(DigitalDetox.getStatus());
+	    return;
 	}
 
-	pause() {
-		clearInterval(this.timerId);
+	if (request.type == 'disableBlocker') {
+    	sendResponse(DigitalDetox.disableBlocker());
+	    return;
 	}
 
-	start() {
-		this.timerId = setInterval(this.callback, this.interval);
+	if (request.type == 'enableBlocker') {
+		sendResponse(DigitalDetox.enableBlocker());
+		return;
 	}
 
-	delete() {
-		clearInterval(this.timerId);
-		this.callback = null;
-		this.interval = null;
-	}
-}
-
-/**
- * Helper functions
- */
-
-function equalArrays(a, b) {
-	let i = a.length;
-
-	if (i !== b.length) {
-		return false;
+	if (request.type == 'getCurrentDomain') {
+		sendResponse(Tabs.getCurrentDomain());
+		return;
 	}
 
-	while (i--) {
-		if (a[i] !== b[i]) {
-			return false;
-		}
+	if (request.type == 'getLocalOptions') {
+    	sendResponse(DigitalDetox.getLocalOptions());
+	    return;
 	}
 
-	return true;
-}
+	if (request.type == 'getUserOptions') {
+    	sendResponse(DigitalDetox.getUserOptions());
+	    return;
+	}
 
-function getStatus() {
-	return DigitalDetox.getStatus();
-}
+	if (request.type == 'syncUserOptions') {
+    	sendResponse(DigitalDetox.syncUserOptions());
+	    return;
+	}
 
-function disableBlocker() {
-	DigitalDetox.disableBlocker();
-}
+	if (request.type == 'getBlockedSites') {
+    	sendResponse(DigitalDetox.getBlockedSites());
+	    return;
+	}
 
-function enableBlocker() {
-	DigitalDetox.enableBlocker();
-}
+	if (request.type == 'getAllSites') {
+    	sendResponse(DigitalDetox.getUserOptions().blockedSites);
+	    return;
+	}
 
-function getDomain() {
-	return browser.tabs.query({
-		active: true,
-		currentWindow: true
-	});
-}
+	if (request.type === 'getHistory') {
+    	sendResponse(DigitalDetox.getLocalOptions().history);
+	    return;
+	}
 
-function refreshOptions() {
-	return DigitalDetox.loadOptions();
-}
+	if (request.type === 'resetHistory') {
+		// Empty history
+		DigitalDetox.updateLocalOptions('history', DigitalDetox.options.history);
+		// Update history modification date
+		DigitalDetox.updateLocalOptions('historyModified', Date.now());
 
-function getLocalOptions() {
-	return DigitalDetox.getLocalOptions();
-}
+		sendResponse(true);
+	    return;
+	}
 
-function getUserOptions() {
-	return DigitalDetox.getUserOptions();
-}
+	if (request.type === 'addSite') {
+    	sendResponse(DigitalDetox.addSite(request.url, request.time));
+	    return;
+	}
 
-function syncUserOptions() {
-	return DigitalDetox.syncUserOptions();
-}
+	if (request.type === 'removeSite') {
+    	sendResponse(DigitalDetox.removeSite(request.url));
+	    return;
+	}
 
-function getBlockedSites() {
-	return DigitalDetox.getBlockedSites();
-}
-
-function getAllSites() {
-	return DigitalDetox.getUserOptions().blockedSites;
-}
-
-function getHistory() {
-	return DigitalDetox.getLocalOptions().history;
-}
-
-function resetHistory() {
-	// Empty history
-	DigitalDetox.updateLocalOptions('history', DigitalDetox.options.history);
-	// Update history modification date
-	DigitalDetox.updateLocalOptions('historyModified', Date.now());
-}
-
-function addSite(url, time) {
-	return DigitalDetox.addSite(url, time);
-}
-
-function removeSite(url) {
-	return DigitalDetox.removeSite(url);
-}
-
-function addCurrentlyActiveSite() {
-	const gettingActiveTab = getDomain();
-	return gettingActiveTab.then(tabs => {
-		const url = new URL(tabs[0].url);
-		addSite(url.hostname.replace(/^www\./, ''));
-	});
-}
-
-function removeCurrentlyActiveSite() {
-	const gettingActiveTab = getDomain();
-	return gettingActiveTab.then(tabs => {
-		const url = new URL(tabs[0].url);
-		removeSite(url.hostname.replace(/^www\./, ''));
-	});
-}
+	throw new Error('Message request type does not exist');
+});
