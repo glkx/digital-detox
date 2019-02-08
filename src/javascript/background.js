@@ -842,6 +842,10 @@ function refreshOptions() {
 	return DigitalDetox.loadOptions();
 }
 
+function getLocalOptions() {
+	return DigitalDetox.getLocalOptions();
+}
+
 function getUserOptions() {
 	return DigitalDetox.getUserOptions();
 }
