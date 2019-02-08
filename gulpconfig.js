@@ -6,7 +6,7 @@ var name = 'digital-detox', // The directory name for your theme; change this at
 		dist: './dist/' + name + '/', // The distribution package that you'll be uploading to your server; delete it anytime
 		modules: './node_modules/' // npm packages
 	},
-	debug = true;
+	debug = false;
 
 // Settings
 module.exports = {

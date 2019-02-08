@@ -790,12 +790,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	    return;
 	}
 
-	if (request.type === 'revertHistory') {
-		DigitalDetox.updateLocalOptions('historyModified', 1546300800);
-		sendResponse(true);
-	    return;
-	}
-
 	if (request.type === 'addSite') {
     	sendResponse(DigitalDetox.addSite(request.url, request.time));
 	    return;
