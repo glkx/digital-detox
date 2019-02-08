@@ -1,23 +1,21 @@
 'use strict';
 
+// Vendor
+import dayjs from 'dayjs';
+
 // Helper classes
-import { Interval } from './helpers/interval';
-import { Tabs } from './helpers/tabs';
+import Domain from './helpers/domain';
+import Interval from './helpers/interval';
 
 // Helper functions
 import equalArrays from './helpers/equal-arrays';
-
-// Global variables
-const debug = false;
 
 /**
  * Digital Detox
  */
 const DigitalDetox = {
 	init: () => {
-		if (debug) {
-			console.log('Initiate Digital Detox');
-		}
+		console.log('Initiate Digital Detox');
 
 		// Load sites form storage then enable blocker and sync listener
 		DigitalDetox.loadOptions().then(() => {
@@ -32,9 +30,7 @@ const DigitalDetox = {
 	 * Initiate options
 	 */
 	loadOptions: () => {
-		if (debug) {
-			console.log('Load options started');
-		}
+		console.log('Load options started');
 
 		// Wait for local and user options are loaded
 		return new Promise((resolve, reject) => {
@@ -42,9 +38,7 @@ const DigitalDetox = {
 				DigitalDetox.loadLocalOptions(),
 				DigitalDetox.loadUserOptions()
 			]).then(() => {
-				if (debug) {
-					console.log('Load options finished');
-				}
+				console.log('Load options finished');
 				return resolve();
 			});
 		});
@@ -100,9 +94,7 @@ const DigitalDetox = {
 
 			DigitalDetox.localOptionsModified = Date.now();
 
-			if (debug) {
-				console.log('Update local options');
-			}
+			console.log('Update local options');
 		}
 	},
 
@@ -115,9 +107,7 @@ const DigitalDetox = {
 			localOptions: DigitalDetox.localOptions
 		});
 
-		if (debug) {
-			console.log('Sync local options');
-		}
+		console.log('Sync local options');
 	},
 
 	/**
@@ -140,9 +130,7 @@ const DigitalDetox = {
 
 			DigitalDetox.userOptionsModified = Date.now();
 
-			if (debug) {
-				console.log('Update user options');
-			}
+			console.log('Update user options');
 		}
 	},
 
@@ -155,9 +143,7 @@ const DigitalDetox = {
 			userSettings: DigitalDetox.userOptions
 		});
 
-		if (debug) {
-			console.log('Sync user options');
-		}
+		console.log('Sync user options');
 	},
 
 	/**
@@ -223,13 +209,6 @@ const DigitalDetox = {
 				false
 			);
 
-			if (debug) {
-				console.warn(
-					'Idle detection interval set to 15 seconds which can impact performance. Disable debug to return to default interval.'
-				);
-				browser.idle.setDetectionInterval(15);
-			}
-
 			// Pause background processes when user is inactive
 			browser.idle.onStateChanged.addListener(state => {
 				if (state === 'idle' || state === 'locked') {
@@ -277,9 +256,7 @@ const DigitalDetox = {
 			// IDEA: Auto disable blocker between time range
 		}
 
-		if (debug) {
-			console.log('Status handled');
-		}
+		console.log('Status handled');
 	},
 
 	/**
@@ -314,10 +291,7 @@ const DigitalDetox = {
 			path: icon
 		});
 
-		if (debug) {
-			console.log('Set status', status);
-		}
-
+		console.log('Set status', status);
 		return true;
 	},
 
@@ -332,16 +306,13 @@ const DigitalDetox = {
 		// Reset history when new day
 		if (
 			localOptions.historyModified != undefined &&
-			new Date(localOptions.historyModified).getDate() !=
-				new Date().getDate()
+			dayjs(localOptions.historyModified).isBefore(dayjs(), "day")
 		) {
 			history = DigitalDetox.options.history;
+			console.log('Reset history');
 		}
 
-		if (debug) {
-			console.log('Get history', history);
-		}
-
+		console.log('Get history', history);
 		return history;
 	},
 
@@ -366,10 +337,7 @@ const DigitalDetox = {
 			// IDEA: Implement time logic
 		});
 
-		if (debug) {
-			console.log('Get blocked sites', blockedSites);
-		}
-
+		console.log('Get blocked sites', blockedSites);
 		return blockedSites;
 	},
 
@@ -394,10 +362,7 @@ const DigitalDetox = {
 			// Update user settings
 			DigitalDetox.updateUserOptions(userOptions);
 
-			if (debug) {
-				console.log('Site added');
-			}
-
+			console.log('Site added');
 			return true;
 		}
 
@@ -458,9 +423,7 @@ const DigitalDetox = {
 		// Change status to on
 		DigitalDetox.setStatus('on');
 
-		if (debug) {
-			console.log('Blocker enabled');
-		}
+		console.log('Blocker enabled');
 	},
 
 	/*
@@ -470,18 +433,14 @@ const DigitalDetox = {
 		let previousSites = DigitalDetox.getBlockedSites();
 
 		DigitalDetox.process.updateBlockerTimer = new Interval(() => {
-			if (debug) {
-				console.log('Check for blocker updates');
-			}
+			console.log('Check for blocker updates');
 
 			let currentSites = DigitalDetox.getBlockedSites();
 			if (equalArrays(previousSites, currentSites) === false) {
 				DigitalDetox.enableBlocker();
 				previousSites = currentSites;
 
-				if (debug) {
-					console.log('Blocker updated');
-				}
+				console.log('Blocker updated');
 			}
 		}, DigitalDetox.options.updateBlockerInterval);
 
@@ -504,9 +463,7 @@ const DigitalDetox = {
 	 * Removes the web request listener and turns the extension off.
 	 */
 	disableBlocker: () => {
-		if (debug) {
-			console.log('Disable blocker');
-		}
+		console.log('Disable blocker');
 
 		// Restore blocked tabs
 		DigitalDetox.restoreTabs();
@@ -530,9 +487,7 @@ const DigitalDetox = {
 			DigitalDetox.process.updateBlockerTimer = null;
 		}
 
-		if (debug) {
-			console.log('Blocker cleared');
-		}
+		console.log('Blocker cleared');
 	},
 
 	/**
@@ -603,15 +558,12 @@ const DigitalDetox = {
 				}
 			});
 
-		if (debug) {
-			console.log('Tabs restored');
-		}
+		console.log('Tabs restored');
 	},
 
 	// Listen to new tabs
 	handleVisit: requestDetails => {
-		const url = new URL(requestDetails.url),
-			domain = url.hostname.replace(/^www\./, ''),
+		const domain = Domain.parseURL(requestDetails.url),
 			history = DigitalDetox.getHistory();
 
 		if (history != undefined) {
@@ -649,9 +601,7 @@ const DigitalDetox = {
 			DigitalDetox.updateHistory(history);
 		}
 
-		if (debug) {
-			console.log('Visit handled');
-		}
+		console.log('Visit handled');
 	},
 
 	/**
@@ -796,7 +746,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	}
 
 	if (request.type == 'getCurrentDomain') {
-		sendResponse(Tabs.getCurrentDomain());
+		sendResponse(Domain.getCurrent());
 		return;
 	}
 
@@ -836,6 +786,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		// Update history modification date
 		DigitalDetox.updateLocalOptions('historyModified', Date.now());
 
+		sendResponse(true);
+	    return;
+	}
+
+	if (request.type === 'revertHistory') {
+		DigitalDetox.updateLocalOptions('historyModified', 1546300800);
 		sendResponse(true);
 	    return;
 	}
