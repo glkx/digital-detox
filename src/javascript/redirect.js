@@ -1,12 +1,10 @@
 'use strict';
 
-let getBackgroundPage, currentUrl, redirectUrl, redirectDomain;
+let currentUrl, redirectUrl, redirectDomain;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
 function initialize() {
-	getBackgroundPage = browser.runtime.getBackgroundPage();
-
 	// Get domain
 	currentUrl = new URL(window.location.href);
 	redirectUrl = atob(decodeURIComponent(currentUrl.searchParams.get('from')));
@@ -45,21 +43,23 @@ function localizeRedirect() {
 	}
 }
 
-function restoreRedirect() {
+async function restoreRedirect() {
 	if (window.performance.navigation.type == 2) {
 		window.history.back();
 	} else {
-		getBackgroundPage.then(bg => {
-			const status = bg.getStatus(),
-				sites = bg.getAllSites();
+		const status = await browser.runtime.sendMessage({
+				type: 'getStatus'
+			}),
+			sites = await browser.runtime.sendMessage({
+				type: 'getAllSites'
+			});
 
-			if (
-				redirectUrl != undefined &&
-				(status == 'off' || matchUrl(redirectDomain, sites) === false)
-			) {
-				window.location.href = redirectUrl;
-			}
-		});
+		if (
+			redirectUrl != undefined &&
+			(status == 'off' || matchUrl(redirectDomain, sites) === false)
+		) {
+			window.location.href = redirectUrl;
+		}
 	}
 }
 

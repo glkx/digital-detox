@@ -5,7 +5,8 @@ var name = 'digital-detox', // The directory name for your theme; change this at
 		build: './build/', // A temporary directory containing a development version of your theme; delete it anytime
 		dist: './dist/' + name + '/', // The distribution package that you'll be uploading to your server; delete it anytime
 		modules: './node_modules/' // npm packages
-	};
+	},
+	debug = false;
 
 // Settings
 module.exports = {
@@ -35,11 +36,24 @@ module.exports = {
 	},
 	scripts: {
 		lint: {
-			src: [dir.src + 'assets/js/**/*.js', '!**/vendor/**']
+			src: [dir.src + 'javascript/**/*.js', '!**/vendor/**']
 		},
 		build: {
 			src: dir.src + 'javascript/*.js',
 			dest: dir.build + 'javascript/'
+		},
+		webpack: {
+			mode: 'production',
+			output: {
+				filename: '[name].js'
+			},
+			externals: {
+				// Exclude from import in JavaScript
+			},
+			optimization: {
+				minimize: debug ? false : true,
+				runtimeChunk: false
+			}
 		}
 	},
 	styles: {
@@ -77,20 +91,5 @@ module.exports = {
 			name: name + '.zip'
 		}
 	},
-	watch: {
-		src: {
-			theme: [
-				dir.src + 'acf_json/**/*',
-				dir.src + 'languages/**/*',
-				dir.src + 'library/**/*',
-				dir.src + '*.php',
-				dir.src + 'plugins/**/*',
-				dir.src + 'views/**/*.twig',
-				dir.src + '*.+(txt|webmanifest)'
-			],
-			images: dir.src + '**/*.+(png|jpg|jpeg|gif|svg)',
-			styles: dir.src + 'scss/**/*.scss',
-			scripts: dir.src + 'assets/**/*.js'
-		}
-	}
+	debug: debug
 };

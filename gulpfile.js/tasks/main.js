@@ -4,9 +4,6 @@
 
 const gulp = require('gulp');
 
-// Default task chain: build -> (livereload or browsersync) -> watch
-gulp.task('default', ['watch']);
-
 // Build a working copy of the theme
 gulp.task('build', ['extention', 'images', 'scripts', 'styles']);
 
