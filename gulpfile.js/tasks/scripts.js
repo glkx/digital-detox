@@ -11,8 +11,6 @@ const gulp = require('gulp'),
 	config = require('../../gulpconfig').scripts,
 	debug = require('../../gulpconfig').debug;
 
-console.log(debug);
-
 const cleanup = function() {
 	if (debug) {
 		return false;
