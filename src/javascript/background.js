@@ -3,8 +3,11 @@
 // Vendor
 import dayjs from 'dayjs';
 
+// Modules
+import Domain from './modules/domain';
+import Tabs from './modules/tabs';
+
 // Helper classes
-import Domain from './helpers/domain';
 import Interval from './helpers/interval';
 
 // Helper functions
@@ -466,7 +469,7 @@ const DigitalDetox = {
 		console.log('Disable blocker');
 
 		// Restore blocked tabs
-		DigitalDetox.restoreTabs();
+		Tabs.restore();
 
 		// Remove listeners
 		DigitalDetox.clearBlocker();
