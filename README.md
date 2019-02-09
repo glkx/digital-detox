@@ -8,7 +8,7 @@ You can export and import your blocked websites with an work around through the 
 
 Export:
 ```
-getBackgroundPage.then(bg => { const options = bg.getUserOptions(); console.log(JSON.stringify(options)); });
+browser.runtime.getBackgroundPage().then(bg => { const options = bg.getUserOptions(); console.log(JSON.stringify(options)); });
 ```
 
 Import:
@@ -16,7 +16,7 @@ Import:
 const options = JSON.parse('{}');
 
 options.blockedSites.forEach(function(site) {
-	getBackgroundPage.then(bg => {
+	browser.runtime.getBackgroundPage().then(bg => {
 		bg.addSite(site.url, site.time);
 	});
 });
