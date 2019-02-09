@@ -730,78 +730,72 @@ DigitalDetox.init();
  */
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	if (request.type == 'getStatus') {
-		sendResponse(DigitalDetox.getStatus());
-		return;
+	switch (request.type) {
+		case 'getStatus':
+			sendResponse(DigitalDetox.getStatus());
+			break;
+
+		case 'disableBlocker':
+			sendResponse(DigitalDetox.disableBlocker());
+			break;
+
+		case 'enableBlocker':
+			sendResponse(DigitalDetox.enableBlocker());
+			break;
+
+		case 'getCurrentDomain':
+			sendResponse(Domain.getCurrent());
+			break;
+
+		case 'getLocalOptions':
+			sendResponse(DigitalDetox.getLocalOptions());
+			break;
+
+		case 'getUserOptions':
+			sendResponse(DigitalDetox.getUserOptions());
+			break;
+
+		case 'syncUserOptions':
+			sendResponse(DigitalDetox.syncUserOptions());
+			break;
+
+		case 'getBlockedSites':
+			sendResponse(DigitalDetox.getBlockedSites());
+			break;
+
+		case 'getAllSites':
+			sendResponse(DigitalDetox.getUserOptions().blockedSites);
+			break;
+
+		case 'getHistory':
+			sendResponse(DigitalDetox.getLocalOptions().history);
+			break;
+
+		case 'resetHistory':
+			// Empty history
+			DigitalDetox.updateLocalOptions(
+				'history',
+				DigitalDetox.options.history
+			);
+
+			// Update history modification date
+			DigitalDetox.updateLocalOptions('historyModified', Date.now());
+
+			sendResponse(true);
+			break;
+
+		case 'addSite':
+			sendResponse(DigitalDetox.addSite(request.url, request.time));
+			break;
+
+		case 'removeSite':
+			sendResponse(DigitalDetox.removeSite(request.url));
+			break;
+
+		default:
+			sendResponse(new Error('Message request type does not exist'));
+			break;
 	}
 
-	if (request.type == 'disableBlocker') {
-		sendResponse(DigitalDetox.disableBlocker());
-		return;
-	}
-
-	if (request.type == 'enableBlocker') {
-		sendResponse(DigitalDetox.enableBlocker());
-		return;
-	}
-
-	if (request.type == 'getCurrentDomain') {
-		sendResponse(Domain.getCurrent());
-		return;
-	}
-
-	if (request.type == 'getLocalOptions') {
-		sendResponse(DigitalDetox.getLocalOptions());
-		return;
-	}
-
-	if (request.type == 'getUserOptions') {
-		sendResponse(DigitalDetox.getUserOptions());
-		return;
-	}
-
-	if (request.type == 'syncUserOptions') {
-		sendResponse(DigitalDetox.syncUserOptions());
-		return;
-	}
-
-	if (request.type == 'getBlockedSites') {
-		sendResponse(DigitalDetox.getBlockedSites());
-		return;
-	}
-
-	if (request.type == 'getAllSites') {
-		sendResponse(DigitalDetox.getUserOptions().blockedSites);
-		return;
-	}
-
-	if (request.type === 'getHistory') {
-		sendResponse(DigitalDetox.getLocalOptions().history);
-		return;
-	}
-
-	if (request.type === 'resetHistory') {
-		// Empty history
-		DigitalDetox.updateLocalOptions(
-			'history',
-			DigitalDetox.options.history
-		);
-		// Update history modification date
-		DigitalDetox.updateLocalOptions('historyModified', Date.now());
-
-		sendResponse(true);
-		return;
-	}
-
-	if (request.type === 'addSite') {
-		sendResponse(DigitalDetox.addSite(request.url, request.time));
-		return;
-	}
-
-	if (request.type === 'removeSite') {
-		sendResponse(DigitalDetox.removeSite(request.url));
-		return;
-	}
-
-	throw new Error('Message request type does not exist');
+	return;
 });
