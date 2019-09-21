@@ -16,10 +16,6 @@ button {
     display: flex;
 }
 
-.options:hover {
-    background-color: #EDEDF0;
-}
-
 .toggle-button,
 .add-domain-section button {
     width: 100%;
@@ -27,16 +23,16 @@ button {
 }
 
 .toggle-button.off {
-    background-color: #0a84ff;
+    background-color: var(--in-content-primary-button-background);
     border-color: transparent;
     color: #fff !important;
 
     &:hover {
-        background-color: #0060df;
+        background-color: var(--in-content-primary-button-background-hover);
     }
 
     &:active {
-        background-color: #003EAA;
+        background-color: var(--in-content-primary-button-background-active);
     }
 }
 
@@ -48,14 +44,14 @@ button {
     margin: 0 0 0 0.5em;
     padding: 15px;
     background-color: transparent;
-    background-image: url( 'chrome://browser/skin/settings.svg' );
+    background-image: url('chrome://browser/skin/settings.svg');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 16px;
     border: 0;
     z-index: 100;
     vertical-align: middle;
-    fill: rgba( 12, 12, 13, 0.6 );
+    fill: var(--grey-90-a60);
     -moz-context-properties: fill;
 }
 
@@ -65,10 +61,32 @@ button {
     font-size: 12px;
 
     &.add-button {
-        background-color: #FF4136;
+        background-color: var(--red-60);
+
+		&:hover {
+	        background-color: var(--red-70);
+	    }
+
+	    &:active {
+	        background-color: var(--red-70);
+	    }
     }
 
     &.remove-button {
-        background-color: #2ECC40;
+        background-color: var(--green-60);
+
+		&:hover {
+	        background-color: var(--green-70);
+	    }
+
+	    &:active {
+	        background-color: var(--green-80);
+	    }
     }
+}
+
+@media (prefers-color-scheme: dark) {
+	.prefs-button {
+		fill: var(--in-content-page-color);
+	}
 }
