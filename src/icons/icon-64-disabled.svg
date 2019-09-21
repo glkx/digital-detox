@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
-    <title>icon-64-disabled</title>
-    <desc>Created with Sketch.</desc>
-    <g id="icon-64-disabled" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Disabled" fill-rule="nonzero">
-            <circle id="Background" fill="#FFFFFF" cx="32" cy="32" r="32"></circle>
-            <path d="M22,21.5 C22,20.1192881 23.1192881,19 24.5,19 C25.8807119,19 27,20.1192881 27,21.5 L27,42.5 C27,43.8807119 25.8807119,45 24.5,45 C23.1192881,45 22,43.8807119 22,42.5 L22,21.5 Z" id="Line" fill-opacity="0.8" fill="#0C0C0D"></path>
-            <path d="M37,21.5 C37,20.1192881 38.1192881,19 39.5,19 C40.8807119,19 42,20.1192881 42,21.5 L42,42.5 C42,43.8807119 40.8807119,45 39.5,45 C38.1192881,45 37,43.8807119 37,42.5 L37,21.5 Z" id="Line" fill-opacity="0.8" fill="#0C0C0D"></path>
-        </g>
-    </g>
-</svg>
+<svg height="64" viewBox="0 0 64 64" width="64" xmlns="http://www.w3.org/2000/svg"><g fill="none"><circle cx="32" cy="32" fill="#fff" r="32"/><g fill="#0c0c0d" fill-opacity=".8"><path d="m22 21.5c0-1.3807119 1.1192881-2.5 2.5-2.5s2.5 1.1192881 2.5 2.5v21c0 1.3807119-1.1192881 2.5-2.5 2.5s-2.5-1.1192881-2.5-2.5z"/><path d="m37 21.5c0-1.3807119 1.1192881-2.5 2.5-2.5s2.5 1.1192881 2.5 2.5v21c0 1.3807119-1.1192881 2.5-2.5 2.5s-2.5-1.1192881-2.5-2.5z"/></g></g></svg>

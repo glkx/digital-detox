@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
-    <title>icon-48-disabled</title>
-    <desc>Created with Sketch.</desc>
-    <g id="icon-48-disabled" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Disabled" fill-rule="nonzero">
-            <circle id="Background" fill="#FFFFFF" cx="24" cy="24" r="24"></circle>
-            <path d="M16.5,16.125 C16.5,15.0894661 17.3394661,14.25 18.375,14.25 C19.4105339,14.25 20.25,15.0894661 20.25,16.125 L20.25,31.875 C20.25,32.9105339 19.4105339,33.75 18.375,33.75 C17.3394661,33.75 16.5,32.9105339 16.5,31.875 L16.5,16.125 Z" id="Line" fill-opacity="0.8" fill="#0C0C0D"></path>
-            <path d="M27.75,16.125 C27.75,15.0894661 28.5894661,14.25 29.625,14.25 C30.6605339,14.25 31.5,15.0894661 31.5,16.125 L31.5,31.875 C31.5,32.9105339 30.6605339,33.75 29.625,33.75 C28.5894661,33.75 27.75,32.9105339 27.75,31.875 L27.75,16.125 Z" id="Line" fill-opacity="0.8" fill="#0C0C0D"></path>
-        </g>
-    </g>
-</svg>
+<svg height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg"><g fill="none"><circle cx="24" cy="24" fill="#fff" r="24"/><g fill="#0c0c0d" fill-opacity=".8"><path d="m16.5 16.125c0-1.0355339.8394661-1.875 1.875-1.875s1.875.8394661 1.875 1.875v15.75c0 1.0355339-.8394661 1.875-1.875 1.875s-1.875-.8394661-1.875-1.875z"/><path d="m27.75 16.125c0-1.0355339.8394661-1.875 1.875-1.875s1.875.8394661 1.875 1.875v15.75c0 1.0355339-.8394661 1.875-1.875 1.875s-1.875-.8394661-1.875-1.875z"/></g></g></svg>
