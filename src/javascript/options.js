@@ -44,10 +44,10 @@ function localizeOptions() {
 	);
 	document.getElementById(
 		'optionsBlockedSitesTHeadVisits'
-	).title = getI18nMsg('optionsBlockedSitesTHeadVisits');
+	).dataset.tooltip = getI18nMsg('optionsBlockedSitesTHeadVisits');
 	document.getElementById(
 		'optionsBlockedSitesTHeadBlocks'
-	).title = getI18nMsg('optionsBlockedSitesTHeadBlocks');
+	).dataset.tooltip = getI18nMsg('optionsBlockedSitesTHeadBlocks');
 }
 
 async function restoreOptions() {

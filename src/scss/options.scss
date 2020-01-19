@@ -173,7 +173,6 @@ button {
     background-color: var(--in-content-box-background);
 	border: 1px solid var(--in-content-box-border-color);
     border-radius: 2px;
-	overflow: hidden;
 }
 
 .blocked-sites {
@@ -245,3 +244,6 @@ button {
 .d-block {
 	display: block;
 }
+
+// Tooltip
+@import 'css-tooltip/src/css-tooltip.scss';
