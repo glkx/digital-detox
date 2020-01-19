@@ -55,9 +55,12 @@
 	}
 } */
 
+body {
+	overflow: auto;
+}
+
 .main-content {
     padding: 82px 40px 40px;
-    overflow: auto;
 }
 
 .pane-container {
