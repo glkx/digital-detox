@@ -4,6 +4,10 @@ import Tabs from './tabs';
 
 export default class Domain {
 	static parseURL(url) {
+		if (!url) {
+			return;
+		}
+
 		const parseURL = new URL(url);
 
 		// Check url is http or https address
