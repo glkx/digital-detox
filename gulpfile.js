@@ -15,15 +15,14 @@ const { task, src, dest, series, parallel } = require('gulp');
 // Plugins
 const args = require('yargs').argv;
 const del = require('del');
-const cssnano = require('gulp-cssnano');
 const changed = require('gulp-changed');
+const cssnano = require('gulp-cssnano');
 const eslint = require('gulp-eslint');
 const gulpif = require('gulp-if');
 const imagemin = require('gulp-imagemin');
 const replace = require('gulp-replace');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
-const uglify = require('gulp-uglify');
 const zip = require('gulp-zip');
 const named = require('vinyl-named');
 const compiler = require('webpack');
@@ -114,7 +113,7 @@ task('styles:minify', () => {
 				preset: 'default',
 				autoprefixer: {
 					add: true,
-					browsers: ['last 2 versions']
+					browsers: ['Firefox >= 57']
 				},
 				mergeIdents: true,
 				reduceIdents: true
