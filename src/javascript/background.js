@@ -308,7 +308,7 @@ const DigitalDetox = {
 
 		// Reset history when new day
 		if (
-			localOptions.historyModified != undefined &&
+			localOptions.historyModified == undefined ||
 			dayjs(localOptions.historyModified).isBefore(dayjs(), 'day')
 		) {
 			history = DigitalDetox.options.history;
