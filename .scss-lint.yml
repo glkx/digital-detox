@@ -1,0 +1,6 @@
+scss_files: "**/*.scss"
+
+linters:
+  Indentation:
+    character: tab
+    width: 4
