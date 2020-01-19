@@ -72,8 +72,8 @@ task('images:optimize', () => {
 		.pipe(
 			imagemin([
 				imagemin.gifsicle({ interlaced: true }),
-				imagemin.jpegtran({ progressive: true }),
-				imagemin.optipng({ optimizationLevel: 7 }),
+				imagemin.mozjpeg({ progressive: true }),
+				imagemin.optipng({ optimizationLevel: 5 }),
 				imagemin.svgo({
 					plugins: [
 						{ removeUselessDefs: false },
