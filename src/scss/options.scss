@@ -187,7 +187,7 @@ button {
             font-weight: normal;
         }
 
-        .icon {
+        .icon-wrapper {
             margin-left: -3px;
         }
 	}
@@ -232,6 +232,7 @@ button {
     }
 }
 
+// Icon
 .icon {
     fill: currentColor;
     display: inline-block;
@@ -241,9 +242,16 @@ button {
 	overflow: visible;
 }
 
+// Tooltip
+[data-tooltip] {
+	cursor: help;
+    display: inline-block;
+    border-bottom: 1px dotted var(--in-content-page-color);
+}
+
+@import 'css-tooltip/src/css-tooltip.scss';
+
+// Misc
 .d-block {
 	display: block;
 }
-
-// Tooltip
-@import 'css-tooltip/src/css-tooltip.scss';
