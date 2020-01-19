@@ -507,12 +507,7 @@ const DigitalDetox = {
 				// Loop matched tabs
 				for (let tab of tabs) {
 					// Block tabs
-					browser.tabs.update(tab.id, {
-						url: browser.runtime.getURL(
-							'/redirect.html?from=' +
-								encodeURIComponent(btoa(tab.url))
-						)
-					});
+					Tabs.setBlocked(tab.id, tab.url);
 				}
 			});
 	},
@@ -536,32 +531,8 @@ const DigitalDetox = {
 		}
 
 		if (match === true) {
-			browser.tabs.update(requestDetails.tabId, {
-				url: browser.runtime.getURL(
-					'/redirect.html?from=' +
-						encodeURIComponent(btoa(requestDetails.url))
-				)
-			});
+			Tabs.setBlocked(requestDetails.id, requestDetails.url);
 		}
-	},
-
-	/**
-	 * Restore tabs
-	 */
-	restoreTabs: () => {
-		browser.tabs
-			.query({
-				url: browser.runtime.getURL('*')
-			})
-			.then(tabs => {
-				// Loop matched tabs
-				for (let tab of tabs) {
-					// Reload tabs
-					browser.tabs.reload(tab.id);
-				}
-			});
-
-		console.log('Tabs restored');
 	},
 
 	// Listen to new tabs

@@ -15,6 +15,19 @@ export default class Tabs {
 		});
 	}
 
+	static async setBlocked(tabId, tabUrl) {
+		if (!tabId || !tabUrl) {
+			return;
+		}
+
+		// Redirect tab to blocked message
+		return await browser.tabs.update(tabId, {
+			url: browser.runtime.getURL(
+				'/redirect.html?from=' + encodeURIComponent(btoa(tabUrl))
+			)
+		});
+	}
+
 	static async restore() {
 		// Get current blocked tabs
 		const blockedTabs = await this.getBlocked();
