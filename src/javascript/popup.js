@@ -1,5 +1,8 @@
 'use strict';
 
+// Variables
+import runtimeMessage from './variables/runtimeMessages';
+
 let toggleButton,
 	addButton,
 	prefsButton,
@@ -57,16 +60,16 @@ function restorePopup() {
 
 async function handleClick() {
 	const status = await browser.runtime.sendMessage({
-		type: 'getStatus'
+		type: runtimeMessage.getStatus
 	});
 
 	if (status === 'on') {
 		browser.runtime.sendMessage({
-			type: 'disableBlocker'
+			type: runtimeMessage.disableBlocker
 		});
 	} else {
 		browser.runtime.sendMessage({
-			type: 'enableBlocker'
+			type: runtimeMessage.enableBlocker
 		});
 	}
 
@@ -75,7 +78,7 @@ async function handleClick() {
 
 async function setStatus() {
 	const status = await browser.runtime.sendMessage({
-		type: 'getStatus'
+		type: runtimeMessage.getStatus
 	});
 
 	if (status === 'off') {
@@ -97,12 +100,12 @@ async function setStatus() {
 
 async function setCurrentDomain() {
 	const domain = await browser.runtime.sendMessage({
-		type: 'getCurrentDomain'
+		type: runtimeMessage.getCurrentDomain
 	});
 
 	if (domain !== false) {
 		const sites = await browser.runtime.sendMessage({
-			type: 'getAllSites'
+			type: runtimeMessage.getAllSites
 		});
 
 		domainToAllow.textContent = '(' + domain + ')';
@@ -120,11 +123,11 @@ async function setCurrentDomain() {
 
 async function addWebsite() {
 	const domain = await browser.runtime.sendMessage({
-		type: 'getCurrentDomain'
+		type: runtimeMessage.getCurrentDomain
 	});
 
 	await browser.runtime.sendMessage({
-		type: 'addSite',
+		type: runtimeMessage.addSite,
 		url: domain
 	});
 
@@ -133,11 +136,11 @@ async function addWebsite() {
 
 async function removeWebsite() {
 	const domain = await browser.runtime.sendMessage({
-		type: 'getCurrentDomain'
+		type: runtimeMessage.getCurrentDomain
 	});
 
 	await browser.runtime.sendMessage({
-		type: 'removeSite',
+		type: runtimeMessage.removeSite,
 		url: domain
 	});
 

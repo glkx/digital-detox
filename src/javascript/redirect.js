@@ -1,5 +1,8 @@
 'use strict';
 
+// Variables
+import runtimeMessage from './variables/runtimeMessages';
+
 let currentUrl, redirectUrl, redirectDomain;
 
 document.addEventListener('DOMContentLoaded', initialize);
@@ -48,10 +51,10 @@ async function restoreRedirect() {
 		window.history.back();
 	} else {
 		const status = await browser.runtime.sendMessage({
-				type: 'getStatus'
+				type: runtimeMessage.getStatus
 			}),
 			sites = await browser.runtime.sendMessage({
-				type: 'getAllSites'
+				type: runtimeMessage.getAllSites
 			});
 
 		if (

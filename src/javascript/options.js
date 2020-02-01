@@ -1,5 +1,8 @@
 'use strict';
 
+// Variables
+import runtimeMessage from './variables/runtimeMessages';
+
 let blockedSites, formBlockSite;
 
 document.addEventListener('DOMContentLoaded', initialize);
@@ -52,7 +55,7 @@ function localizeOptions() {
 
 async function restoreOptions() {
 	const userOptions = await browser.runtime.sendMessage({
-		type: 'getUserOptions'
+		type: runtimeMessage.getUserOptions
 	});
 
 	// Set sites
@@ -62,7 +65,7 @@ async function restoreOptions() {
 function closeOptions() {
 	// Request sync sites to storage
 	browser.runtime.sendMessage({
-		type: 'syncUserOptions'
+		type: runtimeMessage.syncUserOptions
 	});
 }
 
@@ -86,7 +89,7 @@ async function setSites(sites) {
 	sites.sort(sortSites);
 
 	const history = await browser.runtime.sendMessage({
-		type: 'getHistory'
+		type: runtimeMessage.getHistory
 	});
 
 	// Add sites to options page
@@ -148,7 +151,7 @@ function saveSite(event) {
 
 	// Store url
 	browser.runtime.sendMessage({
-		type: 'addSite',
+		type: runtimeMessage.addSite,
 		url: url,
 		time: 0
 	});
@@ -161,7 +164,7 @@ function deleteSite(event) {
 		row.remove();
 
 		browser.runtime.sendMessage({
-			type: 'removeSite',
+			type: runtimeMessage.removeSite,
 			url: url
 		});
 	}

@@ -1,7 +1,7 @@
 'use strict';
 
-// Vendor
-import dayjs from 'dayjs';
+// Variables
+import runtimeMessage from './variables/runtimeMessages';
 
 // Modules
 import Domain from './modules/domain';
@@ -12,6 +12,9 @@ import Interval from './helpers/interval';
 
 // Helper functions
 import equalArrays from './helpers/equal-arrays';
+
+// Vendor
+import dayjs from 'dayjs';
 
 /**
  * Digital Detox
@@ -705,47 +708,47 @@ DigitalDetox.init();
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	switch (request.type) {
-		case 'getStatus':
+		case runtimeMessage.getStatus:
 			sendResponse(DigitalDetox.getStatus());
 			break;
 
-		case 'disableBlocker':
+		case runtimeMessage.disableBlocker:
 			sendResponse(DigitalDetox.disableBlocker());
 			break;
 
-		case 'enableBlocker':
+		case runtimeMessage.enableBlocker:
 			sendResponse(DigitalDetox.enableBlocker());
 			break;
 
-		case 'getCurrentDomain':
+		case runtimeMessage.getCurrentDomain:
 			sendResponse(Domain.getCurrent());
 			break;
 
-		case 'getLocalOptions':
+		case runtimeMessage.getLocalOptions:
 			sendResponse(DigitalDetox.getLocalOptions());
 			break;
 
-		case 'getUserOptions':
+		case runtimeMessage.getUserOptions:
 			sendResponse(DigitalDetox.getUserOptions());
 			break;
 
-		case 'syncUserOptions':
+		case runtimeMessage.syncUserOptions:
 			sendResponse(DigitalDetox.syncUserOptions());
 			break;
 
-		case 'getBlockedSites':
+		case runtimeMessage.getBlockedSites:
 			sendResponse(DigitalDetox.getBlockedSites());
 			break;
 
-		case 'getAllSites':
+		case runtimeMessage.getAllSites:
 			sendResponse(DigitalDetox.getUserOptions().blockedSites);
 			break;
 
-		case 'getHistory':
+		case runtimeMessage.getHistory:
 			sendResponse(DigitalDetox.getLocalOptions().history);
 			break;
 
-		case 'resetHistory':
+		case runtimeMessage.resetHistory:
 			// Empty history
 			DigitalDetox.updateLocalOptions(
 				'history',
@@ -758,11 +761,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			sendResponse(true);
 			break;
 
-		case 'addSite':
+		case runtimeMessage.addSite:
 			sendResponse(DigitalDetox.addSite(request.url, request.time));
 			break;
 
-		case 'removeSite':
+		case runtimeMessage.removeSite:
 			sendResponse(DigitalDetox.removeSite(request.url));
 			break;
 
