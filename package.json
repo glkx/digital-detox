@@ -1,6 +1,6 @@
 {
 	"name": "digital-detox",
-	"version": "1.6.0",
+	"version": "1.5.12",
 	"scripts": {
 		"lint": "eslint ./src/assets/js/**/*.js",
 		"format": "eslint --fix ./src/assets/js/**/*.js",

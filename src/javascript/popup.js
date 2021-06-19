@@ -4,8 +4,6 @@
 import runtimeMessage from './variables/runtimeMessages';
 
 let toggleButton,
-	toggleButtonDelay = 5000,
-	toggleButtonTimer,
 	addButton,
 	prefsButton,
 	removeButton,
@@ -15,8 +13,8 @@ let toggleButton,
 document.addEventListener('DOMContentLoaded', initialize);
 
 function initialize() {
-	toggleButton = document.getElementById('popupToggleButton');
 	prefsButton = document.getElementById('popupPrefsButton');
+	toggleButton = document.getElementById('popupToggleButton');
 	addButton = document.querySelector('button.add-button');
 	removeButton = document.querySelector('button.remove-button');
 	domainToAllow = document.querySelector('span.domainToAllow');
@@ -29,11 +27,8 @@ function initialize() {
 }
 
 function setListeners() {
-	toggleButton.addEventListener('click', toggleBlocker);
-	toggleButton.addEventListener('mousedown', startLongPress);
-	toggleButton.addEventListener('mouseup', stopLongPress);
-	toggleButton.addEventListener('mouseout', stopLongPress);
 	prefsButton.addEventListener('click', openOptions);
+	toggleButton.addEventListener('click', handleClick);
 	addButton.addEventListener('click', addWebsite);
 	removeButton.addEventListener('click', removeWebsite);
 }
@@ -63,18 +58,12 @@ function restorePopup() {
 	setCurrentDomain();
 }
 
-async function toggleBlocker() {
+async function handleClick() {
 	const status = await browser.runtime.sendMessage({
 		type: runtimeMessage.getStatus
 	});
 
 	if (status === 'on') {
-		// Cancel click event when delay is set.
-		if (null !== toggleButtonDelay && toggleButtonDelay > 0) {
-			console.log('Cancel toggle blocker.');
-			return;
-		}
-
 		browser.runtime.sendMessage({
 			type: runtimeMessage.disableBlocker
 		});
@@ -87,47 +76,6 @@ async function toggleBlocker() {
 	setStatus();
 }
 
-async function startLongPress() {
-	// Get blocker status.
-	const status = await browser.runtime.sendMessage({
-		type: runtimeMessage.getStatus
-	});
-
-	console.log(status);
-
-	// When blocker is enabled start delay timer.
-	if ('on' === status) {
-		console.log('Start toggle button timer.');
-
-		// Add timer class.
-		toggleButton.classList.add('has-delay-timer');
-
-		// Start delay timer.
-		toggleButtonTimer = setTimeout(function() {
-			console.log('Long press completed.');
-
-			// Disable blocker.
-			browser.runtime.sendMessage({
-				type: runtimeMessage.disableBlocker
-			});
-		}, toggleButtonDelay);
-	}
-}
-
-async function stopLongPress() {
-	// Remove delay timer class.
-	if (toggleButton.classList.contains('has-delay-timer')) {
-		toggleButton.classList.remove('has-delay-timer');
-	}
-
-	// Stop and cleanup delay timer.
-	if (null !== toggleButtonTimer) {
-		console.log('Cancel toggle button timer.');
-		clearTimeout(toggleButtonTimer);
-		toggleButtonTimer = null;
-	}
-}
-
 async function setStatus() {
 	const status = await browser.runtime.sendMessage({
 		type: runtimeMessage.getStatus
@@ -138,15 +86,15 @@ async function setStatus() {
 			toggleButton.classList.remove('on');
 		}
 		toggleButton.classList.add('off');
-		/* toggleButton.innerText = browser.i18n.getMessage(
+		toggleButton.innerText = browser.i18n.getMessage(
 			'popupToggleButtonOff'
-		); */
+		);
 	} else if (status === 'on') {
 		if (toggleButton.classList.contains('off')) {
 			toggleButton.classList.remove('off');
 		}
 		toggleButton.classList.add('on');
-		// toggleButton.innerText = browser.i18n.getMessage('popupToggleButtonOn');
+		toggleButton.innerText = browser.i18n.getMessage('popupToggleButtonOn');
 	}
 }
 
