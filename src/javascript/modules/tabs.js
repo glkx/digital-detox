@@ -17,6 +17,7 @@ export default class Tabs {
 
 	static async setBlocked(tabId, tabUrl) {
 		if (!tabId || !tabUrl) {
+			console.log('Tab ID or url missing');
 			return;
 		}
 

@@ -534,7 +534,7 @@ const DigitalDetox = {
 		}
 
 		if (match === true) {
-			Tabs.setBlocked(requestDetails.id, requestDetails.url);
+			Tabs.setBlocked(requestDetails.tabId, requestDetails.url);
 		}
 	},
 
