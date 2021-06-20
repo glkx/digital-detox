@@ -4,7 +4,7 @@ export default class Tabs {
 	static async getCurrent() {
 		const currentTab = await browser.tabs.query({
 			active: true,
-			currentWindow: true
+			currentWindow: true,
 		});
 		return currentTab[0];
 	}
@@ -16,7 +16,7 @@ export default class Tabs {
 	 */
 	static async getBlocked() {
 		return await browser.tabs.query({
-			url: browser.runtime.getURL('*')
+			url: browser.runtime.getURL('*'),
 		});
 	}
 
@@ -42,7 +42,7 @@ export default class Tabs {
 		return await browser.tabs.update(tabId, {
 			url: browser.runtime.getURL(
 				'/redirect.html?from=' + encodeURIComponent(btoa(tabUrl))
-			)
+			),
 		});
 	}
 

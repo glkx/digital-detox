@@ -33,7 +33,7 @@ function localizeOptions() {
 	document.documentElement.setAttribute('lang', browserLanguage);
 
 	// Translate strings
-	document.querySelectorAll('[i18n]').forEach(element => {
+	document.querySelectorAll('[i18n]').forEach((element) => {
 		const translation = getI18nMsg(element.getAttribute('i18n'));
 
 		if (translation != undefined) {
@@ -45,17 +45,15 @@ function localizeOptions() {
 	document.getElementById('optionsAddSiteInput').placeholder = getI18nMsg(
 		'optionsAddSiteInputPlaceholder'
 	);
-	document.getElementById(
-		'optionsBlockedSitesTHeadVisits'
-	).dataset.tooltip = getI18nMsg('optionsBlockedSitesTHeadVisits');
-	document.getElementById(
-		'optionsBlockedSitesTHeadBlocks'
-	).dataset.tooltip = getI18nMsg('optionsBlockedSitesTHeadBlocks');
+	document.getElementById('optionsBlockedSitesTHeadVisits').dataset.tooltip =
+		getI18nMsg('optionsBlockedSitesTHeadVisits');
+	document.getElementById('optionsBlockedSitesTHeadBlocks').dataset.tooltip =
+		getI18nMsg('optionsBlockedSitesTHeadBlocks');
 }
 
 async function restoreOptions() {
 	const userOptions = await browser.runtime.sendMessage({
-		type: runtimeMessage.getUserOptions
+		type: runtimeMessage.getUserOptions,
 	});
 
 	// Set sites
@@ -65,7 +63,7 @@ async function restoreOptions() {
 function closeOptions() {
 	// Request sync sites to storage
 	browser.runtime.sendMessage({
-		type: runtimeMessage.syncUserOptions
+		type: runtimeMessage.syncUserOptions,
 	});
 }
 
@@ -89,16 +87,16 @@ async function setSites(sites) {
 	sites.sort(sortSites);
 
 	const history = await browser.runtime.sendMessage({
-		type: runtimeMessage.getHistory
+		type: runtimeMessage.getHistory,
 	});
 
 	// Add sites to options page
-	sites.forEach(site => {
+	sites.forEach((site) => {
 		let visits = 0,
 			blocks = 0;
 
 		if (history != undefined) {
-			const domainIndex = history.findIndex(v => v.url === site.url);
+			const domainIndex = history.findIndex((v) => v.url === site.url);
 
 			if (domainIndex > -1) {
 				visits = history[domainIndex].visits;
@@ -153,7 +151,7 @@ function saveSite(event) {
 	browser.runtime.sendMessage({
 		type: runtimeMessage.addSite,
 		url: url,
-		time: 0
+		time: 0,
 	});
 }
 
@@ -165,7 +163,7 @@ function deleteSite(event) {
 
 		browser.runtime.sendMessage({
 			type: runtimeMessage.removeSite,
-			url: url
+			url: url,
 		});
 	}
 }

@@ -25,7 +25,7 @@ function localizeRedirect() {
 	document.documentElement.setAttribute('lang', browserLanguage);
 
 	// Translate strings
-	document.querySelectorAll('[i18n]').forEach(element => {
+	document.querySelectorAll('[i18n]').forEach((element) => {
 		const translation = getI18nMsg(element.getAttribute('i18n'));
 
 		if (translation != undefined) {
@@ -51,10 +51,10 @@ async function restoreRedirect() {
 		window.history.back();
 	} else {
 		const status = await browser.runtime.sendMessage({
-				type: runtimeMessage.getStatus
+				type: runtimeMessage.getStatus,
 			}),
 			sites = await browser.runtime.sendMessage({
-				type: runtimeMessage.getAllSites
+				type: runtimeMessage.getAllSites,
 			});
 
 		if (
@@ -67,7 +67,7 @@ async function restoreRedirect() {
 }
 
 function matchUrl(url, list) {
-	if (list.findIndex(v => v.url === url) > -1) {
+	if (list.findIndex((v) => v.url === url) > -1) {
 		return true;
 	} else {
 		for (let i = 0; i < list.length; i++) {

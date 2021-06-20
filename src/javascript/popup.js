@@ -41,7 +41,7 @@ function localizePopup() {
 	document.documentElement.setAttribute('lang', browserLanguage);
 
 	// Translate strings
-	document.querySelectorAll('[i18n]').forEach(element => {
+	document.querySelectorAll('[i18n]').forEach((element) => {
 		const translation = getI18nMsg(element.getAttribute('i18n'));
 
 		if (translation != undefined) {
@@ -60,16 +60,16 @@ function restorePopup() {
 
 async function handleClick() {
 	const status = await browser.runtime.sendMessage({
-		type: runtimeMessage.getStatus
+		type: runtimeMessage.getStatus,
 	});
 
 	if (status === 'on') {
 		browser.runtime.sendMessage({
-			type: runtimeMessage.disableBlocker
+			type: runtimeMessage.disableBlocker,
 		});
 	} else {
 		browser.runtime.sendMessage({
-			type: runtimeMessage.enableBlocker
+			type: runtimeMessage.enableBlocker,
 		});
 	}
 
@@ -78,7 +78,7 @@ async function handleClick() {
 
 async function setStatus() {
 	const status = await browser.runtime.sendMessage({
-		type: runtimeMessage.getStatus
+		type: runtimeMessage.getStatus,
 	});
 
 	if (status === 'off') {
@@ -100,18 +100,18 @@ async function setStatus() {
 
 async function setCurrentDomain() {
 	const domain = await browser.runtime.sendMessage({
-		type: runtimeMessage.getCurrentDomain
+		type: runtimeMessage.getCurrentDomain,
 	});
 
 	if (domain !== false) {
 		const sites = await browser.runtime.sendMessage({
-			type: runtimeMessage.getAllSites
+			type: runtimeMessage.getAllSites,
 		});
 
 		domainToAllow.textContent = '(' + domain + ')';
 		domainToBlock.textContent = '(' + domain + ')';
 
-		if (sites.findIndex(v => v.url === domain) > -1) {
+		if (sites.findIndex((v) => v.url === domain) > -1) {
 			removeButton.style.display = 'block';
 			addButton.style.display = 'none';
 		} else {
@@ -123,12 +123,12 @@ async function setCurrentDomain() {
 
 async function addWebsite() {
 	const domain = await browser.runtime.sendMessage({
-		type: runtimeMessage.getCurrentDomain
+		type: runtimeMessage.getCurrentDomain,
 	});
 
 	await browser.runtime.sendMessage({
 		type: runtimeMessage.addSite,
-		url: domain
+		url: domain,
 	});
 
 	restorePopup();
@@ -136,12 +136,12 @@ async function addWebsite() {
 
 async function removeWebsite() {
 	const domain = await browser.runtime.sendMessage({
-		type: runtimeMessage.getCurrentDomain
+		type: runtimeMessage.getCurrentDomain,
 	});
 
 	await browser.runtime.sendMessage({
 		type: runtimeMessage.removeSite,
-		url: domain
+		url: domain,
 	});
 
 	restorePopup();
@@ -149,7 +149,7 @@ async function removeWebsite() {
 
 function openOptions() {
 	browser.tabs.create({
-		url: browser.runtime.getURL('/options.html')
+		url: browser.runtime.getURL('/options.html'),
 	});
 	window.close();
 }

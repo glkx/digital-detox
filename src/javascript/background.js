@@ -39,10 +39,10 @@ const DigitalDetox = {
 		console.log('Load options started');
 
 		// Wait for local and user options are loaded
-		return new Promise(resolve => {
+		return new Promise((resolve) => {
 			Promise.all([
 				DigitalDetox.loadLocalOptions(),
-				DigitalDetox.loadUserOptions()
+				DigitalDetox.loadUserOptions(),
 			]).then(() => {
 				console.log('Load options finished');
 				return resolve();
@@ -52,8 +52,8 @@ const DigitalDetox = {
 
 	// Load local options from local storage
 	loadLocalOptions: () => {
-		return new Promise(resolve => {
-			browser.storage.local.get('localOptions').then(storage => {
+		return new Promise((resolve) => {
+			browser.storage.local.get('localOptions').then((storage) => {
 				if (
 					typeof storage.localOptions != undefined &&
 					storage.localOptions != undefined
@@ -67,9 +67,9 @@ const DigitalDetox = {
 
 	// Load user options from sync storage
 	loadUserOptions: () => {
-		return new Promise(resolve => {
+		return new Promise((resolve) => {
 			// NOTE: userSettings was old variable for userOptions
-			browser.storage.sync.get('userSettings').then(storage => {
+			browser.storage.sync.get('userSettings').then((storage) => {
 				if (
 					typeof storage.userSettings != undefined &&
 					storage.userSettings != undefined
@@ -110,7 +110,7 @@ const DigitalDetox = {
 	syncLocalOptions: () => {
 		// Stores sites array in browser storage
 		browser.storage.local.set({
-			localOptions: DigitalDetox.localOptions
+			localOptions: DigitalDetox.localOptions,
 		});
 
 		console.log('Sync local options');
@@ -146,7 +146,7 @@ const DigitalDetox = {
 	syncUserOptions: () => {
 		// Stores sites array in browser storage
 		browser.storage.sync.set({
-			userSettings: DigitalDetox.userOptions
+			userSettings: DigitalDetox.userOptions,
 		});
 
 		console.log('Sync user options');
@@ -164,7 +164,7 @@ const DigitalDetox = {
 		// Process times
 		let processLastRuntime = {
 			syncLocalOptions: 0,
-			syncUserOptions: 0
+			syncUserOptions: 0,
 		};
 
 		// Sync local options
@@ -216,7 +216,7 @@ const DigitalDetox = {
 			);
 
 			// Pause background processes when user is inactive
-			browser.idle.onStateChanged.addListener(state => {
+			browser.idle.onStateChanged.addListener((state) => {
 				if (state === 'idle' || state === 'locked') {
 					DigitalDetox.process.syncLocalOptions.pause();
 					DigitalDetox.process.syncUserOptions.pause();
@@ -236,7 +236,7 @@ const DigitalDetox = {
 			DigitalDetox.handleVisit,
 			{
 				urls: ['<all_urls>'],
-				types: ['main_frame']
+				types: ['main_frame'],
 			}
 		);
 	},
@@ -278,7 +278,7 @@ const DigitalDetox = {
 	 * Sets the current status of the extension.
 	 * @param string status
 	 */
-	setStatus: status => {
+	setStatus: (status) => {
 		// Change local status
 		DigitalDetox.updateLocalOptions('status', status);
 		// Change status moditication time
@@ -294,7 +294,7 @@ const DigitalDetox = {
 
 		// Set icon
 		browser.browserAction.setIcon({
-			path: icon
+			path: icon,
 		});
 
 		console.log('Set status', status);
@@ -322,7 +322,7 @@ const DigitalDetox = {
 		return history;
 	},
 
-	updateHistory: history => {
+	updateHistory: (history) => {
 		if (history != undefined) {
 			// Update history
 			DigitalDetox.updateLocalOptions('history', history);
@@ -338,7 +338,7 @@ const DigitalDetox = {
 		const sites = DigitalDetox.getUserOptions().blockedSites,
 			blockedSites = [];
 
-		sites.forEach(site => {
+		sites.forEach((site) => {
 			blockedSites.push(site.url);
 			// IDEA: Implement time logic
 		});
@@ -355,14 +355,14 @@ const DigitalDetox = {
 		const userOptions = DigitalDetox.getUserOptions();
 
 		// Check if url already exists
-		if (userOptions.blockedSites.findIndex(v => v.url === url) === -1) {
+		if (userOptions.blockedSites.findIndex((v) => v.url === url) === -1) {
 			// Parse time
 			time = parseInt(time, 0);
 
 			// Add url to blocked websites
 			userOptions.blockedSites.push({
 				url: url,
-				time: time
+				time: time,
 			});
 
 			// Update user settings
@@ -379,11 +379,11 @@ const DigitalDetox = {
 	 * Add a website to the blocked list
 	 * @param  {string} url Url to remove to the list
 	 */
-	removeSite: url => {
+	removeSite: (url) => {
 		const userOptions = DigitalDetox.getUserOptions();
 
 		userOptions.blockedSites.splice(
-			userOptions.blockedSites.findIndex(v => v.url === url),
+			userOptions.blockedSites.findIndex((v) => v.url === url),
 			1
 		);
 
@@ -401,7 +401,7 @@ const DigitalDetox = {
 	 */
 	enableBlocker: () => {
 		const sites = DigitalDetox.getBlockedSites(),
-			pattern = sites.map(item => `*://*.${item}/*`);
+			pattern = sites.map((item) => `*://*.${item}/*`);
 
 		// console.log(pattern);
 
@@ -417,7 +417,7 @@ const DigitalDetox = {
 				DigitalDetox.redirectTab,
 				{
 					urls: pattern,
-					types: ['main_frame']
+					types: ['main_frame'],
 				},
 				['blocking']
 			);
@@ -499,14 +499,14 @@ const DigitalDetox = {
 	/**
 	 * Redirect current tabs
 	 */
-	redirectCurrentTab: urls => {
+	redirectCurrentTab: (urls) => {
 		browser.tabs
 			.query({
 				url: urls,
-				audible: false,
-				pinned: false
+				audible: false, // Tabs playing video or audio
+				pinned: false, // Pinned tabs
 			})
-			.then(tabs => {
+			.then((tabs) => {
 				// Loop matched tabs
 				for (let tab of tabs) {
 					// Block tabs
@@ -518,7 +518,7 @@ const DigitalDetox = {
 	/**
 	 * Redirects the tab to local "You have been blocked" page.
 	 */
-	redirectTab: requestDetails => {
+	redirectTab: (requestDetails) => {
 		let match = true; // By default url is catched correctly
 
 		// Test url on false positive when url components are found
@@ -539,13 +539,13 @@ const DigitalDetox = {
 	},
 
 	// Listen to new tabs
-	handleVisit: requestDetails => {
+	handleVisit: (requestDetails) => {
 		const domain = Domain.parseURL(requestDetails.url),
 			history = DigitalDetox.getHistory();
 
 		if (history != undefined) {
 			const status = DigitalDetox.getStatus(),
-				domainIndex = history.findIndex(v => v.url === domain);
+				domainIndex = history.findIndex((v) => v.url === domain);
 
 			if (domainIndex > -1) {
 				if (status == 'off') {
@@ -570,7 +570,7 @@ const DigitalDetox = {
 					url: domain,
 					visits: status == 'off' ? 1 : 0,
 					blocks: status == 'on' ? 1 : 0,
-					date: Date.now()
+					date: Date.now(),
 				});
 			}
 
@@ -584,9 +584,9 @@ const DigitalDetox = {
 	/**
 	 * Generic error logger.
 	 */
-	onError: event => {
+	onError: (event) => {
 		console.error(event);
-	}
+	},
 };
 
 // Default options
@@ -596,18 +596,18 @@ DigitalDetox.options = {
 	processInterval: {
 		syncLocalOptions: 1000,
 		syncUserOptions: 30000,
-		statusInterval: 6000
+		statusInterval: 6000,
 	},
 	updateBlockerInterval: 1000,
 	disableDuration: 5400000,
-	history: []
+	history: [],
 };
 
 // Default local options
 DigitalDetox.localOptions = {
 	status: null,
 	statusModified: 0,
-	history: null
+	history: null,
 };
 
 // Default user options meant to be synct
@@ -616,88 +616,88 @@ DigitalDetox.userOptions = {
 		// Social media
 		{
 			url: 'facebook.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'tumblr.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'instagram.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'twitter.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'snapchat.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'vk.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'pinterest.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'reddit.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'linkedin.com',
-			time: 0
+			time: 0,
 		},
 		// Video streaming
 		{
 			url: 'youtube.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'netflix.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'primevideo.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'hulu.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'hbonow.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'videoland.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'dumpert.nl',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'dailymotion.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'twitch.tv',
-			time: 0
+			time: 0,
 		},
 		// Entertainment
 		{
 			url: '9gag.com',
-			time: 0
+			time: 0,
 		},
 		{
 			url: 'buzzfeed.com',
-			time: 0
-		}
+			time: 0,
+		},
 	],
-	disableDuration: null // TODO: Add disable duration to options page
+	disableDuration: null, // TODO: Add disable duration to options page
 };
 
 DigitalDetox.init();

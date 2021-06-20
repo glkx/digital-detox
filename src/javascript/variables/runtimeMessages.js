@@ -13,7 +13,7 @@ const runtimeMessages = {
 	getHistory: 'getHistory',
 	resetHistory: 'resetHistory',
 	addSite: 'addSite',
-	removeSite: 'removeSite'
+	removeSite: 'removeSite',
 };
 
 Object.freeze(runtimeMessages);
