@@ -9,9 +9,26 @@ export default class Tabs {
 		return currentTab[0];
 	}
 
+	/**
+	 * Get all blocked tabs
+	 *
+	 * @return  array  Information about each matching tab.
+	 */
 	static async getBlocked() {
 		return await browser.tabs.query({
 			url: browser.runtime.getURL('*')
+		});
+	}
+
+	/**
+	 * Get all blocked tabs that are in memory
+	 *
+	 * @return  array  Information about each matching tab.
+	 */
+	static async getBlockedInMemory() {
+		return await browser.tabs.query({
+			url: browser.runtime.getURL('*'),
+			discarded: false, // Excluded tabs that are unloaded
 		});
 	}
 
@@ -31,7 +48,7 @@ export default class Tabs {
 
 	static async restore() {
 		// Get current blocked tabs
-		const blockedTabs = await this.getBlocked();
+		const blockedTabs = await this.getBlockedInMemory();
 
 		// Loop blocked tabs and reload
 		for (let tab of blockedTabs) {
