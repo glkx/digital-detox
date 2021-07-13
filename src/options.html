@@ -68,7 +68,7 @@
                 <form id="formBlockSite" class="groupbox-body">
                     <label i18n="optionsAddSiteLabel" class="d-block" for="inputfieldSite">Website address</label>
                     <div class="field-group">
-						<input id="optionsAddSiteInput" type="text" id="inputfieldSite" name="site" placeholder="domain.com" />
+						<input id="optionsAddSiteInput" type="text" id="inputfieldSite" name="site" pattern="([a-z0-9|-]+\.)*[a-z0-9|-]+\.[a-z]+" placeholder="domain.com" />
                     	<button i18n="optionsAddSiteButton" type="submit" class="primary">Block</button>
 					</div>
                 </form>
