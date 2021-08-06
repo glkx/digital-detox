@@ -1,0 +1,103 @@
+{
+	"extensionName": {
+		"message": "Digital Detox",
+		"description": "Name of the extension."
+	},
+
+	"extensionDescription": {
+		"message": "Dese una desintoxicación digital y bloquee todos sus comportamientos impulsivos de navegación en la red.",
+		"description": "Description of the extension."
+	},
+
+	"popupTitle": {
+		"message": "Digital Detox",
+		"description": "Title of the navbar popup."
+	},
+
+	"popupPrefsButtonTitle": {
+		"message": "Cambiar opciones de Digital Detox"
+	},
+
+	"popupToggleButtonOn": {
+		"message": "Pausar"
+	},
+
+	"popupToggleButtonOff": {
+		"message": "Reanudar"
+	},
+
+	"popupToggleConfirmationMessage": {
+		"message": "¿Está seguro de que quiere desactivar Digital Detox durante 1½ horas?"
+	},
+
+	"popupAddButtonValue": {
+		"message": "Bloquear"
+	},
+
+	"popupRemoveButtonValue": {
+		"message": "Permitir"
+	},
+
+	"redirectTitle": {
+		"message": "La carga de la página está bloqueada"
+	},
+
+	"redirectShortDescText": {
+		"message": "Su impulso de visitar este sitio web ha sido bloqueado con éxito por Digital Detox."
+	},
+
+	"redirectShortCustomDescText": {
+		"message": "Su impulso de visitar $URL$ ha sido bloqueado con éxito por Digital Detox.",
+		"placeholders": {
+			"url" : {
+				"content" : "$1",
+				"example" : "facebook.com"
+			}
+		}
+	},
+
+	"optionsTitle": {
+		"message": "Opciones de Digital Detox"
+	},
+
+	"optionGroupNameGeneral": {
+		"message": "General"
+	},
+
+	"optionGroupNameStartup": {
+		"message": "Inicio"
+	},
+
+	"optionGroupNameBlocklist": {
+		"message": "Lista de bloqueos"
+	},
+
+	"optionsAddSiteLabel": {
+		"message": "Dirección de la página web"
+	},
+
+	"optionsAddSiteInputPlaceholder": {
+		"message": "dominio.es"
+	},
+
+	"optionsAddSiteButton": {
+		"message": "Bloquear"
+	},
+
+	"optionsDeleteSiteButton": {
+		"message": "Eliminar"
+	},
+
+	"optionsBlockedSitesTHeadWebsites": {
+		"message": "Páginas web bloqueadas"
+	},
+
+	"optionsBlockedSitesTHeadVisits": {
+		"message": "Número de veces visitado hoy"
+	},
+
+	"optionsBlockedSitesTHeadBlocks": {
+		"message": "Número de veces bloqueado hoy"
+	}
+
+}
