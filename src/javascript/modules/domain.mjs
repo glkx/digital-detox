@@ -1,6 +1,6 @@
 'use strict';
 
-import Tabs from './tabs';
+import Tabs from './tabs.mjs';
 
 export default class Domain {
 	static parseURL(url) {

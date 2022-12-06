@@ -1,7 +1,7 @@
 'use strict';
 
 // Variables
-import runtimeMessage from './variables/runtimeMessages';
+import runtimeMessage from './variables/runtimeMessages.mjs';
 
 let blockedSites, formBlockSite;
 

@@ -1,17 +1,17 @@
 'use strict';
 
 // Variables
-import runtimeMessage from './variables/runtimeMessages';
+import runtimeMessage from './variables/runtimeMessages.mjs';
 
 // Modules
-import Domain from './modules/domain';
-import Tabs from './modules/tabs';
+import Domain from './modules/domain.mjs';
+import Tabs from './modules/tabs.mjs';
 
 // Helper classes
-import Interval from './helpers/interval';
+import Interval from './helpers/interval.mjs';
 
 // Helper functions
-import equalArrays from './helpers/equal-arrays';
+import equalArrays from './helpers/equal-arrays.mjs';
 
 // Vendor
 import dayjs from 'dayjs';
