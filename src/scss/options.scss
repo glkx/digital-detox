@@ -183,7 +183,6 @@ button {
 
         th {
             background-color: var(--in-content-button-background);
-            color: #15141a;
             font-weight: normal;
         }
 
@@ -220,15 +219,19 @@ button {
         height: 22px;
         min-height: auto;
         margin: -1px -5px -1px auto;
-        padding: 0;
-        background-repeat: no-repeat;
-        background-position: center;
+        padding: 2px;
 
-		-moz-context-properties: fill, fill-opacity;
-		background-image: url('../icons/close.svg');
-		color: inherit !important;
-		fill: currentColor;
-		fill-opacity: 0;
+		&::after {
+			content: '';
+			display: block;
+			width: 16px;
+			height: 16px;
+			mask-image: url('../icons/close.svg');
+			mask-repeat: no-repeat;
+			mask-position: center;
+			mask-size: cover;
+			background-color: var(--in-content-page-color);
+		}
     }
 }
 
