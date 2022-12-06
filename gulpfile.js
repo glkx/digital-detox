@@ -7,82 +7,91 @@ var name = 'digital-detox', // The directory name for your theme; change this at
 	};
 
 // Package information
-const packageConfig = require('./package.json');
+import packageConfig from './package.json' assert { type: "json" };
 
 // Gulp
-const { task, src, dest, series, parallel } = require('gulp');
+import gulp from 'gulp';
 
 // Plugins
-const args = require('yargs').argv;
-const del = require('del');
-const changed = require('gulp-changed');
-const cssnano = require('gulp-cssnano');
-const eslint = require('gulp-eslint');
-const gulpif = require('gulp-if');
-const imagemin = require('gulp-imagemin');
-const replace = require('gulp-replace');
-const sass = require('gulp-sass')(require('sass'));
-const sourcemaps = require('gulp-sourcemaps');
-const zip = require('gulp-zip');
-const named = require('vinyl-named');
-const compiler = require('webpack');
-const webpack = require('webpack-stream');
+import yargs from 'yargs';
+const argv = yargs().argv;
+import { deleteAsync } from 'del';
+import changed from 'gulp-changed';
+import cssnano from 'gulp-cssnano';
+import eslint from 'gulp-eslint';
+import gulpif from 'gulp-if';
+import imagemin, { gifsicle, mozjpeg, optipng, svgo } from 'gulp-imagemin';
+import replace from 'gulp-replace';
+import dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+const sass = gulpSass(dartSass);
+import sourcemaps from 'gulp-sourcemaps';
+import zip from 'gulp-zip';
+import named from 'vinyl-named';
+import compiler from 'webpack';
+import webpack from 'webpack-stream';
 
 // Enviroment
-const isDevelopment = args.env === 'development';
+const isDevelopment = argv.env === 'development';
 
 /**
  * Extension
  */
 
-// Copy everything under `src/languages` indiscriminately
-task('extention:lang', () => {
-	return src(dir.src + '_locales/**/*')
+// Copy everything under `gulp.src/languages` indiscriminately
+gulp.task('extention:lang', () => {
+	return gulp.src(dir.src + '_locales/**/*')
 		.pipe(changed(dir.build + '_locales/'))
-		.pipe(dest(dir.build + '_locales/'));
+		.pipe(gulp.dest(dir.build + '_locales/'));
 });
 
 // Copy PHP source files to the `build` folder
-task('extention:files', () => {
+gulp.task('extention:files', () => {
 	return (
-		src([dir.src + 'manifest.json', dir.src + '*.html'])
-			// .pipe(changed(config.files.dest))
+		gulp.src([dir.src + 'manifest.json', dir.src + '*.html'])
+			// .pipe(changed(config.files.gulp.dest))
 			.pipe(replace('<%= version =>', packageConfig.version))
-			.pipe(dest(dir.build))
+			.pipe(gulp.dest(dir.build))
 	);
 });
 
-// All the theme tasks in one
-task('extention', parallel('extention:lang', 'extention:files'));
+// All the theme gulp.tasks in one
+gulp.task('extention', gulp.parallel('extention:lang', 'extention:files'));
 
 /**
  * Images
  */
 
 // Copy changed images from the source folder to `build` (fast)
-task('images', () => {
-	return src([dir.src + '**/*.+(png|jpg|jpeg|gif|svg)', '!**/vendor/**'])
+gulp.task('images', () => {
+	return gulp.src([dir.src + '**/*.+(png|jpg|jpeg|gif|svg)', '!**/vendor/**'])
 		.pipe(changed(dir.build))
-		.pipe(dest(dir.build));
+		.pipe(gulp.dest(dir.build));
 });
 
 // Optimize images in the `dist` folder (slow)
-task('images:optimize', () => {
-	return src(dir.dist + '**/*.+(png|jpg|jpeg|gif|svg)')
+gulp.task('images:optimize', () => {
+	return gulp.src(dir.dist + '**/*.+(png|jpg|jpeg|gif|svg)')
 		.pipe(
 			imagemin([
-				imagemin.gifsicle({ interlaced: true }),
-				imagemin.mozjpeg({ progressive: true }),
-				imagemin.optipng({ optimizationLevel: 5 }),
-				imagemin.svgo({
+				gifsicle({ interlaced: true }),
+				mozjpeg({ progressive: true }),
+				optipng({ optimizationLevel: 5 }),
+				svgo({
 					plugins: [
-						{ removeUselessDefs: false },
-						{ cleanupIDs: false }
+						{
+							name: 'removeUselessDefs',
+							active: false
+						},
+						{
+							name: 'cleanupIDs',
+							active: false
+						}
 					]
 				})
 			])
 		)
-		.pipe(dest(dir.dist));
+		.pipe(gulp.dest(dir.dist));
 });
 
 /**
@@ -93,20 +102,20 @@ task('images:optimize', () => {
  * Styles
  */
 
-task('styles:bundle', () => {
-	return src(dir.src + 'scss/*.scss')
+gulp.task('styles:bundle', () => {
+	return gulp.src(dir.src + 'scss/*.scss')
 		.pipe(
 			sass({
-				includePaths: ['node_modules', 'src', '.'],
+				includePaths: ['node_modules', 'gulp.src', '.'],
 				precision: 6
 			}).on('error', sass.logError) // Log errors instead of killing the process))
 		)
-		.pipe(dest(dir.build + 'css/'));
+		.pipe(gulp.dest(dir.build + 'css/'));
 });
 
 // Minify scripts in place
-task('styles:minify', () => {
-	return src(dir.build + 'css/**/*.css')
+gulp.task('styles:minify', () => {
+	return gulp.src(dir.build + 'css/**/*.css')
 		.pipe(gulpif(isDevelopment, sourcemaps.init())) // Note that sourcemaps need to be initialized with libsass
 		.pipe(
 			cssnano({
@@ -120,17 +129,17 @@ task('styles:minify', () => {
 			})
 		)
 		.pipe(gulpif(isDevelopment, sourcemaps.write('./')))
-		.pipe(dest(dir.build + 'css/'));
+		.pipe(gulp.dest(dir.build + 'css/'));
 });
 
-task('styles', series('styles:bundle', 'styles:minify'));
+gulp.task('styles', gulp.series('styles:bundle', 'styles:minify'));
 
 /**
  * Scripts
  */
 
-task('scripts:lint', () => {
-	return src([dir.src + 'assets/js/**/*.js', '!**/vendor/**'])
+gulp.task('scripts:lint', () => {
+	return gulp.src([dir.src + 'assets/js/**/*.js', '!**/vendor/**'])
 		.pipe(
 			eslint({
 				configFile: '.eslintrc.json'
@@ -139,8 +148,8 @@ task('scripts:lint', () => {
 		.pipe(eslint.format());
 });
 
-task('scripts:bundle', () => {
-	return src(dir.src + 'javascript/*.js')
+gulp.task('scripts:bundle', () => {
+	return gulp.src(dir.src + 'javascript/*.js')
 		.pipe(gulpif(isDevelopment, sourcemaps.init()))
 		.pipe(named())
 		.pipe(
@@ -162,37 +171,37 @@ task('scripts:bundle', () => {
 			)
 		)
 		.pipe(gulpif(isDevelopment, sourcemaps.write('./')))
-		.pipe(dest(dir.build + 'javascript/'));
+		.pipe(gulp.dest(dir.build + 'javascript/'));
 });
 
-task('scripts', series('scripts:lint', 'scripts:bundle'));
+gulp.task('scripts', gulp.series('scripts:lint', 'scripts:bundle'));
 
 /**
  * Utilities
  */
 
 // Totally wipe the contents of the `dist` folder to prepare for a clean build
-task('utils:wipe', () => {
-	return del([dir.dist, dir.dist + '../*.zip']);
+gulp.task('utils:wipe', () => {
+	return deleteAsync([dir.dist, dir.dist + '../*.zip']);
 });
 
 // Clean out junk files after build
-task('utils:clean', () => {
-	return del([dir.build + '**/.DS_Store']);
+gulp.task('utils:clean', () => {
+	return deleteAsync([dir.build + '**/.DS_Store']);
 });
 
 // Copy files from the `build` folder to `dist/[project]`
-task('utils:dist', () => {
-	return src([dir.build + '**/*', '!' + dir.build + '**/*.map']).pipe(
-		dest(dir.dist)
+gulp.task('utils:dist', () => {
+	return gulp.src([dir.build + '**/*', '!' + dir.build + '**/*.map']).pipe(
+		gulp.dest(dir.dist)
 	);
 });
 
 // Zip theme folder
-task('utils:zip', () => {
-	return src(dir.dist + '/**/*')
+gulp.task('utils:zip', () => {
+	return gulp.src(dir.dist + '/**/*')
 		.pipe(zip(name + '.zip'))
-		.pipe(dest(dir.dist + '../'));
+		.pipe(gulp.dest(dir.dist + '../'));
 });
 
 /**
@@ -202,29 +211,29 @@ task('utils:zip', () => {
 // Build a working copy of the project
 if (isDevelopment) {
 	// Development build
-	task(
+	gulp.task(
 		'build',
-		parallel('extention', 'images', 'scripts:bundle', 'styles:bundle')
+		gulp.parallel('extention', 'images', 'scripts:bundle', 'styles:bundle')
 	);
 } else {
 	// Production build
-	task('build', parallel('extention', 'images', 'scripts', 'styles'));
+	gulp.task('build', gulp.parallel('extention', 'images', 'scripts', 'styles'));
 }
 
 // Distribute project
-// Dist task chain: wipe -> build -> clean -> copy/dist -> compress images -> zip
-// NOTE: this is a resource-intensive task!
-task(
+// Dist gulp.task chain: wipe -> build -> clean -> copy/dist -> compress images -> zip
+// NOTE: this is a resource-intensive gulp.task!
+gulp.task(
 	'dist',
-	series(
+	gulp.series(
 		'utils:wipe',
 		'build',
 		'utils:clean',
 		'utils:dist',
-		'images:optimize',
+		// 'images:optimize',
 		'utils:zip'
 	)
 );
 
-// Default task chain: build
-task('default', series('build'));
+// Default gulp.task chain: build
+gulp.task('default', gulp.series('build'));
