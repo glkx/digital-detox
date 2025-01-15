@@ -1,0 +1,103 @@
+{
+	"extensionName": {
+		"message": "Digital Detox",
+		"description": "Name of the extension."
+	},
+
+	"extensionDescription": {
+		"message": "נתקו את עצמכם מהתלות בהדיגיטל בעזרת אכיפה של הדחף החזק לגלוש באינטרנט.",
+		"description": "Description of the extension."
+	},
+
+	"popupTitle": {
+		"message": "Digital Detox",
+		"description": "Title of the navbar popup."
+	},
+
+	"popupPrefsButtonTitle": {
+		"message": "התאמת האפשרויות של Digital Detox"
+	},
+
+	"popupToggleButtonOn": {
+		"message": "השהייה"
+	},
+
+	"popupToggleButtonOff": {
+		"message": "המשך"
+	},
+
+	"popupToggleConfirmationMessage": {
+		"message": "להשבית את Digital Detox למשך שעה וחצי?"
+	},
+
+	"popupAddButtonValue": {
+		"message": "חסימה"
+	},
+
+	"popupRemoveButtonValue": {
+		"message": "התרה"
+	},
+
+	"redirectTitle": {
+		"message": "העמוד נחסם"
+	},
+
+	"redirectShortDescText": {
+		"message": "הדחף שלך לבקר באתר זה נאכף בהצלחה בזכות Digital Detox."
+	},
+
+	"redirectShortCustomDescText": {
+		"message": "הדחף שלך לבקר בכתובת $URL$ זה נאכף בהצלחה בזכות Digital Detox.",
+		"placeholders": {
+			"url" : {
+				"content" : "$1",
+				"example" : "facebook.com"
+			}
+		}
+	},
+
+	"optionsTitle": {
+		"message": "אפשרויות ל־Digital Detox"
+	},
+
+	"optionGroupNameGeneral": {
+		"message": "כללי"
+	},
+
+	"optionGroupNameStartup": {
+		"message": "הפעלה"
+	},
+
+	"optionGroupNameBlocklist": {
+		"message": "רשימת חסימה"
+	},
+
+	"optionsAddSiteLabel": {
+		"message": "כתובת אתר"
+	},
+
+	"optionsAddSiteInputPlaceholder": {
+		"message": "domain.com"
+	},
+
+	"optionsAddSiteButton": {
+		"message": "חסימה"
+	},
+
+	"optionsDeleteSiteButton": {
+		"message": "מחיקה"
+	},
+
+	"optionsBlockedSitesTHeadWebsites": {
+		"message": "אתרים שנחסמו"
+	},
+
+	"optionsBlockedSitesTHeadVisits": {
+		"message": "מספר הצפיות מהיום"
+	},
+
+	"optionsBlockedSitesTHeadBlocks": {
+		"message": "מספר החסימות מהיום"
+	}
+
+}
