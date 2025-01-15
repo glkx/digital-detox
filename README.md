@@ -5,6 +5,7 @@ Give yourself a digital detox and block all your impulsive surf behaviour on the
 
 ## Translations
 Spanish by @oscfdezdz
+Hebrew by @omeritzics
 
 ## Fork from Impulse Blocker by raicem
 Digital Detox is inspired by and fork from [Impulse Blocker](https://addons.mozilla.org/en-US/firefox/addon/impulse-blocker/).
